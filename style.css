@@ -66,10 +66,13 @@ body {
   -webkit-flex-direction: column;
       -ms-flex-direction: column;
           flex-direction: column; }
+  .settings > div {
+    margin-bottom: 15px; }
+  .settings > div:first-child {
+    margin-top: 15px; }
 
 #words {
-  width: 100%;
-  margin-bottom: 7.5px; }
+  width: 100%; }
   #words input {
     width: calc(100% - 10px); }
 
@@ -116,9 +119,9 @@ body {
     #ok input:hover {
       border-color: #09f; }
     #ok input:first-child {
-      margin-right: 10px; }
+      margin-right: 30px; }
     #ok input:last-child {
-      margin-left: 10px; }
+      margin-left: 30px; }
 
 #woi {
   width: 100%;
