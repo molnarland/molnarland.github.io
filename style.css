@@ -1,5 +1,5 @@
 body {
-  font-size: 20px; }
+  font-size: 15px; }
 
 p, label, input {
   font-size: 1em; }
@@ -115,6 +115,10 @@ body {
     margin: 5px 5px 0; }
     #ok input:hover {
       border-color: #09f; }
+    #ok input:first-child {
+      margin-right: 10px; }
+    #ok input:last-child {
+      margin-left: 10px; }
 
 #woi {
   width: 100%;
@@ -136,5 +140,15 @@ body {
 #inspirate {
   font-size: 10px;
   text-align: right; }
+
+@media(max-width:1024px) {
+  p, label, input {
+    font-size: 2em; }
+
+  input[type="range"] {
+    font-size: 1.6em; }
+
+  #woi {
+    font-size: 3em; } }
 
 /*# sourceMappingURL=style.css.map */
