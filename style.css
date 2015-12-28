@@ -82,7 +82,9 @@ body {
   display: -ms-flexbox;
   display: flex; }
   #delay input, #wait input {
-    width: 100%; }
+    width: 100%;
+    margin-right: 10px;
+    margin-left: 10px; }
 
 #stop {
   display: -webkit-box;
