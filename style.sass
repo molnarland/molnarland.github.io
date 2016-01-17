@@ -9,8 +9,8 @@ p, label, input
 input[type="range"]
 	font-size: 0.8em
 
-p, input[type="range"]
-	margin: 7.5px 0
+p, input[type="range"], label
+	margin: 0
 	line-height: 1
 
 input[type="text"], input[type="button"]
@@ -22,17 +22,13 @@ input[type="text"], input[type="button"]
 		border-color: #09f
 		transition: $trans
 
-input[type="text"]:focus, input[type="button"]:active
+input[type="button"]:active
 	border-color: #09f
 	transition: $trans
 
 input[type="text"]:focus
 	background: #e5f5ff
 	transition: $trans
-
-input[type="button"]:active
-	background: #09f
-	transition: $trans	
 
 input[type="checkbox"], input[type="button"], label
 	cursor: pointer
@@ -60,13 +56,28 @@ body
 	input
 		width: calc(100% - 10px)
 
-#delay, #wait
+#delay, #wait, #color
 	width: 100%
 	display: flex
-	input
-		width: 100%
-		margin-right: 10px
-		margin-left: 10px
+	justify-content: center
+	div
+		width: calc(50% - 10px)
+		display: flex
+		justify-content: space-between
+		&:first-child
+			margin-right: calc(2.5% + 2.5px)
+		&:last-child
+			margin-left: calc(2.5% + 2.5px)
+		input
+			width: 100%
+			margin-right: 10px
+			margin-left: 10px
+			&[type="range"]
+				margin: 7.5px 5px 0 0
+		p:last-child
+			margin: 7.5px 0
+
+
 
 #stop
 	display: flex

@@ -1,23 +1,47 @@
 doctype html
 html
 	head
-		//-script(type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-beta.2/angular.min.js")
 		script(type="text/javascript" src="wordsoutin.min.js")
+		script(type="text/javascript" src="jscolor.min.js")
 		script(type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js")
 		link(href="style.css" type="text/css" rel="stylesheet")
 		title Typed.js - Words Out In
+		meta(charset="utf8")
+		meta(name="description" content="Words Out In is an simple free TypeScript so words or word write as you type. You can add delay in between characters and wait in between words and words' colors. And if you does not want that typing at last word then just you can add the false value to last parameter.")
+		meta(name="keywords" content="type,script,js,javascript,words out in,words,free,simple,delay,write,wait,programming")
+		meta(name="robots" content="index, follow")
+		meta(name="Robots" content="All")
+		meta(name="author" content="rrmolnar@gmail.com")
+		meta(name="generator" content="Molnar Roland")
 	body
 		.settings
 			#words
 				input(type="text" placeholder="Words with '|' between")
 			#delay
-				p Delay: 
-				input(type="range" min="1" max="2000" value="120")
-				p 120
+				div
+					p Start delay: 
+					input(type="range" min="1" max="2000" value="600")
+					p 600
+				div
+					p End delay: 
+					input(type="range" min="1" max="2000" value="900")
+					p 900
 			#wait
-				p InWait: 
-				input(type="range" min="1" max="20" value="10")
-				p 10
+				div
+					p Start wait: 
+					input(type="range" min="1" max="2000" value="150")
+					p 150
+				div
+					p End wait: 
+					input(type="range" min="1" max="2000" value="500")
+					p 500
+			#color
+				div
+					label(for="firstcolor") Start color:
+					input(type="text" class="jscolor {hash:true}")#firstcolor
+				div
+					label(for="secondcolor") End color:
+					input(type="text" class="jscolor {hash:true}")#secondcolor
 			#stop
 				label(for="stopCheck") Stop in the end:
 				input(type="checkbox")#stopCheck

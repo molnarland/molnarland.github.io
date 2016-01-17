@@ -7,64 +7,41 @@ p, label, input {
 input[type="range"] {
   font-size: 0.8em; }
 
-p, input[type="range"] {
-  margin: 7.5px 0;
+p, input[type="range"], label {
+  margin: 0;
   line-height: 1; }
 
 input[type="text"], input[type="button"] {
   border-radius: 10px;
   padding: 5px;
   border: 2px solid #fff;
-  -webkit-transition: 1s ease;
-          transition: 1s ease; }
+  transition: 1s ease; }
   input[type="text"]:hover, input[type="button"]:hover {
     border-color: #09f;
-    -webkit-transition: 1s ease;
-            transition: 1s ease; }
+    transition: 1s ease; }
 
-input[type="text"]:focus, input[type="button"]:active {
+input[type="button"]:active {
   border-color: #09f;
-  -webkit-transition: 1s ease;
-          transition: 1s ease; }
+  transition: 1s ease; }
 
 input[type="text"]:focus {
   background: #e5f5ff;
-  -webkit-transition: 1s ease;
-          transition: 1s ease; }
-
-input[type="button"]:active {
-  background: #09f;
-  -webkit-transition: 1s ease;
-          transition: 1s ease; }
+  transition: 1s ease; }
 
 input[type="checkbox"], input[type="button"], label {
   cursor: pointer; }
 
 body {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   background: #7B7B7B;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: column;
-      -ms-flex-direction: column;
-          flex-direction: column; }
+  flex-direction: column; }
 
 .settings {
   background: #454545;
   width: calc(100% - 20px);
   padding: 10px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: column;
-      -ms-flex-direction: column;
-          flex-direction: column; }
+  flex-direction: column; }
   .settings > div {
     margin-bottom: 15px; }
   .settings > div:first-child {
@@ -75,44 +52,40 @@ body {
   #words input {
     width: calc(100% - 10px); }
 
-#delay, #wait {
+#delay, #wait, #color {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex; }
-  #delay input, #wait input {
-    width: 100%;
-    margin-right: 10px;
-    margin-left: 10px; }
+  display: flex;
+  justify-content: center; }
+  #delay div, #wait div, #color div {
+    width: calc(50% - 10px);
+    display: flex;
+    justify-content: space-between; }
+    #delay div:first-child, #wait div:first-child, #color div:first-child {
+      margin-right: calc(2.5% + 2.5px); }
+    #delay div:last-child, #wait div:last-child, #color div:last-child {
+      margin-left: calc(2.5% + 2.5px); }
+    #delay div input, #wait div input, #color div input {
+      width: 100%;
+      margin-right: 10px;
+      margin-left: 10px; }
+      #delay div input[type="range"], #wait div input[type="range"], #color div input[type="range"] {
+        margin: 7.5px 5px 0 0; }
+    #delay div p:last-child, #wait div p:last-child, #color div p:last-child {
+      margin: 7.5px 0; }
 
 #stop {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-      -ms-flex-pack: center;
-          justify-content: center; }
+  justify-content: center; }
   #stop input {
     margin: 5px 0 5px 8px;
-    -webkit-transform: scale(1.5);
-        -ms-transform: scale(1.5);
-            transform: scale(1.5); }
+    transform: scale(1.5); }
   #stop p {
     margin: 0; }
 
 #ok {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  justify-content: center;
   margin-top: 7.5px; }
   #ok input {
     width: 40%;
@@ -127,18 +100,9 @@ body {
 #woi {
   width: 100%;
   height: 50vh;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-      -ms-flex-align: center;
-          align-items: center;
+  justify-content: center;
+  align-items: center;
   font-size: 1.5em; }
 
 #inspirate {

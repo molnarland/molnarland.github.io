@@ -4,8 +4,7 @@ words=[]
 
 #functions
 stopfun = () ->
-	WOI.stopping()
-	# WOI=null
+	inTimer.stopping(WOI.timer)
 
 start = () ->
 	$('#woitxt').html ''
@@ -15,24 +14,25 @@ start = () ->
 	words=$('#words input').val()
 	if words == '' then words=["Words with '|' between"] else words=words.split('|')
 
-	delay=$('#delay input').val()
-	wait=$('#wait input').val()
+	delay=[[parseInt($('#delay div:first-child input').val()), parseInt($('#delay div:last-child input').val())]]
+	wait=[[parseInt($('#wait div:first-child input').val()), parseInt($('#wait div:last-child input').val())]]
+	color=[[$('#color div:first-child input').val(), $('#color div:last-child input').val()]]
 	stop=$('#stop input').is ':checked'
 
-	# if words==[""] then words=["Words with '|' between"]
-
-	console.log words
-
-	WOI = new WordsOutIn document.getElementById("woitxt"), words, delay, wait, stop
+	WOI = new WordsOutIn document.getElementById("woitxt"), words, delay, wait, color, stop
+	# console.log WOI
 
 #start with jquery
 $(document).ready ->
-	$('#delay p:last-child').html $('#delay input').val()
-	$('#wait p:last-child').html $('#wait input').val()
+	$('#delay div:first-child p:last-child').html $('#delay div:first-child input').val()
+	$('#delay div:last-child p:last-child').html $('#delay div:last-child input').val()
+
+	$('#wait div:first-child p:last-child').html $('#wait div:first-child input').val()
+	$('#wait div:last-child p:last-child').html $('#wait div:last-child input').val()
 	
 	start()
 
-	inspirate = new WordsOutIn document.getElementById('inspirate'), ["Inspitated by my friend and npmjs.org."], 800, 0, true
+	inspirate = new WordsOutIn document.getElementById('inspirate'), ["Inspitated by my friend and npmjs.org."], 800, 0, ['black'], false
 
 
 $('#stopbtn').click ->
