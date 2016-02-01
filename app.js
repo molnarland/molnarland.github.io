@@ -6,7 +6,8 @@
   words = [];
 
   stopfun = function() {
-    return inTimer.stopping(WOI.timer);
+    console.log(timerId);
+    return inTimer.stopping(timerId);
   };
 
   start = function() {
@@ -26,13 +27,11 @@
   };
 
   $(document).ready(function() {
-    var inspirate;
     $('#delay div:first-child p:last-child').html($('#delay div:first-child input').val());
     $('#delay div:last-child p:last-child').html($('#delay div:last-child input').val());
     $('#wait div:first-child p:last-child').html($('#wait div:first-child input').val());
     $('#wait div:last-child p:last-child').html($('#wait div:last-child input').val());
-    start();
-    return inspirate = new WordsOutIn(document.getElementById('inspirate'), ["Inspitated by my friend and npmjs.org."], 800, 0, ['black'], false);
+    return start();
   });
 
   $('#stopbtn').click(function() {
@@ -53,5 +52,3 @@
   });
 
 }).call(this);
-
-//# sourceMappingURL=app.map
