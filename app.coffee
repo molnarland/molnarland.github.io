@@ -4,8 +4,7 @@ words = []
 
 #functions
 stopfun = () ->
-	console.log(timerId);
-	inTimer.stopping(timerId)
+	inTimer.prototype.stopping(timerId)
 
 start = () ->
 	$('#woitxt').html ''
@@ -32,6 +31,8 @@ $(document).ready ->
 	$('#wait div:last-child p:last-child').html $('#wait div:last-child input').val()
 	
 	start()
+
+	inpsirated = new WordsOutIn document.getElementById("inspirate"), ['Inspirated my friend and npmjs.org'], 200, 0, 'black', true
 
 
 $('#stopbtn').click ->
