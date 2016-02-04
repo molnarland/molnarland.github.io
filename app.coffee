@@ -20,7 +20,6 @@ start = () ->
 	stop = $('#stop input').is ':checked'
 
 	WOI = new WordsOutIn document.getElementById("woitxt"), words, delay, wait, color, stop
-	# console.log WOI
 
 #start with jquery
 $(document).ready ->
@@ -32,7 +31,7 @@ $(document).ready ->
 	
 	start()
 
-	inpsirated = new WordsOutIn document.getElementById("inspirate"), ['Inspirated my friend and npmjs.org'], 200, 0, 'black', true
+	# inpsirated = new WordsOutIn document.getElementById("inspirate"), ['Inspirated my friend and npmjs.org'], 200, 0, 'black', true
 
 
 $('#stopbtn').click ->
