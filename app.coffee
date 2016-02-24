@@ -4,7 +4,7 @@ words = []
 
 #functions
 stopfun = () ->
-	inTimer.prototype.stopping(timerId)
+	WOI.stopping()
 
 start = () ->
 	$('#woitxt').html ''
@@ -12,7 +12,7 @@ start = () ->
 	# words=$('#words input').val().split '|'
 
 	words=$('#words input').val()
-	if words == '' then words = ["Words with '|' between"] else words=words.split('|')
+	if words == '' then words = ["Words with '|' between"] else words = words.split('|')
 
 	delay = [[parseInt($('#delay div:first-child input').val()), parseInt($('#delay div:last-child input').val())]]
 	wait = [[parseInt($('#wait div:first-child input').val()), parseInt($('#wait div:last-child input').val())]]
@@ -31,7 +31,7 @@ $(document).ready ->
 	
 	start()
 
-	# inpsirated = new WordsOutIn document.getElementById("inspirate"), ['Inspirated my friend and npmjs.org'], 200, 0, 'black', true
+	inpsirated = new WordsOutIn document.getElementById("inspirate"), ['Inspirated my friend and npmjs.org'], 200, 0, 'black', true
 
 
 $('#stopbtn').click ->

@@ -1,126 +1,213 @@
+* {
+  transition: 1s ease;
+}
+
 body {
-  font-size: 15px; }
+  font-size: 15px;
+}
 
 p, label, input {
-  font-size: 1em; }
+  font-size: 1em;
+}
+
+input {
+  background: #eee;
+}
 
 input[type="range"] {
-  font-size: 0.8em; }
+  font-size: 0.8em;
+  background: inherit;
+}
 
 p, input[type="range"], label {
   margin: 0;
-  line-height: 1; }
+  line-height: 1;
+}
 
 input[type="text"], input[type="button"] {
   border-radius: 10px;
   padding: 5px;
   border: 2px solid #fff;
-  transition: 1s ease; }
-  input[type="text"]:hover, input[type="button"]:hover {
-    border-color: #09f;
-    transition: 1s ease; }
-
-input[type="button"]:active {
+}
+input[type="text"]:hover, input[type="button"]:hover {
   border-color: #09f;
-  transition: 1s ease; }
-
-input[type="text"]:focus {
+}
+input[type="text"]:focus, input[type="text"]:active, input[type="button"]:focus, input[type="button"]:active {
   background: #e5f5ff;
-  transition: 1s ease; }
+}
 
 input[type="checkbox"], input[type="button"], label {
-  cursor: pointer; }
+  cursor: pointer;
+}
+
+p:not(#inspirate), label:not(#inspirate) {
+  color: #ddd;
+}
 
 body {
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   background: #7B7B7B;
-  flex-direction: column; }
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
 
 .settings {
   background: #454545;
   width: calc(100% - 20px);
   padding: 10px;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column; }
-  .settings > div {
-    margin-bottom: 15px; }
-  .settings > div:first-child {
-    margin-top: 15px; }
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+.settings > div {
+  margin-bottom: 15px;
+}
+.settings > div:first-child {
+  margin-top: 15px;
+}
 
 #words {
-  width: 100%; }
-  #words input {
-    width: calc(100% - 10px); }
+  width: 100%;
+}
+#words input {
+  width: calc(100% - 10px);
+}
 
 #delay, #wait, #color {
   width: 100%;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: center; }
-  #delay div, #wait div, #color div {
-    width: calc(50% - 10px);
-    display: flex;
-    justify-content: space-between; }
-    #delay div:first-child, #wait div:first-child, #color div:first-child {
-      margin-right: calc(2.5% + 2.5px); }
-    #delay div:last-child, #wait div:last-child, #color div:last-child {
-      margin-left: calc(2.5% + 2.5px); }
-    #delay div input, #wait div input, #color div input {
-      width: 100%;
-      margin-right: 10px;
-      margin-left: 10px; }
-      #delay div input[type="range"], #wait div input[type="range"], #color div input[type="range"] {
-        margin: 7.5px 5px 0 0; }
-    #delay div p:last-child, #wait div p:last-child, #color div p:last-child {
-      margin: 7.5px 0; }
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+#delay div, #wait div, #color div {
+  width: calc(50% - 10px);
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+#delay div:first-child, #wait div:first-child, #color div:first-child {
+  margin-right: calc(2.5% + 2.5px);
+}
+#delay div:last-child, #wait div:last-child, #color div:last-child {
+  margin-left: calc(2.5% + 2.5px);
+}
+#delay div input, #wait div input, #color div input {
+  width: 100%;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+#delay div input[type="range"], #wait div input[type="range"], #color div input[type="range"] {
+  margin: 7.5px 5px 0 0;
+}
+#delay div p:last-child, #wait div p:last-child, #color div p:last-child {
+  margin: 7.5px 0;
+}
 
 #stop {
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: center; }
-  #stop input {
-    margin: 5px 0 5px 8px;
-    transform: scale(1.5); }
-  #stop p {
-    margin: 0; }
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+#stop input {
+  margin: 5px 0 5px 8px;
+  -webkit-transform: scale(1.5);
+      -ms-transform: scale(1.5);
+          transform: scale(1.5);
+}
+#stop label {
+  padding-top: 4px;
+}
 
 #ok {
   width: 100%;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: center;
-  margin-top: 7.5px; }
-  #ok input {
-    width: 40%;
-    margin: 5px 5px 0; }
-    #ok input:hover {
-      border-color: #09f; }
-    #ok input:first-child {
-      margin-right: 30px; }
-    #ok input:last-child {
-      margin-left: 30px; }
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  margin-top: 7.5px;
+}
+#ok input {
+  width: 40%;
+  margin: 5px 5px 0;
+}
+#ok input:hover {
+  border-color: #09f;
+}
+#ok input:first-child {
+  margin-right: 30px;
+}
+#ok input:last-child {
+  margin-left: 30px;
+}
 
 #woi {
   width: 100%;
   height: 50vh;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.5em; }
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  font-size: 1.5em;
+}
 
 #woitxt {
-  transition: ease 300ms; }
+  transition: ease 300ms;
+}
 
 #inspirate {
   font-size: 10px;
   text-align: right;
-  margin-top: -16px; }
+  margin-top: -16px;
+}
 
 @media(max-width:1024px) {
   p, label, input {
-    font-size: 2em; }
+    font-size: 2em;
+  }
 
   input[type="range"] {
-    font-size: 1.6em; }
+    font-size: 1.6em;
+  }
+
+  .settings > div:not(:last-child) {
+    margin-bottom: 25px;
+  }
 
   #woi {
-    font-size: 3em; } }
+    font-size: 3em;
+  }
+
+  #stop input {
+    -webkit-transform: scale(2.5);
+        -ms-transform: scale(2.5);
+            transform: scale(2.5);
+    margin: 10px 0 5px 15px;
+  }
+  #stop label {
+    padding-top: 0;
+  }
+}
 
 /*# sourceMappingURL=style.css.map */

@@ -5,7 +5,7 @@ WOI = delay = wait = stop = null;
 words = [];
 
 stopfun = function() {
-  return inTimer.prototype.stopping(timerId);
+  return WOI.stopping();
 };
 
 start = function() {
@@ -25,11 +25,13 @@ start = function() {
 };
 
 $(document).ready(function() {
+  var inpsirated;
   $('#delay div:first-child p:last-child').html($('#delay div:first-child input').val());
   $('#delay div:last-child p:last-child').html($('#delay div:last-child input').val());
   $('#wait div:first-child p:last-child').html($('#wait div:first-child input').val());
   $('#wait div:last-child p:last-child').html($('#wait div:last-child input').val());
-  return start();
+  start();
+  return inpsirated = new WordsOutIn(document.getElementById("inspirate"), ['Inspirated my friend and npmjs.org'], 200, 0, 'black', true);
 });
 
 $('#stopbtn').click(function() {
@@ -48,3 +50,5 @@ $('#delay input').change(function() {
 $('#wait input').change(function() {
   return $(this).parent().find('p:last-child').html($(this).val());
 });
+
+//# sourceMappingURL=app.js.map

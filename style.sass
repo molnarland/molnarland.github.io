@@ -1,4 +1,11 @@
 $trans: 1s ease
+$gray: #eee
+$darker-gray: #ddd
+$blue: #09f
+$ligher-blue: #e5f5ff
+
+*
+	transition: $trans
 
 body
 	font-size: 15px
@@ -6,8 +13,12 @@ body
 p, label, input
 	font-size: 1em
 
+input
+	background: $gray
+
 input[type="range"]
 	font-size: 0.8em
+	background: inherit
 
 p, input[type="range"], label
 	margin: 0
@@ -17,21 +28,22 @@ input[type="text"], input[type="button"]
 	border-radius: 10px
 	padding: 5px
 	border: 2px solid #fff
-	transition: $trans
+	// transition: $trans
 	&:hover
-		border-color: #09f
-		transition: $trans
-
-input[type="button"]:active
-	border-color: #09f
-	transition: $trans
-
-input[type="text"]:focus
-	background: #e5f5ff
-	transition: $trans
+		border-color: $blue
+		// transition: $trans
+	&:focus, &:active
+		background: $ligher-blue
+		// transition: $trans	
+	
 
 input[type="checkbox"], input[type="button"], label
 	cursor: pointer
+
+p, label
+	&:not(#inspirate)
+		color: $darker-gray
+
 
 //specific
 
@@ -85,8 +97,8 @@ body
 	input
 		margin: 5px 0 5px 8px
 		transform: scale(1.5)
-	p
-		margin: 0
+	label
+		padding-top: 4px
 
 #ok
 	width: 100%
@@ -128,5 +140,15 @@ body
 	input[type="range"]
 		font-size: 1.6em
 
+	.settings > div:not(:last-child)
+		margin-bottom: 25px
+
 	#woi
 		font-size: 3em
+
+	#stop
+		input
+			transform: scale(2.5)
+			margin: 10px 0 5px 15px
+		label
+			padding-top: 0
