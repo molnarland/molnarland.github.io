@@ -9,6 +9,9 @@ $ligher-blue: #e5f5ff
 
 body
 	font-size: 15px
+	display: flex
+	background: #7B7B7B
+	flex-direction: column
 
 p, label, input
 	font-size: 1em
@@ -41,17 +44,61 @@ input[type="checkbox"], input[type="button"], label
 	cursor: pointer
 
 p, label
-	&:not(#inspirate)
-		color: $darker-gray
+	color: $darker-gray
 
 
 //specific
 
-body
-	display: flex
-	background: #7B7B7B
-	flex-direction: column
 
+
+.settings, #description, #download
+	border-radius: 6px
+
+//description and others
+#description, #download
+	margin-bottom: 20px
+
+#project-name, #download
+	text-align: center
+	a
+		text-decoration: none
+
+#description
+	background: #EEE
+	padding: 20px
+
+#project-name
+	margin: 20px 0 
+	a	
+		color: #3B9214
+		font-size: 2.7em
+		&:visited
+			color: #43CF04
+
+#download
+	background: #B9B9B9
+	padding: 10px
+	text-align: center
+	a
+		&:first-child
+			margin-right: 50px
+		&:last-child
+			margin-left: 50px
+
+
+
+
+
+#proposer
+	color: #4A4A4A
+	font-size: 2.2em
+	width: 50vw
+	margin: 0 auto
+	text-align: center
+
+
+
+//program
 .settings
 	background: #454545
 	width: calc(100% - 20px)

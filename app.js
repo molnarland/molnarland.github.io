@@ -51,4 +51,4 @@ $('#wait input').change(function() {
   return $(this).parent().find('p:last-child').html($(this).val());
 });
 
-//# sourceMappingURL=app.js.map
+//# sourceMappingURL=app.map

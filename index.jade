@@ -5,7 +5,7 @@ html
 		script(type="text/javascript" src="jscolor.min.js")
 		script(type="text/javascript" src="jquery-2.1.4.min.js")
 		link(href="style.css" type="text/css" rel="stylesheet")
-		title Words Out In - Simulate 
+		title wordsOutInJS 
 		meta(charset="utf8")
 		meta(name="description" content="Words Out In is an simple free TypeScript so words or word write as you type. You can add delay in between characters and wait in between words and words' colors. And if you does not want that typing at last word then just you can add the false value to last parameter.")
 		meta(name="keywords" content="type,script,js,javascript,words out in,simulate type,vanilla javascript, vanilla js")
@@ -14,8 +14,18 @@ html
 		meta(name="author" content="rrmolnar@gmail.com")
 		meta(name="generator" content="Molnar Roland")
 	body
-		//-#description
-			h3 Words Out In is a simulates typing with vanilla JavaScript. No jQuery or others. Really easy to use, few lines. Working in mobile and desktop.
+		//- #description
+			p#project-name
+				a(href="https://github.com/molnarland/wordsOutInJS") wordsOutInJS
+			p#proposer Words Out In is a simulates typing with vanilla JavaScript.
+				br 
+				u No jQuery
+				|  or others. Really easy to use, few lines. 
+				br
+				| Working in mobile and desktop.
+		//- #download
+			a(href="https://github.com/molnarland/wordsOutInJS/archive/master.zip") Download
+			a(href="https://github.com/molnarland/wordsOutInJS#readme") Readme
 		.settings
 			#words
 				input(type="text" placeholder="Words with '|' between")
