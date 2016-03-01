@@ -196,9 +196,6 @@ p, label
 	input[type="range"]
 		font-size: 1.6em
 
-	#download a
-		font-size: 20px
-
 	.settings > div:not(:last-child)
 		margin-bottom: 25px
 
@@ -211,3 +208,9 @@ p, label
 			margin: 10px 0 5px 15px
 		label
 			padding-top: 0
+
+@media(max-width:800px)
+	#download a
+		font-size: 20px
+		&:hover
+			font-size: 17px
