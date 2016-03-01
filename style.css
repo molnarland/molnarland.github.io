@@ -21,8 +21,10 @@ p, input[type="range"], label {
   margin: 0;
   line-height: 1; }
 
+input[type="text"], input[type="button"], a.btn {
+  border-radius: 10px; }
+
 input[type="text"], input[type="button"] {
-  border-radius: 10px;
   padding: 5px;
   border: 2px solid #fff; }
   input[type="text"]:hover, input[type="button"]:hover {
@@ -47,30 +49,44 @@ p, label {
   #project-name a, #download a {
     text-decoration: none; }
 
+#proposer, #project-name {
+  font-weight: normal; }
+
 #description {
-  background: #EEE;
+  background: #DDD;
   padding: 20px; }
 
 #project-name {
   margin: 20px 0; }
   #project-name a {
     color: #3B9214;
-    font-size: 2.7em; }
+    font-size: 45px; }
     #project-name a:visited {
       color: #43CF04; }
 
 #download {
   background: #B9B9B9;
-  padding: 10px;
+  padding: 20px;
   text-align: center; }
-  #download a:first-child {
-    margin-right: 50px; }
-  #download a:last-child {
-    margin-left: 50px; }
+  #download a {
+    color: #DCDCDC;
+    font-size: 25px;
+    background: #08AB04;
+    padding: 5px 20px; }
+    #download a:hover {
+      padding: 10px 30px;
+      font-size: 28px; }
+    #download a:first-child {
+      margin-right: 50px;
+      transition: rotate(0deg); }
+      #download a:first-child:hover {
+        transition: rotate(180deg); }
+    #download a:last-child {
+      margin-left: 50px; }
 
 #proposer {
   color: #4A4A4A;
-  font-size: 2.2em;
+  font-size: 33px;
   width: 50vw;
   margin: 0 auto;
   text-align: center; }
