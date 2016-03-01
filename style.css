@@ -77,10 +77,7 @@ p, label {
       padding: 10px 30px;
       font-size: 28px; }
     #download a:first-child {
-      margin-right: 50px;
-      transition: rotate(0deg); }
-      #download a:first-child:hover {
-        transition: rotate(180deg); }
+      margin-right: 50px; }
     #download a:last-child {
       margin-left: 50px; }
 
