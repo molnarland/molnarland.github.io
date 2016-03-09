@@ -39,7 +39,8 @@ p, label {
   color: #ddd; }
 
 .settings, #description, #download {
-  border-radius: 6px; }
+  border-radius: 6px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25); }
 
 #description, #download {
   margin-bottom: 20px; }
@@ -67,6 +68,7 @@ p, label {
 #download {
   background: #B9B9B9;
   padding: 20px;
+  max-height: 31px;
   text-align: center; }
   #download a {
     color: #DCDCDC;
@@ -75,7 +77,8 @@ p, label {
     padding: 5px 20px; }
     #download a:hover {
       padding: 10px 30px;
-      font-size: 28px; }
+      font-size: 28px;
+      box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.12), 0 8px 8px 0 rgba(0, 0, 0, 0.24); }
     #download a:first-child {
       margin-right: 50px; }
     #download a:last-child {

@@ -48,10 +48,9 @@ input[type="checkbox"], input[type="button"], label
 p, label
 	color: $darker-gray
 
-
-
 .settings, #description, #download
 	border-radius: 6px
+	box-shadow: 0 3px 8px rgba(0,0,0,0.25)
 
 //description and others
 #description, #download
@@ -80,6 +79,7 @@ p, label
 #download
 	background: #B9B9B9
 	padding: 20px
+	max-height: 31px
 	text-align: center
 	a
 		color: #DCDCDC 
@@ -89,6 +89,7 @@ p, label
 		&:hover
 			padding: 10px 30px
 			font-size: 28px
+			box-shadow: 0 0 8px 0 rgba(0,0,0,0.12),0 8px 8px 0 rgba(0,0,0,0.24)
 		&:first-child
 			margin-right: 50px
 		&:last-child
@@ -101,8 +102,8 @@ p, label
 	margin: 0 auto
 	text-align: center
 
-
-
+//box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+//box-shadow: 0 0 8px 0 rgba(0,0,0,0.12),0 8px 8px 0 rgba(0,0,0,0.24);
 
 //program
 .settings
