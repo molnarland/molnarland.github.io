@@ -1,65 +1,196 @@
-/*
-Error: Undefined variable: "$darker-settings".
-        on line 49 of D:\Users\molnarro\Documents\GitHub\molnarland.github.io\style.sass
+* {
+  transition: 1s ease; }
 
-44: 
-45: input[type="checkbox"], input[type="button"], label
-46: 	cursor: pointer
-47: 
-48: p, label
-49: 	color: $darker-settings
-50: 
-51: .gray, #description, #download
-52: 	border-radius: 6px
-53: 	box-shadow: 0 3px 8px rgba(0,0,0,0.25)
-54: 
+body {
+  font-size: 15px;
+  display: flex;
+  background: #7B7B7B;
+  flex-direction: column; }
 
-Backtrace:
-D:\Users\molnarro\Documents\GitHub\molnarland.github.io\style.sass:49
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/script/tree/variable.rb:49:in `_perform'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/script/tree/node.rb:50:in `perform'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/tree/visitors/perform.rb:384:in `visit_prop'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/tree/visitors/base.rb:36:in `visit'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/tree/visitors/perform.rb:158:in `block in visit'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/stack.rb:79:in `block in with_base'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/stack.rb:115:in `with_frame'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/stack.rb:79:in `with_base'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/tree/visitors/perform.rb:158:in `visit'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/tree/visitors/perform.rb:420:in `block (2 levels) in visit_rule'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/tree/visitors/perform.rb:420:in `map'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/tree/visitors/perform.rb:420:in `block in visit_rule'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/tree/visitors/perform.rb:179:in `with_environment'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/tree/visitors/perform.rb:418:in `visit_rule'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/tree/visitors/base.rb:36:in `visit'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/tree/visitors/perform.rb:158:in `block in visit'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/stack.rb:79:in `block in with_base'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/stack.rb:115:in `with_frame'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/stack.rb:79:in `with_base'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/tree/visitors/perform.rb:158:in `visit'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/tree/visitors/base.rb:52:in `block in visit_children'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/tree/visitors/base.rb:52:in `map'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/tree/visitors/base.rb:52:in `visit_children'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/tree/visitors/perform.rb:167:in `block in visit_children'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/tree/visitors/perform.rb:179:in `with_environment'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/tree/visitors/perform.rb:166:in `visit_children'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/tree/visitors/base.rb:36:in `block in visit'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/tree/visitors/perform.rb:186:in `visit_root'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/tree/visitors/base.rb:36:in `visit'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/tree/visitors/perform.rb:157:in `visit'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/tree/visitors/perform.rb:8:in `visit'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/tree/root_node.rb:36:in `css_tree'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/tree/root_node.rb:29:in `render_with_sourcemap'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/engine.rb:368:in `_render_with_sourcemap'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/engine.rb:285:in `render_with_sourcemap'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/exec/sass_scss.rb:396:in `run'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/exec/sass_scss.rb:62:in `process_result'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/exec/base.rb:52:in `parse'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/lib/sass/exec/base.rb:19:in `parse!'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.4.9/bin/sass:13:in `<top (required)>'
-C:/Program Files (x86)/Koala/bin/sass:18:in `load'
-C:/Program Files (x86)/Koala/bin/sass:18:in `<main>'
-*/
-body:before {
-  white-space: pre;
-  font-family: monospace;
-  content: "Error: Undefined variable: \"$darker-settings\".\A         on line 49 of D:\Users\molnarro\Documents\GitHub\molnarland.github.io\style.sass\A \A 44: \A 45: input[type=\"checkbox\"], input[type=\"button\"], label\A 46: 	cursor: pointer\A 47: \A 48: p, label\A 49: 	color: $darker-settings\A 50: \A 51: .gray, #description, #download\A 52: 	border-radius: 6px\A 53: 	box-shadow: 0 3px 8px rgba(0,0,0,0.25)\A 54: "; }
+p, label, input {
+  font-size: 1em; }
+
+input {
+  background: #eee; }
+
+input[type="range"] {
+  font-size: 0.8em;
+  background: inherit; }
+
+p, input[type="range"], label {
+  margin: 0;
+  line-height: 1; }
+
+input[type="text"], input[type="button"], a.btn {
+  border-radius: 10px; }
+
+input[type="text"], input[type="button"] {
+  padding: 5px;
+  border: 2px solid #fff; }
+  input[type="text"]:hover, input[type="button"]:hover {
+    border-color: #09f; }
+  input[type="text"]:focus, input[type="text"]:active, input[type="button"]:focus, input[type="button"]:active {
+    background: #e5f5ff; }
+
+input[type="checkbox"], input[type="button"], label {
+  cursor: pointer; }
+
+p, label {
+  color: #ddd; }
+
+.gray, #description, #download {
+  border-radius: 6px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25); }
+
+#description, #download {
+  margin-bottom: 20px; }
+
+#project-name, #download {
+  text-align: center; }
+  #project-name a, #download a {
+    text-decoration: none; }
+
+#proposer, #project-name {
+  font-weight: normal; }
+
+#description {
+  background: #DDD;
+  padding: 20px; }
+
+#project-name {
+  margin: 20px 0; }
+  #project-name a {
+    color: #3B9214;
+    font-size: 45px; }
+    #project-name a:visited {
+      color: #43CF04; }
+
+#download {
+  background: #B9B9B9;
+  padding: 20px;
+  max-height: 31px;
+  text-align: center; }
+  #download a {
+    color: #DCDCDC;
+    font-size: 25px;
+    background: #08AB04;
+    padding: 5px 20px; }
+    #download a:hover {
+      padding: 10px 30px;
+      font-size: 28px;
+      box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.12), 0 8px 8px 0 rgba(0, 0, 0, 0.24); }
+    #download a:first-child {
+      margin-right: 50px; }
+    #download a:last-child {
+      margin-left: 50px; }
+
+#proposer {
+  color: #4A4A4A;
+  font-size: 33px;
+  width: 50vw;
+  margin: 0 auto;
+  text-align: center; }
+
+.settings {
+  background: #454545;
+  width: calc(100% - 20px);
+  padding: 10px;
+  display: flex;
+  flex-direction: column; }
+  .settings > div {
+    margin-bottom: 15px; }
+  .settings > div:first-child {
+    margin-top: 15px; }
+
+#words {
+  width: 100%; }
+  #words input {
+    width: calc(100% - 10px); }
+
+#delay, #wait, #color {
+  width: 100%;
+  display: flex;
+  justify-content: center; }
+  #delay div, #wait div, #color div {
+    width: calc(50% - 10px);
+    display: flex;
+    justify-content: space-between; }
+    #delay div:first-child, #wait div:first-child, #color div:first-child {
+      margin-right: calc(2.5% + 2.5px); }
+    #delay div:last-child, #wait div:last-child, #color div:last-child {
+      margin-left: calc(2.5% + 2.5px); }
+    #delay div input, #wait div input, #color div input {
+      width: 100%;
+      margin-right: 10px;
+      margin-left: 10px; }
+      #delay div input[type="range"], #wait div input[type="range"], #color div input[type="range"] {
+        margin: 7.5px 5px 0 0; }
+    #delay div p:last-child, #wait div p:last-child, #color div p:last-child {
+      margin: 7.5px 0; }
+
+#stop {
+  display: flex;
+  justify-content: center; }
+  #stop input {
+    margin: 5px 0 5px 8px;
+    transform: scale(1.5); }
+  #stop label {
+    padding-top: 4px; }
+
+#ok {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 7.5px; }
+  #ok input {
+    width: 40%;
+    margin: 5px 5px 0; }
+    #ok input:hover {
+      border-color: #09f; }
+    #ok input:first-child {
+      margin-right: 30px; }
+    #ok input:last-child {
+      margin-left: 30px; }
+
+#woi {
+  width: 100%;
+  height: 50vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5em; }
+
+#woitxt {
+  transition: ease 300ms; }
+
+#inspirate {
+  font-size: 10px;
+  text-align: right;
+  margin-top: -16px; }
+
+@media(max-width:1024px) {
+  p, label, input {
+    font-size: 2em; }
+
+  input[type="range"] {
+    font-size: 1.6em; }
+
+  #project-name a {
+    font-size: 60px; }
+
+  #proposer {
+    font-size: 25px; }
+
+  .settings > div:not(:last-child) {
+    margin-bottom: 25px; }
+
+  #woi {
+    font-size: 3em; }
+
+  #stop input {
+    transform: scale(2.5);
+    margin: 10px 0 5px 15px; }
+  #stop label {
+    padding-top: 0; } }
+
+/*# sourceMappingURL=style.css.map */
