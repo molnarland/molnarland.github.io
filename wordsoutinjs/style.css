@@ -38,7 +38,7 @@ input[type="checkbox"], input[type="button"], label {
 p, label {
   color: #ddd; }
 
-.gray, #description, #download {
+.gray, #description, #download, .settings {
   border-radius: 6px;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25); }
 
