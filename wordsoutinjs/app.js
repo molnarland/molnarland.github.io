@@ -39,14 +39,14 @@ codeWrite = function() {
   stop = $('#stop input').is(':checked');
   str = "<span class='purple'>new</span> WordsOutIn<span class='darkerblue'>(</span><span class='ligherblue'>document</span><span class='darkerblue'>.</span><span class='ligherblue'>getElementById</span><span class='darkerblue'>('</span><span class='green'>elem</span><span class='darkerblue'>'), [";
   if (words[0] === '') {
-    str += "'</span><span class='green'>Words with '|' between</span><span class='darkerblue'>',";
+    str += "\"</span><span class='green'>Words with '|' between</span><span class='darkerblue'>\",";
   } else {
     $.each(words, function(index, value) {
-      return str += "'</span><span class='green'>" + value + "</span><span class='darkerblue'>',";
+      return str += "\"</span><span class='green'>" + value + "</span><span class='darkerblue'>\",";
     });
   }
   str = str.substring(0, str.length - 1);
-  str += "], [[</span><span class='brown'>" + startDelay + "</span><span class='darkerblue'>, </span><span class='brown'>" + endDelay + "</span><span class='darkerblue'>]], [[</span><span class='brown'>" + startWait + "</span><span class='darkerblue'>, </span><span class='brown'>" + endWait + "</span><span class='darkerblue'>]], [['</span><span class='green'>" + startColor + "</span><span class='darkerblue'>', '</span><span class='green'>" + endColor + "</span><span class='darkerblue'>']], </span><span class='brown'>" + stop + "</span><span class='darkerblue'>);</span>";
+  str += "], [[</span><span class='brown'>" + startDelay + "</span><span class='darkerblue'>, </span><span class='brown'>" + endDelay + "</span><span class='darkerblue'>]], [[</span><span class='brown'>" + startWait + "</span><span class='darkerblue'>, </span><span class='brown'>" + endWait + "</span><span class='darkerblue'>]], [[\"</span><span class='green'>" + startColor + "</span><span class='darkerblue'>\", \"</span><span class='green'>" + endColor + "</span><span class='darkerblue'>\"]], </span><span class='brown'>" + stop + "</span><span class='darkerblue'>);</span>";
   return $('#code').html(str);
 };
 
