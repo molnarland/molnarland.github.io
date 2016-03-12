@@ -1,8 +1,10 @@
-var WOI, codeWrite, delay, start, stop, stopfun, wait, words;
+var WOI, clipboard, codeWrite, delay, start, stop, stopfun, wait, words;
 
 WOI = delay = wait = stop = null;
 
 words = [];
+
+clipboard = new Clipboard('#copy-button');
 
 stopfun = function() {
   return WOI.stopping();

@@ -2,6 +2,9 @@
 WOI = delay = wait = stop = null
 words = []
 
+#clipboard.js
+clipboard = new Clipboard '#copy-button'
+
 #functions
 stopfun = ->
 	WOI.stopping()
