@@ -40,9 +40,9 @@ codeWrite = ->
 			<span class='ligherblue'>document</span>\
 			<span class='darkerblue'>.</span>\
 			<span class='ligherblue'>getElementById</span>\
-			<span class='darkerblue'>('</span>\
+			<span class='darkerblue'>(\"</span>\
 			<span class='green'>elem</span>\
-			<span class='darkerblue'>'), ["
+			<span class='darkerblue'>\"), ["
 
 	if words[0] == ''
 		str += "\"</span><span class='green'>Words with '|' between</span><span class='darkerblue'>\","
