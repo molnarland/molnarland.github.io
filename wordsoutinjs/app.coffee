@@ -3,10 +3,10 @@ WOI = delay = wait = stop = null
 words = []
 
 #functions
-stopfun = () ->
+stopfun = ->
 	WOI.stopping()
 
-start = () ->
+start = ->
 	$('#woitxt').html ''
 
 	# words=$('#words input').val().split '|'
@@ -20,6 +20,50 @@ start = () ->
 	stop = $('#stop input').is ':checked'
 
 	WOI = new WordsOutIn document.getElementById("woitxt"), words, delay, wait, color, stop
+	codeWrite()
+
+codeWrite = ->
+	words = $('#words input').val().split('|')
+	startDelay = $('#delay div:first-child input').val()
+	endDelay = $('#delay div:last-child input').val()
+	startWait = $('#wait div:first-child input').val()
+	endWait = $('#wait div:last-child input').val()
+	startColor = $('#color div:first-child input').val()
+	endColor = $('#color div:last-child input').val()
+	stop = $('#stop input').is(':checked')
+
+	str = "<span class='purple'>new</span> WordsOutIn\
+			<span class='darkerblue'>(</span>\
+			<span class='ligherblue'>document</span>\
+			<span class='darkerblue'>.</span>\
+			<span class='ligherblue'>getElementById</span>\
+			<span class='darkerblue'>('</span>\
+			<span class='green'>elem</span>\
+			<span class='darkerblue'>'), ["
+
+	if words[0] == ''
+		str += "'</span><span class='green'>Words with '|' between</span><span class='darkerblue'>',"
+	else
+		$.each words, (index, value) ->
+			str += "'</span><span class='green'>#{value}</span><span class='darkerblue'>',"
+
+	str = str.substring 0, str.length - 1
+	str += "], [</span><span class='brown'>#{startDelay}</span>\
+						<span class='darkerblue'>, </span>\
+						<span class='brown'>#{endDelay}</span>\
+						<span class='darkerblue'>], [</span>\
+						<span class='brown'>#{startWait}</span>\
+						<span class='darkerblue'>, </span>\
+						<span class='brown'>#{endWait}</span>\
+						<span class='darkerblue'>], ['</span>\
+						<span class='green'>#{startColor}</span>\
+						<span class='darkerblue'>', '</span>\
+						<span class='green'>#{endColor}</span>\
+						<span class='darkerblue'>'], </span>\
+						<span class='brown'>#{stop}</span>\
+						<span class='darkerblue'>);</span>"
+
+	$('#code').html(str)
 
 #start with jquery
 $(document).ready ->
@@ -47,3 +91,8 @@ $('#delay input').change ->
 $('#wait input').change ->
 	$(this).parent().find('p:last-child').html $(this).val()
 
+$('.settings input').change ->
+	codeWrite()
+
+$('#words input').keyup ->
+	codeWrite()

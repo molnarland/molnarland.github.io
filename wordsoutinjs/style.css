@@ -1,158 +1,230 @@
 * {
-  transition: 1s ease; }
+  transition: 1s ease;
+}
 
 body {
   font-size: 15px;
   display: flex;
   background: #7B7B7B;
-  flex-direction: column; }
+  flex-direction: column;
+}
 
 p, label, input {
-  font-size: 1em; }
+  font-size: 1em;
+}
 
 input {
-  background: #eee; }
+  background: #eee;
+}
 
 input[type="range"] {
   font-size: 0.8em;
-  background: inherit; }
+  background: inherit;
+}
 
 p, input[type="range"], label {
   margin: 0;
-  line-height: 1; }
+  line-height: 1;
+}
 
 input[type="text"], input[type="button"], a.btn {
-  border-radius: 10px; }
+  border-radius: 10px;
+}
 
 input[type="text"], input[type="button"] {
   padding: 5px;
-  border: 2px solid #fff; }
-  input[type="text"]:hover, input[type="button"]:hover {
-    border-color: #09f; }
-  input[type="text"]:focus, input[type="text"]:active, input[type="button"]:focus, input[type="button"]:active {
-    background: #e5f5ff; }
+  border: 2px solid #fff;
+}
+
+input[type="text"]:hover, input[type="button"]:hover {
+  border-color: #09f;
+}
+
+input[type="text"]:focus, input[type="text"]:active, input[type="button"]:focus, input[type="button"]:active {
+  background: #e5f5ff;
+}
 
 input[type="checkbox"], input[type="button"], label {
-  cursor: pointer; }
+  cursor: pointer;
+}
 
 p, label {
-  color: #ddd; }
+  color: #ddd;
+}
 
 .gray, #description, #download, .settings, #generated-code {
-  border-radius: 6px; }
+  border-radius: 6px;
+}
 
 .gray, #description, #download, .settings {
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25); }
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+}
 
 #description, #download, #generated-code {
-  margin-bottom: 20px; }
+  margin-bottom: 20px;
+}
 
 #project-name, #download {
-  text-align: center; }
-  #project-name a, #download a {
-    text-decoration: none; }
+  text-align: center;
+}
+
+#project-name a, #download a {
+  text-decoration: none;
+}
 
 #proposer, #project-name {
-  font-weight: normal; }
+  font-weight: normal;
+}
 
 #description {
   background: #DDD;
-  padding: 20px; }
+  padding: 20px;
+}
 
 #project-name {
-  margin: 20px 0; }
-  #project-name a {
-    color: #3B9214;
-    font-size: 45px; }
-    #project-name a:visited {
-      color: #43CF04; }
+  margin: 20px 0;
+}
+
+#project-name a {
+  color: #3B9214;
+  font-size: 45px;
+}
+
+#project-name a:visited {
+  color: #43CF04;
+}
 
 #download {
   background: #B9B9B9;
   padding: 20px;
   max-height: 31px;
-  text-align: center; }
-  #download a {
-    color: #DCDCDC;
-    font-size: 25px;
-    background: #08AB04;
-    padding: 5px 20px; }
-    #download a:hover {
-      padding: 10px 30px;
-      font-size: 28px;
-      box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.12), 0 8px 8px 0 rgba(0, 0, 0, 0.24); }
-    #download a:first-child {
-      margin-right: 50px; }
-    #download a:last-child {
-      margin-left: 50px; }
+  text-align: center;
+}
+
+#download a {
+  color: #DCDCDC;
+  font-size: 25px;
+  background: #08AB04;
+  padding: 5px 20px;
+}
+
+#download a:hover {
+  padding: 10px 30px;
+  font-size: 28px;
+  box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.12), 0 8px 8px 0 rgba(0, 0, 0, 0.24);
+}
+
+#download a:first-child {
+  margin-right: 50px;
+}
+
+#download a:last-child {
+  margin-left: 50px;
+}
 
 #proposer {
   color: #4A4A4A;
   font-size: 33px;
   width: 50vw;
   margin: 0 auto;
-  text-align: center; }
+  text-align: center;
+}
 
 .settings {
   background: #454545;
   width: calc(100% - 20px);
   padding: 10px;
   display: flex;
-  flex-direction: column; }
-  .settings > div {
-    margin-bottom: 15px; }
-  .settings > div:first-child {
-    margin-top: 15px; }
+  flex-direction: column;
+}
+
+.settings > div {
+  margin-bottom: 15px;
+}
+
+.settings > div:first-child {
+  margin-top: 15px;
+}
 
 #words {
-  width: 100%; }
-  #words input {
-    width: calc(100% - 10px); }
+  width: 100%;
+}
+
+#words input {
+  width: calc(100% - 10px);
+}
 
 #delay, #wait, #color {
   width: 100%;
   display: flex;
-  justify-content: center; }
-  #delay div, #wait div, #color div {
-    width: calc(50% - 10px);
-    display: flex;
-    justify-content: space-between; }
-    #delay div:first-child, #wait div:first-child, #color div:first-child {
-      margin-right: calc(2.5% + 2.5px); }
-    #delay div:last-child, #wait div:last-child, #color div:last-child {
-      margin-left: calc(2.5% + 2.5px); }
-    #delay div input, #wait div input, #color div input {
-      width: 100%;
-      margin-right: 10px;
-      margin-left: 10px; }
-      #delay div input[type="range"], #wait div input[type="range"], #color div input[type="range"] {
-        margin: 7.5px 5px 0 0; }
-    #delay div p:last-child, #wait div p:last-child, #color div p:last-child {
-      margin: 7.5px 0; }
+  justify-content: center;
+}
+
+#delay div, #wait div, #color div {
+  width: calc(50% - 10px);
+  display: flex;
+  justify-content: space-between;
+}
+
+#delay div:first-child, #wait div:first-child, #color div:first-child {
+  margin-right: calc(2.5% + 2.5px);
+}
+
+#delay div:last-child, #wait div:last-child, #color div:last-child {
+  margin-left: calc(2.5% + 2.5px);
+}
+
+#delay div input, #wait div input, #color div input {
+  width: 100%;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+#delay div input[type="range"], #wait div input[type="range"], #color div input[type="range"] {
+  margin: 7.5px 5px 0 0;
+}
+
+#delay div p:last-child, #wait div p:last-child, #color div p:last-child {
+  margin: 7.5px 0;
+}
 
 #stop {
   display: flex;
-  justify-content: center; }
-  #stop input {
-    margin: 5px 0 5px 8px;
-    transform: scale(1.5); }
-  #stop label {
-    padding-top: 4px; }
+  justify-content: center;
+}
+
+#stop input {
+  margin: 5px 0 5px 8px;
+  transform: scale(1.5);
+}
+
+#stop label {
+  padding-top: 4px;
+}
 
 #ok {
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-top: 7.5px; }
-  #ok input {
-    width: 40%;
-    margin: 5px 5px 0; }
-    #ok input:hover {
-      border-color: #09f; }
-    #ok input:first-child {
-      margin-right: 30px; }
-    #ok input:last-child {
-      margin-left: 30px; }
+  margin-top: 7.5px;
+}
+
+#ok input {
+  width: 40%;
+  margin: 5px 5px 0;
+}
+
+#ok input:hover {
+  border-color: #09f;
+}
+
+#ok input:first-child {
+  margin-right: 30px;
+}
+
+#ok input:last-child {
+  margin-left: 30px;
+}
 
 #woi {
   width: 100%;
@@ -160,84 +232,99 @@ p, label {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.5em; }
+  font-size: 1.5em;
+}
 
 #woitxt {
-  transition: ease 300ms; }
+  transition: ease 300ms;
+}
 
 #generated-code {
   width: 100%;
   height: 100px;
   background: #263238;
   color: #ddd;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25) inset;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5) inset;
   display: flex;
   align-items: center;
-  justify-content: center; }
+  justify-content: center;
+}
 
 #code {
-  font-size: 2em; }
+  font-size: 1em;
+  margin: 10px;
+}
 
 .purple {
-  color: #B393D8; }
+  color: #B393D8;
+}
 
 .ligherblue {
-  color: #46D0E1; }
+  color: #46D0E1;
+}
 
 .darkerblue {
-  color: #5C7D85; }
+  color: #5C7D85;
+}
 
 .green {
-  color: #AEBB57; }
+  color: #AEBB57;
+}
 
 .brown {
-  color: #bf360c; }
+  color: #bf360c;
+}
 
 .arrow_box {
   position: relative;
-  background: #08AB04; }
-  .arrow_box:after {
-    top: 100%;
-    left: 50%;
-    border: solid transparent;
-    content: " ";
-    height: 0;
-    width: 0;
-    position: absolute;
-    pointer-events: none;
-    border-color: rgba(8, 171, 4, 0);
-    border-top-color: #08AB04;
-    border-width: 60px;
-    margin-left: -60px; }
+  background: #08AB04;
+}
+
+.arrow_box:after {
+  top: 100%;
+  left: 50%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+  border-color: rgba(8, 171, 4, 0);
+  border-top-color: #08AB04;
+  border-width: 60px;
+  margin-left: -60px;
+}
 
 #inspirate {
   font-size: 10px;
   text-align: right;
-  margin-top: -16px; }
+  margin-top: -10px;
+}
 
-@media(max-width:1024px) {
+@media (max-width: 1024px) {
   p, label, input {
-    font-size: 2em; }
-
+    font-size: 2em;
+  }
   input[type="range"] {
-    font-size: 1.6em; }
-
+    font-size: 1.6em;
+  }
   #project-name a {
-    font-size: 60px; }
-
+    font-size: 60px;
+  }
   #proposer {
-    font-size: 25px; }
-
+    font-size: 25px;
+  }
   .settings > div:not(:last-child) {
-    margin-bottom: 25px; }
-
+    margin-bottom: 25px;
+  }
   #woi {
-    font-size: 3em; }
-
+    font-size: 3em;
+  }
   #stop input {
     transform: scale(2.5);
-    margin: 10px 0 5px 15px; }
+    margin: 10px 0 5px 15px;
+  }
   #stop label {
-    padding-top: 0; } }
-
-/*# sourceMappingURL=style.css.map */
+    padding-top: 0;
+  }
+}

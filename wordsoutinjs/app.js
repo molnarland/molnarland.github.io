@@ -1,4 +1,4 @@
-var WOI, delay, start, stop, stopfun, wait, words;
+var WOI, codeWrite, delay, start, stop, stopfun, wait, words;
 
 WOI = delay = wait = stop = null;
 
@@ -21,7 +21,31 @@ start = function() {
   wait = [[parseInt($('#wait div:first-child input').val()), parseInt($('#wait div:last-child input').val())]];
   color = [[$('#color div:first-child input').val(), $('#color div:last-child input').val()]];
   stop = $('#stop input').is(':checked');
-  return WOI = new WordsOutIn(document.getElementById("woitxt"), words, delay, wait, color, stop);
+  WOI = new WordsOutIn(document.getElementById("woitxt"), words, delay, wait, color, stop);
+  return codeWrite();
+};
+
+codeWrite = function() {
+  var endColor, endDelay, endWait, startColor, startDelay, startWait, str;
+  words = $('#words input').val().split('|');
+  startDelay = $('#delay div:first-child input').val();
+  endDelay = $('#delay div:last-child input').val();
+  startWait = $('#wait div:first-child input').val();
+  endWait = $('#wait div:last-child input').val();
+  startColor = $('#color div:first-child input').val();
+  endColor = $('#color div:last-child input').val();
+  stop = $('#stop input').is(':checked');
+  str = "<span class='purple'>new</span> WordsOutIn<span class='darkerblue'>(</span><span class='ligherblue'>document</span><span class='darkerblue'>.</span><span class='ligherblue'>getElementById</span><span class='darkerblue'>('</span><span class='green'>elem</span><span class='darkerblue'>'), [";
+  if (words[0] === '') {
+    str += "'</span><span class='green'>Words with '|' between</span><span class='darkerblue'>',";
+  } else {
+    $.each(words, function(index, value) {
+      return str += "'</span><span class='green'>" + value + "</span><span class='darkerblue'>',";
+    });
+  }
+  str = str.substring(0, str.length - 1);
+  str += "], [</span><span class='brown'>" + startDelay + "</span><span class='darkerblue'>, </span><span class='brown'>" + endDelay + "</span><span class='darkerblue'>], [</span><span class='brown'>" + startWait + "</span><span class='darkerblue'>, </span><span class='brown'>" + endWait + "</span><span class='darkerblue'>], ['</span><span class='green'>" + startColor + "</span><span class='darkerblue'>', '</span><span class='green'>" + endColor + "</span><span class='darkerblue'>'], </span><span class='brown'>" + stop + "</span><span class='darkerblue'>);</span>";
+  return $('#code').html(str);
 };
 
 $(document).ready(function() {
@@ -51,4 +75,11 @@ $('#wait input').change(function() {
   return $(this).parent().find('p:last-child').html($(this).val());
 });
 
-//# sourceMappingURL=app.map
+$('.settings input').change(function() {
+  return codeWrite();
+});
+
+$('#words input').keyup(function() {
+  return codeWrite();
+});
+
