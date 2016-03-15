@@ -25,6 +25,8 @@ html
 				| Working in mobile and desktop.
 		#download
 			a(href="https://github.com/molnarland/wordsOutInJS/archive/master.zip").btn Download
+			#arrow
+				include nyil.svg
 			a(href="https://github.com/molnarland/wordsOutInJS#readme" target="_blank").btn Readme
 		.settings
 			#words
@@ -54,9 +56,14 @@ html
 				div
 					label(for="secondcolor") End color:
 					input(type="text" class="jscolor {hash:true}" value="040AAB")#secondcolor
-			#stop
-				label(for="stopCheck") Stop in the end:
-				input(type="checkbox")#stopCheck
+
+			#retype-stop
+				#retype
+					label(for="retypeCheck") Retype all words:	
+					input(type="checkbox")#retypeCheck
+				#stop
+					label(for="stopCheck") Stop in the end:
+					input(type="checkbox")#stopCheck
 			#ok
 				input(type="button" value="Start")#startbtn
 				input(type="button" value="Stop")#stopbtn

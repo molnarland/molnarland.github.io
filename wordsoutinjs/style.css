@@ -4,9 +4,13 @@
 
 body {
   font-size: 15px;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   background: #7B7B7B;
-  flex-direction: column;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
 }
 
 p, label, input {
@@ -97,8 +101,16 @@ p, label {
 #download {
   background: #B9B9B9;
   padding: 20px;
-  max-height: 31px;
-  text-align: center;
+  height: 48px;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-align-items: flex-start;
+      -ms-flex-align: start;
+          align-items: flex-start;
 }
 
 #download a {
@@ -122,6 +134,65 @@ p, label {
   margin-left: 50px;
 }
 
+#arrow {
+  width: 100px;
+  margin-top: 0;
+  cursor: pointer;
+}
+
+#arrow:hover {
+  -webkit-animation: arrow-bounce 1s ease;
+          animation: arrow-bounce 1s ease;
+}
+
+@-webkit-keyframes arrow-bounce {
+  0% {
+    margin-top: 0;
+  }
+  30% {
+    margin-top: 8px;
+  }
+  40% {
+    margin-top: 0;
+  }
+  60% {
+    margin-top: 6px;
+  }
+  70% {
+    margin-top: 0;
+  }
+  90% {
+    margin-top: 3px;
+  }
+  100% {
+    margin-top: 0;
+  }
+}
+
+@keyframes arrow-bounce {
+  0% {
+    margin-top: 0;
+  }
+  30% {
+    margin-top: 8px;
+  }
+  40% {
+    margin-top: 0;
+  }
+  60% {
+    margin-top: 6px;
+  }
+  70% {
+    margin-top: 0;
+  }
+  90% {
+    margin-top: 3px;
+  }
+  100% {
+    margin-top: 0;
+  }
+}
+
 #proposer {
   color: #4A4A4A;
   font-size: 33px;
@@ -134,8 +205,12 @@ p, label {
   background: #454545;
   width: calc(100% - 20px);
   padding: 10px;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
 }
 
 .settings > div {
@@ -156,14 +231,22 @@ p, label {
 
 #delay, #wait, #color {
   width: 100%;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
 
 #delay div, #wait div, #color div {
   width: calc(50% - 10px);
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: space-between;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
 }
 
 #delay div:first-child, #wait div:first-child, #color div:first-child {
@@ -188,24 +271,34 @@ p, label {
   margin: 7.5px 0;
 }
 
-#stop {
+#retype-stop {
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: center;
+  -webkit-justify-content: space-around;
+      -ms-flex-pack: distribute;
+          justify-content: space-around;
 }
 
-#stop input {
+#retype-stop input {
   margin: 5px 0 5px 8px;
-  transform: scale(1.5);
+  -webkit-transform: scale(1.5);
+      -ms-transform: scale(1.5);
+          transform: scale(1.5);
 }
 
-#stop label {
+#retype-stop label {
   padding-top: 4px;
 }
 
 #ok {
   width: 100%;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   margin-top: 7.5px;
 }
 
@@ -229,9 +322,15 @@ p, label {
 #woi {
   width: 100%;
   height: 50vh;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
   font-size: 1.5em;
 }
 
@@ -246,9 +345,15 @@ p, label {
   background: #263238;
   color: #ddd;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5) inset;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
 
 #copy-button {
@@ -290,26 +395,6 @@ p, label {
   color: #bf360c;
 }
 
-.arrow_box {
-  position: relative;
-  background: #08AB04;
-}
-
-.arrow_box:after {
-  top: 100%;
-  left: 50%;
-  border: solid transparent;
-  content: " ";
-  height: 0;
-  width: 0;
-  position: absolute;
-  pointer-events: none;
-  border-color: rgba(8, 171, 4, 0);
-  border-top-color: #08AB04;
-  border-width: 60px;
-  margin-left: -60px;
-}
-
 #inspirate {
   font-size: 10px;
   text-align: right;
@@ -335,11 +420,18 @@ p, label {
   #woi {
     font-size: 3em;
   }
+  #code {
+    font-size: 0.8em;
+  }
   #stop input {
-    transform: scale(2.5);
+    -webkit-transform: scale(2.5);
+        -ms-transform: scale(2.5);
+            transform: scale(2.5);
     margin: 10px 0 5px 15px;
   }
   #stop label {
     padding-top: 0;
   }
 }
+
+/*# sourceMappingURL=style.css.map */

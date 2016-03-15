@@ -20,20 +20,22 @@ start = ->
 	delay = [[parseInt($('#delay div:first-child input').val()), parseInt($('#delay div:last-child input').val())]]
 	wait = [[parseInt($('#wait div:first-child input').val()), parseInt($('#wait div:last-child input').val())]]
 	color = [[$('#color div:first-child input').val(), $('#color div:last-child input').val()]]
+	retype = $('#retype input').is ':checked'
 	stop = $('#stop input').is ':checked'
 
-	WOI = new WordsOutIn document.getElementById("woitxt"), words, delay, wait, color, stop
+	WOI = new WordsOutIn document.getElementById("woitxt"), words, delay, wait, color, retype, stop
 	codeWrite()
 
 codeWrite = ->
-	words = $('#words input').val().split('|')
+	words = $('#words input').val().split '|'
 	startDelay = $('#delay div:first-child input').val()
 	endDelay = $('#delay div:last-child input').val()
 	startWait = $('#wait div:first-child input').val()
 	endWait = $('#wait div:last-child input').val()
 	startColor = $('#color div:first-child input').val()
 	endColor = $('#color div:last-child input').val()
-	stop = $('#stop input').is(':checked')
+	retype = $('#retype input').is ':checked'
+	stop = $('#stop input').is ':checked'
 
 	str = "<span class='purple'>new</span> WordsOutIn\
 			<span class='darkerblue'>(</span>\
@@ -63,6 +65,8 @@ codeWrite = ->
 						<span class='darkerblue'>\", \"</span>\
 						<span class='green'>#{endColor}</span>\
 						<span class='darkerblue'>\"]], </span>\
+						<span class='brown'>#{retype}</span>\
+						<span class='darkerblue'>, </span>\
 						<span class='brown'>#{stop}</span>\
 						<span class='darkerblue'>);</span>"
 
@@ -78,7 +82,7 @@ $(document).ready ->
 	
 	start()
 
-	inpsirated = new WordsOutIn document.getElementById("inspirate"), ['Inspirated my friend and npmjs.org'], 200, 0, 'black', true
+	inpsirated = new WordsOutIn document.getElementById("inspirate"), ['Inspirated my friend and npmjs.org'], 200, 0, 'black', false, true
 
 
 $('#stopbtn').click ->
@@ -99,3 +103,8 @@ $('.settings input').change ->
 
 $('#words input').keyup ->
 	codeWrite()
+
+$('#arrow').click ->
+	$('html, body').animate {
+		scrollTop: $('#woi').offset().top
+	}, 'slow'
