@@ -140,59 +140,6 @@ p, label {
   cursor: pointer;
 }
 
-#arrow:hover {
-  -webkit-animation: arrow-bounce 1s ease;
-          animation: arrow-bounce 1s ease;
-}
-
-@-webkit-keyframes arrow-bounce {
-  0% {
-    margin-top: 0;
-  }
-  30% {
-    margin-top: 8px;
-  }
-  40% {
-    margin-top: 0;
-  }
-  60% {
-    margin-top: 6px;
-  }
-  70% {
-    margin-top: 0;
-  }
-  90% {
-    margin-top: 3px;
-  }
-  100% {
-    margin-top: 0;
-  }
-}
-
-@keyframes arrow-bounce {
-  0% {
-    margin-top: 0;
-  }
-  30% {
-    margin-top: 8px;
-  }
-  40% {
-    margin-top: 0;
-  }
-  60% {
-    margin-top: 6px;
-  }
-  70% {
-    margin-top: 0;
-  }
-  90% {
-    margin-top: 3px;
-  }
-  100% {
-    margin-top: 0;
-  }
-}
-
 #proposer {
   color: #4A4A4A;
   font-size: 33px;
