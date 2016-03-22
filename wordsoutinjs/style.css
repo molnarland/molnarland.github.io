@@ -140,6 +140,10 @@ p, label {
   cursor: pointer;
 }
 
+#arrow :hover {
+  margin-top: 15px;
+}
+
 #proposer {
   color: #4A4A4A;
   font-size: 33px;
