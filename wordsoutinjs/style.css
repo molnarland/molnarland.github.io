@@ -48,12 +48,26 @@ input[type="text"]:focus, input[type="text"]:active, input[type="button"]:focus,
   background: #e5f5ff;
 }
 
-input[type="checkbox"], input[type="button"], label {
+input[type="checkbox"], input[type="button"], label, .arrow-back, #arrow {
   cursor: pointer;
 }
 
 p, label {
   color: #ddd;
+}
+
+.arrow-back {
+  width: 40px;
+  height: 40px;
+  color: #08AB04;
+  background: #B9B9B9;
+  text-align: center;
+  line-height: 50px;
+  border-radius: 50%;
+}
+
+.arrow-back :hover {
+  margin-right: 10px;
 }
 
 .gray, #description, #download, .settings, #generated-code {
@@ -76,10 +90,6 @@ p, label {
   text-decoration: none;
 }
 
-#proposer, #project-name {
-  font-weight: normal;
-}
-
 #description {
   background: #DDD;
   padding: 20px;
@@ -90,12 +100,16 @@ p, label {
 }
 
 #project-name a {
-  color: #3B9214;
+  color: #08AB04;
   font-size: 45px;
 }
 
 #project-name a:visited {
   color: #43CF04;
+}
+
+#proposer {
+  font-weight: normal;
 }
 
 #download {
@@ -137,7 +151,6 @@ p, label {
 #arrow {
   width: 100px;
   margin-top: 0;
-  cursor: pointer;
 }
 
 #arrow :hover {

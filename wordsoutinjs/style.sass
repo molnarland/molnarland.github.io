@@ -2,6 +2,7 @@ $trans: 1s ease
 $gray: #eee
 $darker-gray: #ddd
 $blue: #09f
+$green: #08AB04
 $ligher-blue: #e5f5ff
 $code-purple: #B393D8
 $code-ligherblue: #46D0E1
@@ -49,11 +50,22 @@ input[type="text"], input[type="button"]
 		// transition: $trans	
 	
 
-input[type="checkbox"], input[type="button"], label
+input[type="checkbox"], input[type="button"], label, .arrow-back, #arrow
 	cursor: pointer
 
 p, label
 	color: $darker-gray
+
+.arrow-back
+	width: 40px
+	height: 40px
+	color: $green
+	background: #B9B9B9
+	text-align: center
+	line-height: 50px
+	border-radius: 50%
+	:hover
+		margin-right: 10px
 
 .gray, #description, #download, .settings, #generated-code
 	border-radius: 6px
@@ -70,20 +82,25 @@ p, label
 	a
 		text-decoration: none
 
-#proposer, #project-name
-	font-weight: normal 
-
 #description
 	background: #DDD
-	padding: 20px
+	padding: 20px		
 
 #project-name
 	margin: 20px 0
+	// font-weight: bold
 	a	
-		color: #3B9214
+		color: $green
 		font-size: 45px
 		&:visited
 			color: #43CF04
+
+#proposer
+	font-weight: normal 
+
+
+
+
 
 #download
 	background: #B9B9B9
@@ -95,7 +112,7 @@ p, label
 	a
 		color: #DCDCDC 
 		font-size: 25px
-		background: #08AB04
+		background: $green
 		padding: 5px 20px
 		&:hover
 			padding: 10px 30px
@@ -109,7 +126,6 @@ p, label
 #arrow
 	width: 100px
 	margin-top: 0
-	cursor: pointer
 	:hover
 		margin-top: 15px
 
