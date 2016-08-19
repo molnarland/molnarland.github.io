@@ -92,5 +92,3 @@ $('#arrow').click(function() {
     scrollTop: $('#woi').offset().top
   }, 'slow');
 });
-
-//# sourceMappingURL=app.js.map
