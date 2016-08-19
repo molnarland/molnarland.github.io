@@ -46,4 +46,4 @@ gulp.task('watch', function () {
 	gulp.watch(paths.scripts, ['coffee']);
 });
 
-gulp.task('default', ['pug', 'sass', 'coffee']);
+gulp.task('default', ['watch', 'pug', 'sass', 'coffee']);
