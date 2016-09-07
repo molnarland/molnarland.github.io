@@ -1,0 +1,15 @@
+{
+  "languages":
+  [
+    {
+      "id": 1,
+      "hu": "Magyar",
+      "en": "Hungarian"
+    },
+    {
+      "id": 2,
+      "hu": "Angol",
+      "en": "English"
+    }
+  ]
+}

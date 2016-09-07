@@ -7,7 +7,11 @@ var gulp = require('gulp'),
 	browserSync = require('browser-sync').create();
 
 var paths = {
-	views: ['./wordsoutinjs/**/*.pug', '*.pug'],
+	views: [
+		'./wordsoutinjs/**/*.pug',
+		'*.pug',
+		'./blog/index.pug'
+	],
 	styles: ['./wordsoutinjs/*.sass'],
 	coffee: ['./wordsoutinjs/*.coffee'],
 	feature_js: ['./blog/src/index.js']
