@@ -1,7 +1,8 @@
 module.exports = {
     entry: "./blog/src/index.js",
     output: {
-        filename: '[name].js'
+        filename: 'main.js',
+        library: 'LanguageModel'
     },
     module: {
         loaders: [

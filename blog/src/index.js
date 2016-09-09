@@ -1,7 +1,4 @@
-import LanguageModel from '../model/LanguageModel';
-import DatabaseController from '../controller/DatabaseController';
+import {LanguageModel, DatabaseController} from './imports';
 
-var dc = new DatabaseController();
-dc.select('languages');
-
-
+var bla = new DatabaseController();
+console.log(bla.select('languages'));

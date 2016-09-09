@@ -1,10 +1,36 @@
+import {LanguageModel} from '../src/imports';
+
 export default class DatabaseController
 {
-    select (from)
+    /**
+     * @param {string} from
+     */
+    select (from, callback)
     {
+        require('../src/helpers').checkType('string', from);
+
+        var modelName;
+
+        switch (from)
+        {
+            case 'languages':
+                modelName = LanguageModel;
+                break;
+            default:
+                return false;
+                break;
+        }
+
         this.loadJSON(from, (response) =>
         {
-            console.log(response);
+            let array = [];
+
+            for (let object of response)
+            {
+                array.push(new modelName(object));
+            }
+
+            return callback(array);
         });
     }
 
@@ -26,4 +52,16 @@ export default class DatabaseController
         };
         xobj.send(null);
     }
-}
+
+    /**
+     * @param {string} from
+     */
+    createClassNameByFrom (from)
+    {
+        let className = from.substring(0, from.length - 1);
+        className = className.charAt(0).toUpperCase() + className.slice(1);
+        className += 'Model';
+
+        return className;
+    }
+};

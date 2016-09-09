@@ -1,3 +1,4 @@
+var home =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -46,7 +47,23 @@
 
 	'use strict';
 	
-	var _LanguageModel = __webpack_require__(1);
+	var _imports = __webpack_require__(1);
+	
+	var bla = new _imports.DatabaseController();
+	console.log(bla.select('languages'));
+
+/***/ },
+/* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.DatabaseController = exports.LanguageModel = undefined;
+	
+	var _LanguageModel = __webpack_require__(2);
 	
 	var _LanguageModel2 = _interopRequireDefault(_LanguageModel);
 	
@@ -56,14 +73,14 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var dc = new _DatabaseController2.default();
-	dc.select('languages');
+	exports.LanguageModel = _LanguageModel2.default;
+	exports.DatabaseController = _DatabaseController2.default;
 
 /***/ },
-/* 1 */
-/***/ function(module, exports, __webpack_require__) {
+/* 2 */
+/***/ function(module, exports) {
 
-	'use strict';
+	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -75,10 +92,10 @@
 	/**
 	 * @param {{id: number, hu: string, en: string}} attributes
 	 */
-	function LanguageModel(attributes) {
-	    _classCallCheck(this, LanguageModel);
+	function LanguageModel() {
+	    var attributes = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 	
-	    __webpack_require__(2).checkSomeTypes(['object', 'number', 'string', 'string'], [attributes, attributes.id, attributes.hu, attributes.en]);
+	    _classCallCheck(this, LanguageModel);
 	
 	    this.id = attributes.id || null;
 	    this.hu = attributes.hu || null;
@@ -88,7 +105,121 @@
 	exports.default = LanguageModel;
 
 /***/ },
-/* 2 */
+/* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _imports = __webpack_require__(1);
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var DatabaseController = function () {
+	    function DatabaseController() {
+	        _classCallCheck(this, DatabaseController);
+	    }
+	
+	    _createClass(DatabaseController, [{
+	        key: 'select',
+	
+	        /**
+	         * @param {string} from
+	         */
+	        value: function select(from, callback) {
+	            __webpack_require__(4).checkType('string', from);
+	
+	            var modelName;
+	
+	            switch (from) {
+	                case 'languages':
+	                    modelName = _imports.LanguageModel;
+	                    break;
+	                default:
+	                    return false;
+	                    break;
+	            }
+	
+	            this.loadJSON(from, function (response) {
+	                var array = [];
+	
+	                var _iteratorNormalCompletion = true;
+	                var _didIteratorError = false;
+	                var _iteratorError = undefined;
+	
+	                try {
+	                    for (var _iterator = response[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	                        var object = _step.value;
+	
+	                        array.push(new modelName(object));
+	                    }
+	                } catch (err) {
+	                    _didIteratorError = true;
+	                    _iteratorError = err;
+	                } finally {
+	                    try {
+	                        if (!_iteratorNormalCompletion && _iterator.return) {
+	                            _iterator.return();
+	                        }
+	                    } finally {
+	                        if (_didIteratorError) {
+	                            throw _iteratorError;
+	                        }
+	                    }
+	                }
+	
+	                return callback(array);
+	            });
+	        }
+	
+	        /**
+	         * @author https://codepen.io/KryptoniteDove/post/load-json-file-locally-using-pure-javascript
+	         * @param {string} filename
+	         * @param {function} callback
+	         */
+	
+	    }, {
+	        key: 'loadJSON',
+	        value: function loadJSON(filename, callback) {
+	            var xobj = new XMLHttpRequest();
+	            xobj.overrideMimeType("application/json");
+	            xobj.open('GET', 'json/' + filename + '.json', true);
+	            xobj.onreadystatechange = function () {
+	                if (xobj.readyState == 4 && xobj.status == "200") {
+	                    callback(JSON.parse(xobj.responseText)[filename]);
+	                }
+	            };
+	            xobj.send(null);
+	        }
+	
+	        /**
+	         * @param {string} from
+	         */
+	
+	    }, {
+	        key: 'createClassNameByFrom',
+	        value: function createClassNameByFrom(from) {
+	            var className = from.substring(0, from.length - 1);
+	            className = className.charAt(0).toUpperCase() + className.slice(1);
+	            className += 'Model';
+	
+	            return className;
+	        }
+	    }]);
+	
+	    return DatabaseController;
+	}();
+	
+	exports.default = DatabaseController;
+	;
+
+/***/ },
+/* 4 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -169,59 +300,6 @@
 	    checkType: checkType,
 	    checkSomeTypes: checkSomeTypes
 	};
-
-/***/ },
-/* 3 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var DatabaseController = function () {
-	    function DatabaseController() {
-	        _classCallCheck(this, DatabaseController);
-	    }
-	
-	    _createClass(DatabaseController, [{
-	        key: "select",
-	        value: function select(from) {
-	            this.loadJSON(from, function (response) {
-	                console.log(response);
-	            });
-	        }
-	
-	        /**
-	         * @author https://codepen.io/KryptoniteDove/post/load-json-file-locally-using-pure-javascript
-	         * @param {string} filename
-	         * @param {function} callback
-	         */
-	
-	    }, {
-	        key: "loadJSON",
-	        value: function loadJSON(filename, callback) {
-	            var xobj = new XMLHttpRequest();
-	            xobj.overrideMimeType("application/json");
-	            xobj.open('GET', "json/" + filename + ".json", true);
-	            xobj.onreadystatechange = function () {
-	                if (xobj.readyState == 4 && xobj.status == "200") {
-	                    callback(JSON.parse(xobj.responseText)[filename]);
-	                }
-	            };
-	            xobj.send(null);
-	        }
-	    }]);
-	
-	    return DatabaseController;
-	}();
-	
-	exports.default = DatabaseController;
 
 /***/ }
 /******/ ]);
