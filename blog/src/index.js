@@ -1,4 +1,10 @@
 import {LanguageModel, DatabaseController} from './imports';
 
 var bla = new DatabaseController();
-console.log(bla.select('languages'));
+bla.select('labels', function (result)
+{
+    console.log(result);
+});
+
+
+

@@ -14,7 +14,7 @@ var paths = {
 	],
 	styles: ['./wordsoutinjs/*.sass'],
 	coffee: ['./wordsoutinjs/*.coffee'],
-	feature_js: ['./blog/src/index.js']
+	feature_js: ['./blog/src/*.js', './blog/model/*.js', './blog/controller/*.js']
 };
 
 var basePath = './',
@@ -65,7 +65,8 @@ gulp.task('webpack', function (done) {
 
 gulp.task('server', ['pug', 'sass', 'coffee', 'webpack'], function () {
 	browserSync.init(['index.html'], {
-		server: './'
+		server: './',
+		open: false
 	});
 
 	watch();

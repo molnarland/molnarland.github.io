@@ -1,8 +1,7 @@
 module.exports = {
     entry: "./blog/src/index.js",
     output: {
-        filename: 'main.js',
-        library: 'LanguageModel'
+        filename: 'main.js'
     },
     module: {
         loaders: [
@@ -13,6 +12,5 @@ module.exports = {
             }
         ]
     },
-    devtool: 'source-map',
-    open: false
+    devtool: 'source-map'
 };
