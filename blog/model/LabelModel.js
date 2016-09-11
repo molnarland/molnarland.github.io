@@ -14,12 +14,11 @@ export default class LabelModel
             let that = this;
             dc.select('languages', function (result)
             {
-                that.language = result;
+                that.language = result[0];
             }, {
                 where: [
                     {
                         operator: "=",
-                        //TODO if opts is available value
                         opt1: this.lang_id,
                         opt1Avail: true,
                         opt2: 'id'

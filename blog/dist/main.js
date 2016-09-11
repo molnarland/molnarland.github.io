@@ -140,11 +140,10 @@
 	        (function () {
 	            var that = _this;
 	            dc.select('languages', function (result) {
-	                that.language = result;
+	                that.language = result[0];
 	            }, {
 	                where: [{
 	                    operator: "=",
-	                    //TODO if opts is available value
 	                    opt1: _this.lang_id,
 	                    opt1Avail: true,
 	                    opt2: 'id'
@@ -211,7 +210,7 @@
 	                    var _loop = function _loop() {
 	                        var object = _step.value;
 	
-	                        _this.runClauses(clauses, object, function (add) {
+	                        _this.runClauses(clauses, object, function (add, result) {
 	                            // if all ok, add to result this object
 	                            if (add) {
 	                                array.push(new model(object));
@@ -325,7 +324,7 @@
 	
 	                try {
 	                    for (var _iterator3 = wheres[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-	                        where = _step3.value;
+	                        var where = _step3.value;
 	
 	                        var operator = where.operator || null;
 	                        var _opt = where.opt1 || null;
@@ -335,11 +334,11 @@
 	                            throw ReferenceError('json or opt1 or opt2 are null');
 	                        }
 	
-	                        // return callback(
-	                        //     //TODO opt1, opt2 from other json
-	                        //     this.getIfResult(operator, from[opt1], from[opt2]),
-	                        //     from
-	                        // );
+	                        //TODO opt1, opt2 from other json
+	                        _opt = where.opt1Avail ? _opt : from[_opt];
+	                        _opt2 = where.opt2Avail ? _opt2 : from[_opt2];
+	
+	                        return callback(this.getIfResult(operator, _opt, _opt2), from);
 	                    }
 	                } catch (err) {
 	                    _didIteratorError3 = true;
@@ -403,25 +402,25 @@
 	        }
 	    }, {
 	        key: 'getIfResult',
-	        value: function getIfResult(operator, number1, number2) {
+	        value: function getIfResult(operator, var1, var2) {
 	            switch (operator) {
 	                case '=':
-	                    return number1 === number2;
+	                    return var1 === var2;
 	                    break;
 	                case '>':
-	                    return number1 > number2;
+	                    return var1 > var2;
 	                    break;
 	                case '>=':
-	                    return number1 >= number2;
+	                    return var1 >= var2;
 	                    break;
 	                case '<':
-	                    return number1 < number2;
+	                    return var1 < var2;
 	                    break;
 	                case '<=':
-	                    return number1 <= number2;
+	                    return var1 <= var2;
 	                    break;
 	                case '<>':
-	                    return number1 !== number2;
+	                    return var1 !== var2;
 	                    break;
 	                default:
 	                    return false;

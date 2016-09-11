@@ -26,13 +26,14 @@ export default class DatabaseController
 
             for (let object of response)
             {
-                this.runClauses(clauses, object, function (add)
+                this.runClauses(clauses, object, function (add, result)
                 {
                     // if all ok, add to result this object
                     if (add)
                     {
                         array.push(new model(object));
                     }
+
                 });
 
             }
@@ -98,7 +99,7 @@ export default class DatabaseController
     {
         if (wheres && okay)
         {
-            for (where of wheres)
+            for (let where of wheres)
             {
                 const operator = where.operator || null;
                 let opt1 = where.opt1 || null;
@@ -109,13 +110,14 @@ export default class DatabaseController
                     throw ReferenceError('json or opt1 or opt2 are null');
                 }
 
+                //TODO opt1, opt2 from other json
+                opt1 = (where.opt1Avail) ? opt1 : from[opt1];
+                opt2 = (where.opt2Avail) ? opt2 : from[opt2];
 
-
-                // return callback(
-                //     //TODO opt1, opt2 from other json
-                //     this.getIfResult(operator, from[opt1], from[opt2]),
-                //     from
-                // );
+                return callback(
+                    this.getIfResult(operator, opt1, opt2),
+                    from
+                );
             }
         }
 
@@ -163,27 +165,27 @@ export default class DatabaseController
         }
     }
 
-    getIfResult (operator, number1, number2)
+    getIfResult (operator, var1, var2)
     {
         switch (operator)
         {
             case '=':
-                return number1 === number2;
+                return var1 === var2;
                 break;
             case '>':
-                return number1 > number2;
+                return var1 > var2;
                 break;
             case '>=':
-                return number1 >= number2;
+                return var1 >= var2;
                 break;
             case '<':
-                return number1 < number2;
+                return var1 < var2;
                 break;
             case '<=':
-                return number1 <= number2;
+                return var1 <= var2;
                 break;
             case '<>':
-                return number1 !== number2;
+                return var1 !== var2;
                 break;
             default:
                 return false;
