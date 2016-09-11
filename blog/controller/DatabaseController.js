@@ -1,4 +1,4 @@
-import {LanguageModel, LabelModel} from '../src/imports';
+import {LanguageModel, LabelModel, PostModel} from '../src/imports';
 
 export default class DatabaseController
 {
@@ -158,6 +158,9 @@ export default class DatabaseController
                 break;
             case 'labels':
                 return LabelModel;
+                break;
+            case 'posts':
+                return PostModel;
                 break;
             default:
                 return false;

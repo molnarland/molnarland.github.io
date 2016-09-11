@@ -47,11 +47,6 @@
 	'use strict';
 	
 	var _imports = __webpack_require__(1);
-	
-	var bla = new _imports.DatabaseController();
-	bla.select('labels', function (result) {
-	    console.log(result);
-	});
 
 /***/ },
 /* 1 */
@@ -62,7 +57,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.DatabaseController = exports.LabelModel = exports.LanguageModel = undefined;
+	exports.DatabaseController = exports.PostModel = exports.LabelModel = exports.LanguageModel = undefined;
 	
 	var _LanguageModel = __webpack_require__(2);
 	
@@ -72,7 +67,11 @@
 	
 	var _LabelModel2 = _interopRequireDefault(_LabelModel);
 	
-	var _DatabaseController = __webpack_require__(4);
+	var _PostModel = __webpack_require__(4);
+	
+	var _PostModel2 = _interopRequireDefault(_PostModel);
+	
+	var _DatabaseController = __webpack_require__(5);
 	
 	var _DatabaseController2 = _interopRequireDefault(_DatabaseController);
 	
@@ -80,6 +79,7 @@
 	
 	exports.LanguageModel = _LanguageModel2.default;
 	exports.LabelModel = _LabelModel2.default;
+	exports.PostModel = _PostModel2.default;
 	exports.DatabaseController = _DatabaseController2.default;
 
 /***/ },
@@ -167,6 +167,91 @@
 	    value: true
 	});
 	
+	var _imports = __webpack_require__(1);
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var PostModel = function PostModel() {
+	    var attributes = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	
+	    _classCallCheck(this, PostModel);
+	
+	    this.id = attributes.id || null;
+	    this.created = attributes.created || null;
+	    this.label_ids = attributes.label_ids || null;
+	    this.lang_id = attributes.lang_id || null;
+	
+	    var dc = new _imports.DatabaseController(),
+	        that = this;
+	
+	    if (this.label_ids) {
+	        this.labels = [];
+	
+	        var _iteratorNormalCompletion = true;
+	        var _didIteratorError = false;
+	        var _iteratorError = undefined;
+	
+	        try {
+	            for (var _iterator = this.label_ids[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	                var label_id = _step.value;
+	
+	                dc.select('labels', function (result) {
+	                    that.labels.push(result[0]);
+	                }, {
+	                    where: [{
+	                        operator: '=',
+	                        opt1: label_id,
+	                        opt1Avail: true,
+	                        opt2: 'id'
+	                    }]
+	                });
+	            }
+	        } catch (err) {
+	            _didIteratorError = true;
+	            _iteratorError = err;
+	        } finally {
+	            try {
+	                if (!_iteratorNormalCompletion && _iterator.return) {
+	                    _iterator.return();
+	                }
+	            } finally {
+	                if (_didIteratorError) {
+	                    throw _iteratorError;
+	                }
+	            }
+	        }
+	    } else {
+	        this.labels = null;
+	    }
+	
+	    if (this.lang_id) {
+	        dc.select('languages', function (result) {
+	            that.language = result[0];
+	        }, {
+	            where: [{
+	                operator: '=',
+	                opt1: this.lang_id,
+	                opt1Avail: true,
+	                opt2: 'id'
+	            }]
+	        });
+	    } else {
+	        this.language = null;
+	    }
+	};
+	
+	exports.default = PostModel;
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _imports = __webpack_require__(1);
@@ -191,7 +276,7 @@
 	
 	            var clauses = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
 	
-	            __webpack_require__(5).checkSomeTypes(['string', 'function'], [from, callback]);
+	            __webpack_require__(6).checkSomeTypes(['string', 'function'], [from, callback]);
 	
 	            var model = this.getModelByFrom(from);
 	
@@ -395,6 +480,9 @@
 	                case 'labels':
 	                    return _imports.LabelModel;
 	                    break;
+	                case 'posts':
+	                    return _imports.PostModel;
+	                    break;
 	                default:
 	                    return false;
 	                    break;
@@ -436,7 +524,7 @@
 	;
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports) {
 
 	'use strict';
