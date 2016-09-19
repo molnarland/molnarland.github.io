@@ -47,6 +47,8 @@
 	'use strict';
 	
 	var _imports = __webpack_require__(1);
+	
+	var pc = new _imports.PublicController();
 
 /***/ },
 /* 1 */
@@ -55,9 +57,9 @@
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
-	exports.DatabaseController = exports.PostModel = exports.LabelModel = exports.LanguageModel = undefined;
+	exports.PublicController = exports.DatabaseController = exports.PostModel = exports.LabelModel = exports.LanguageModel = undefined;
 	
 	var _LanguageModel = __webpack_require__(2);
 	
@@ -75,12 +77,17 @@
 	
 	var _DatabaseController2 = _interopRequireDefault(_DatabaseController);
 	
+	var _PublicController = __webpack_require__(7);
+	
+	var _PublicController2 = _interopRequireDefault(_PublicController);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	exports.LanguageModel = _LanguageModel2.default;
 	exports.LabelModel = _LabelModel2.default;
 	exports.PostModel = _PostModel2.default;
 	exports.DatabaseController = _DatabaseController2.default;
+	exports.PublicController = _PublicController2.default;
 
 /***/ },
 /* 2 */
@@ -167,78 +174,107 @@
 	    value: true
 	});
 	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
 	var _imports = __webpack_require__(1);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var PostModel = function PostModel() {
-	    var attributes = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	var PostModel = function () {
+	    function PostModel() {
+	        var _this = this;
 	
-	    _classCallCheck(this, PostModel);
+	        var attributes = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	        var callback = arguments[1];
 	
-	    this.id = attributes.id || null;
-	    this.created = attributes.created || null;
-	    this.label_ids = attributes.label_ids || null;
-	    this.lang_id = attributes.lang_id || null;
+	        _classCallCheck(this, PostModel);
 	
-	    var dc = new _imports.DatabaseController(),
-	        that = this;
+	        this.id = attributes.id || null;
+	        this.created = attributes.created || null;
+	        this.label_ids = attributes.label_ids || null;
+	        this.lang_id = attributes.lang_id || null;
 	
-	    if (this.label_ids) {
-	        this.labels = [];
+	        var dc = new _imports.DatabaseController();
 	
-	        var _iteratorNormalCompletion = true;
-	        var _didIteratorError = false;
-	        var _iteratorError = undefined;
+	        this.selectLabels(function () {
+	            _this.selectLanguages(callback, dc);
+	        }, dc);
 	
-	        try {
-	            for (var _iterator = this.label_ids[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	                var label_id = _step.value;
+	        /*end of labels' select*/
+	    }
 	
-	                dc.select('labels', function (result) {
-	                    that.labels.push(result[0]);
-	                }, {
-	                    where: [{
-	                        operator: '=',
-	                        opt1: label_id,
-	                        opt1Avail: true,
-	                        opt2: 'id'
-	                    }]
-	                });
-	            }
-	        } catch (err) {
-	            _didIteratorError = true;
-	            _iteratorError = err;
-	        } finally {
-	            try {
-	                if (!_iteratorNormalCompletion && _iterator.return) {
-	                    _iterator.return();
-	                }
-	            } finally {
-	                if (_didIteratorError) {
-	                    throw _iteratorError;
-	                }
+	    _createClass(PostModel, [{
+	        key: 'selectLabels',
+	        value: function selectLabels(callback) {
+	            var _this2 = this;
+	
+	            var dc = arguments.length <= 1 || arguments[1] === undefined ? new _imports.DatabaseController() : arguments[1];
+	
+	            if (this.label_ids) {
+	                (function () {
+	                    _this2.labels = [];
+	                    var count_of_labels = _this2.label_ids.length,
+	                        that = _this2;
+	
+	                    var _loop = function _loop(i) {
+	                        dc.select('labels', function (result) {
+	                            that.labels.push(result[0]);
+	
+	                            if (typeof callback == 'function' && i === count_of_labels - 1) {
+	                                return callback();
+	                            }
+	                        }, {
+	                            where: [{
+	                                operator: '=',
+	                                opt1: _this2.label_ids[i],
+	                                opt1Avail: true,
+	                                opt2: 'id'
+	                            }]
+	                        });
+	                    };
+	
+	                    for (var i = 0; i < count_of_labels; i++) {
+	                        _loop(i);
+	                    }
+	                })();
+	            } else {
+	                this.labels = null;
 	            }
 	        }
-	    } else {
-	        this.labels = null;
-	    }
+	    }, {
+	        key: 'selectLanguages',
+	        value: function selectLanguages(callback) {
+	            var _this3 = this;
 	
-	    if (this.lang_id) {
-	        dc.select('languages', function (result) {
-	            that.language = result[0];
-	        }, {
-	            where: [{
-	                operator: '=',
-	                opt1: this.lang_id,
-	                opt1Avail: true,
-	                opt2: 'id'
-	            }]
-	        });
-	    } else {
-	        this.language = null;
-	    }
-	};
+	            var dc = arguments.length <= 1 || arguments[1] === undefined ? new _imports.DatabaseController() : arguments[1];
+	
+	            if (this.lang_id) {
+	                (function () {
+	                    var that = _this3;
+	
+	                    dc.select('languages', function (result) {
+	                        that.language = result[0];
+	
+	                        if (typeof callback == 'function') {
+	                            return callback();
+	                        }
+	                    }, {
+	                        where: [{
+	                            operator: '=',
+	                            opt1: _this3.lang_id,
+	                            opt1Avail: true,
+	                            opt2: 'id'
+	                        }]
+	                    });
+	                })();
+	            } else {
+	                this.language = null;
+	            }
+	        }
+	    }]);
+	
+	    return PostModel;
+	}();
 	
 	exports.default = PostModel;
 
@@ -268,43 +304,43 @@
 	
 	        /**
 	         * @param {string} from
-	         * @param {function} callback
+	         * @param {function} end
+	         * @param {object} clauses
+	         * @param {function} modelCallback
 	         * @return {function(LanguageModel[]|LabelModel[]|boolean)}
 	         */
-	        value: function select(from, callback) {
+	        value: function select(from, end) {
 	            var _this = this;
 	
 	            var clauses = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+	            var modelCallback = arguments[3];
 	
-	            __webpack_require__(6).checkSomeTypes(['string', 'function'], [from, callback]);
+	            __webpack_require__(6).checkSomeTypes(['string', 'function'], [from, end]);
 	
 	            var model = this.getModelByFrom(from);
 	
 	            if (!model) {
-	                return callback(false);
+	                return end(false);
 	            }
 	
 	            this.loadJSON(from, function (response) {
 	                var array = [];
+	                var that = _this;
 	
 	                var _iteratorNormalCompletion = true;
 	                var _didIteratorError = false;
 	                var _iteratorError = undefined;
 	
 	                try {
-	                    var _loop = function _loop() {
+	                    for (var _iterator = response[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 	                        var object = _step.value;
 	
 	                        _this.runClauses(clauses, object, function (add, result) {
 	                            // if all ok, add to result this object
 	                            if (add) {
-	                                array.push(new model(object));
+	                                array.push(new model(result, modelCallback));
 	                            }
 	                        });
-	                    };
-	
-	                    for (var _iterator = response[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	                        _loop();
 	                    }
 	                } catch (err) {
 	                    _didIteratorError = true;
@@ -321,7 +357,23 @@
 	                    }
 	                }
 	
-	                return callback(array);
+	                return end(array);
+	
+	                /*require('../src/helpers').asyncLoop(response.length, function (loop, index)
+	                {
+	                    that.runClauses(clauses, response[loop.iteration()], function (add, result)
+	                    {
+	                        // if all ok, add to result this object
+	                        if (add)
+	                        {
+	                            array.push(new model(result));
+	                        }
+	                         loop.next();
+	                    });
+	                }, function ()
+	                {
+	                    return callback(array);
+	                });*/
 	            });
 	        }
 	    }, {
@@ -335,7 +387,9 @@
 	            var that = this;
 	
 	            this.runJoins(clauses.join, from, okay, function (okay, from) {
-	                that.runWhere(clauses.where, from, okay, callback);
+	                that.runWhere(clauses.where, from, okay, function (okay, from) {
+	                    return callback(okay, from);
+	                });
 	            });
 	        }
 	    }, {
@@ -349,7 +403,7 @@
 	                var _iteratorError2 = undefined;
 	
 	                try {
-	                    var _loop2 = function _loop2() {
+	                    var _loop = function _loop() {
 	                        var join = _step2.value;
 	
 	                        var json = join.json || null;
@@ -368,7 +422,8 @@
 	                            });
 	
 	                            if (result) {
-	                                if (!(model = getModel(from))) {
+	                                var model = getModel(from);
+	                                if (!model) {
 	                                    from.language = new model(result);
 	                                    return callback(okay, from);
 	                                }
@@ -379,7 +434,7 @@
 	                    };
 	
 	                    for (var _iterator2 = joins[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-	                        _loop2();
+	                        _loop();
 	                    }
 	                } catch (err) {
 	                    _didIteratorError2 = true;
@@ -600,11 +655,105 @@
 	    return !error;
 	}
 	
+	function asyncLoop(iterations, func, callback) {
+	    var index = 0;
+	    var done = false;
+	    var loop = {
+	        next: function next() {
+	            if (done) {
+	                return;
+	            }
+	
+	            if (index < iterations) {
+	                index++;
+	                func(loop, index);
+	            } else {
+	                done = true;
+	                callback();
+	            }
+	        },
+	
+	        iteration: function iteration() {
+	            return index - 1;
+	        },
+	
+	        break: function _break() {
+	            done = true;
+	            callback();
+	        }
+	    };
+	
+	    loop.next();
+	    return loop;
+	}
+	
 	module.exports = {
 	    isEmptyObject: isEmptyObject,
 	    checkType: checkType,
-	    checkSomeTypes: checkSomeTypes
+	    checkSomeTypes: checkSomeTypes,
+	    asyncLoop: asyncLoop
 	};
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _imports = __webpack_require__(1);
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var PublicController = function () {
+	    function PublicController() {
+	        _classCallCheck(this, PublicController);
+	
+	        this.bodyId = document.body.id = 'public';
+	
+	        var that = this,
+	            dc = new _imports.DatabaseController();
+	
+	        dc.select('posts', function (result) {
+	            that.posts = result;
+	        }, {}, function () {
+	            return that.postPreviews();
+	        });
+	    }
+	
+	    /**
+	     * @param {number} from
+	     * @param {number} to
+	     */
+	
+	
+	    _createClass(PublicController, [{
+	        key: 'postPreviews',
+	        value: function postPreviews() {
+	            var from = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+	            var to = arguments.length <= 1 || arguments[1] === undefined ? this.posts.length : arguments[1];
+	
+	            var html = '';
+	
+	            for (var i = from; i < to; i++) {
+	                var post = this.posts[i];
+	
+	                html += '<section class="post-preview">\n                        <div class="blog-header">\n                            <h2 class="post-title"></h2>\n                            <div class="post-datas">\n                                <div class="created">' + post.created + '</div>\n                            </div>\n                        </div>\n                        ' + post.language.hu + '\n                    </section>';
+	            }
+	
+	            document.getElementById(this.bodyId).innerHTML = html;
+	        }
+	    }]);
+	
+	    return PublicController;
+	}();
+	
+	exports.default = PublicController;
 
 /***/ }
 /******/ ]);

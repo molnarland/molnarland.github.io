@@ -86,8 +86,43 @@ function checkSomeTypes(types, values)
     return !error;
 }
 
+function asyncLoop(iterations, func, callback)
+{
+    var index = 0;
+    var done = false;
+    var loop = {
+        next: function() {
+            if (done) {
+                return;
+            }
+
+            if (index < iterations) {
+                index++;
+                func(loop, index);
+
+            } else {
+                done = true;
+                callback();
+            }
+        },
+
+        iteration: function() {
+            return index - 1;
+        },
+
+        break: function() {
+            done = true;
+            callback();
+        }
+    };
+
+    loop.next();
+    return loop;
+}
+
 module.exports = {
     isEmptyObject: isEmptyObject,
     checkType: checkType,
-    checkSomeTypes: checkSomeTypes
+    checkSomeTypes: checkSomeTypes,
+    asyncLoop: asyncLoop
 };

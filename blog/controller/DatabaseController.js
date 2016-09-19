@@ -4,25 +4,28 @@ export default class DatabaseController
 {
     /**
      * @param {string} from
-     * @param {function} callback
+     * @param {function} end
+     * @param {object} clauses
+     * @param {function} modelCallback
      * @return {function(LanguageModel[]|LabelModel[]|boolean)}
      */
-    select (from, callback, clauses = {})
+    select (from, end, clauses = {}, modelCallback)
     {
         require('../src/helpers').checkSomeTypes(
-            ['string', 'function'], [from, callback]
+            ['string', 'function'], [from, end]
         );
 
         const model = this.getModelByFrom(from);
 
         if (!model)
         {
-            return callback(false);
+            return end(false);
         }
 
         this.loadJSON(from, (response) =>
         {
             let array = [];
+            const that = this;
 
             for (let object of response)
             {
@@ -31,14 +34,30 @@ export default class DatabaseController
                     // if all ok, add to result this object
                     if (add)
                     {
-                        array.push(new model(object));
+                        array.push(new model(result, modelCallback));
                     }
 
                 });
-
             }
 
-            return callback(array);
+            return end(array);
+
+            /*require('../src/helpers').asyncLoop(response.length, function (loop, index)
+            {
+                that.runClauses(clauses, response[loop.iteration()], function (add, result)
+                {
+                    // if all ok, add to result this object
+                    if (add)
+                    {
+                        array.push(new model(result));
+                    }
+
+                    loop.next();
+                });
+            }, function ()
+            {
+                return callback(array);
+            });*/
         });
     }
 
@@ -47,9 +66,12 @@ export default class DatabaseController
         let okay = true;
         const that = this;
 
-        this.runJoins(clauses.join, from, okay, function (okay, from)
+        this.runJoins(clauses.join, from, okay, (okay, from) =>
         {
-            that.runWhere(clauses.where, from, okay, callback);
+            that.runWhere(clauses.where, from, okay, (okay, from) =>
+            {
+                return callback(okay, from);
+            });
         });
     }
 
@@ -70,9 +92,9 @@ export default class DatabaseController
 
                 const getModel = this.getModelByFrom;
 
-                this.loadJSON(json, function (result)
+                this.loadJSON(json, (result) =>
                 {
-                    result = result.find(function (object)
+                    result = result.find((object) =>
                     {
                         return object[opt1] === from[opt2]
                             || object[opt2] === from[opt1];
@@ -80,7 +102,8 @@ export default class DatabaseController
 
                     if (result)
                     {
-                        if (!(model = getModel(from)))
+                        let model = getModel(from);
+                        if (!model)
                         {
                             from.language = new model(result);
                             return callback(okay, from);
@@ -135,7 +158,8 @@ export default class DatabaseController
         let xobj = new XMLHttpRequest();
         xobj.overrideMimeType("application/json");
         xobj.open('GET', `json/${filename}.json`, true);
-        xobj.onreadystatechange = function () {
+        xobj.onreadystatechange = () =>
+        {
             if (xobj.readyState == 4 && xobj.status == "200")
             {
                 callback(JSON.parse(xobj.responseText)[filename]);

@@ -12,7 +12,7 @@ export default class LabelModel
         if (this.lang_id)
         {
             let that = this;
-            dc.select('languages', function (result)
+            dc.select('languages', (result) =>
             {
                 that.language = result[0];
             }, {

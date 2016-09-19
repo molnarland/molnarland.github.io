@@ -1,2 +1,3 @@
-import {LanguageModel, DatabaseController} from './imports';
+import {PublicController} from './imports';
 
+const pc = new PublicController();
