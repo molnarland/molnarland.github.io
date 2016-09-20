@@ -54,6 +54,11 @@ export default class PostModel
         else
         {
             this.labels = null;
+
+            if (typeof callback == 'function')
+            {
+                return callback();
+            }
         }
     }
 
@@ -85,6 +90,11 @@ export default class PostModel
         else
         {
             this.language = null
+
+            if (typeof callback == 'function')
+            {
+                return callback();
+            }
         }
     }
 }

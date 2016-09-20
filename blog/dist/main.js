@@ -48,6 +48,7 @@
 	
 	var _imports = __webpack_require__(1);
 	
+	//TODO
 	var pc = new _imports.PublicController();
 
 /***/ },
@@ -239,6 +240,10 @@
 	                })();
 	            } else {
 	                this.labels = null;
+	
+	                if (typeof callback == 'function') {
+	                    return callback();
+	                }
 	            }
 	        }
 	    }, {
@@ -269,6 +274,10 @@
 	                })();
 	            } else {
 	                this.language = null;
+	
+	                if (typeof callback == 'function') {
+	                    return callback();
+	                }
 	            }
 	        }
 	    }]);
@@ -358,22 +367,6 @@
 	                }
 	
 	                return end(array);
-	
-	                /*require('../src/helpers').asyncLoop(response.length, function (loop, index)
-	                {
-	                    that.runClauses(clauses, response[loop.iteration()], function (add, result)
-	                    {
-	                        // if all ok, add to result this object
-	                        if (add)
-	                        {
-	                            array.push(new model(result));
-	                        }
-	                         loop.next();
-	                    });
-	                }, function ()
-	                {
-	                    return callback(array);
-	                });*/
 	            });
 	        }
 	    }, {
@@ -712,18 +705,25 @@
 	
 	var PublicController = function () {
 	    function PublicController() {
+	        var language = arguments.length <= 0 || arguments[0] === undefined ? 'en' : arguments[0];
+	
 	        _classCallCheck(this, PublicController);
 	
 	        this.bodyId = document.body.id = 'public';
+	        this.language = language || 'hu';
 	
 	        var that = this,
 	            dc = new _imports.DatabaseController();
 	
-	        dc.select('posts', function (result) {
+	        /*dc.select('posts', (result) =>
+	        {
 	            that.posts = result;
-	        }, {}, function () {
+	        }, {}, () =>
+	        {
 	            return that.postPreviews();
-	        });
+	        });*/
+	
+	        this.iWillGo();
 	    }
 	
 	    /**
@@ -743,10 +743,33 @@
 	            for (var i = from; i < to; i++) {
 	                var post = this.posts[i];
 	
-	                html += '<section class="post-preview">\n                        <div class="blog-header">\n                            <h2 class="post-title"></h2>\n                            <div class="post-datas">\n                                <div class="created">' + post.created + '</div>\n                            </div>\n                        </div>\n                        ' + post.language.hu + '\n                    </section>';
+	                html += '<section class="post-preview">\n                        <div class="blog-header">\n                            <h2 class="post-title"></h2>\n                            <div class="post-datas">\n                                <div class="created">' + post.created + '</div>\n                            </div>\n                        </div>\n                        ' + post.language[this.language] + '\n                    </section>';
 	            }
 	
 	            document.getElementById(this.bodyId).innerHTML = html;
+	        }
+	    }, {
+	        key: 'iWillGo',
+	        value: function iWillGo() {
+	            var _this = this;
+	
+	            var dc = new _imports.DatabaseController();
+	            this.result;
+	            var that = this;
+	
+	            dc.select('posts', function (result) {
+	                that.result = result;
+	                console.log(result);
+	            }, {
+	                where: [{
+	                    operator: '=',
+	                    opt1: 'id',
+	                    opt2: 2,
+	                    opt2Avail: true
+	                }]
+	            }, function () {
+	                document.getElementById(_this.bodyId).innerHTML = _this.result[0].language[_this.language];
+	            });
 	        }
 	    }]);
 	

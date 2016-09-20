@@ -41,23 +41,6 @@ export default class DatabaseController
             }
 
             return end(array);
-
-            /*require('../src/helpers').asyncLoop(response.length, function (loop, index)
-            {
-                that.runClauses(clauses, response[loop.iteration()], function (add, result)
-                {
-                    // if all ok, add to result this object
-                    if (add)
-                    {
-                        array.push(new model(result));
-                    }
-
-                    loop.next();
-                });
-            }, function ()
-            {
-                return callback(array);
-            });*/
         });
     }
 

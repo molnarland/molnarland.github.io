@@ -2,20 +2,23 @@ import {DatabaseController} from '../src/imports';
 
 export default class PublicController
 {
-    constructor()
+    constructor(language = 'en')
     {
         this.bodyId = document.body.id = 'public';
+        this.language = language || 'hu';
 
         const that = this,
             dc = new DatabaseController();
 
-        dc.select('posts', (result) =>
+        /*dc.select('posts', (result) =>
         {
             that.posts = result;
         }, {}, () =>
         {
             return that.postPreviews();
-        });
+        });*/
+
+        this.iWillGo();
     }
 
     /**
@@ -37,10 +40,36 @@ export default class PublicController
                                 <div class="created">${post.created}</div>
                             </div>
                         </div>
-                        ${post.language.hu}
+                        ${post.language[this.language]}
                     </section>`;
         }
 
         document.getElementById(this.bodyId).innerHTML = html;
+    }
+
+    iWillGo()
+    {
+        const dc = new DatabaseController();
+        this.result;
+        const that = this;
+
+        dc.select('posts', (result) =>
+        {
+            that.result = result;
+            console.log(result);
+        }, {
+            where: [
+                {
+                    operator: '=',
+                    opt1: 'id',
+                    opt2: 2,
+                    opt2Avail: true
+                }
+            ]
+        }, () =>
+        {
+            document.getElementById(this.bodyId).innerHTML
+                = this.result[0].language[this.language];
+        });
     }
 }
