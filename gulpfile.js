@@ -12,7 +12,7 @@ var paths = {
 		'*.pug',
 		'./blog/index.pug'
 	],
-	styles: ['./wordsoutinjs/*.sass'],
+	styles: ['./wordsoutinjs/*.sass', 'landing.sass'],
 	coffee: ['./wordsoutinjs/*.coffee'],
 	feature_js: ['./blog/src/*.js', './blog/model/*.js', './blog/controller/*.js']
 };
