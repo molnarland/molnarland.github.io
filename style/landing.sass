@@ -1,0 +1,27 @@
+$menuHeight: 60px
+$molnarlandCharCount: 9
+
+body
+	margin: 0
+	padding: 0
+
+.molnarland-text
+	opacity: 1
+	&.hide
+		opacity: 0
+
+@for $index from 0 through $molnarlandCharCount
+  .molnarland-#{$index}:hover
+    $first: $molnarlandCharCount / 3
+    $second: $first * 2
+    $third: $molnarlandCharCount
+
+    @if $index < $first
+      color: red
+    @else if $index >= $first and $index < $second
+      color: gold
+    @else if $index >= $second
+      color: green
+
+@import _menu.sass
+@import _welcome.sass

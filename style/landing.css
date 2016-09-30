@@ -1,0 +1,71 @@
+body {
+  margin: 0;
+  padding: 0; }
+
+.molnarland-text {
+  opacity: 1; }
+  .molnarland-text.hide {
+    opacity: 0; }
+
+.molnarland-0:hover {
+  color: red; }
+
+.molnarland-1:hover {
+  color: red; }
+
+.molnarland-2:hover {
+  color: red; }
+
+.molnarland-3:hover {
+  color: gold; }
+
+.molnarland-4:hover {
+  color: gold; }
+
+.molnarland-5:hover {
+  color: gold; }
+
+.molnarland-6:hover {
+  color: green; }
+
+.molnarland-7:hover {
+  color: green; }
+
+.molnarland-8:hover {
+  color: green; }
+
+.molnarland-9:hover {
+  color: green; }
+
+#menu {
+  width: 100vw;
+  height: 60px;
+  background: black; }
+  #menu.top-fix {
+    position: fixed;
+    top: 0; }
+
+#social-media {
+  float: left;
+  margin: 15px 10px 0; }
+  #social-media a {
+    margin-left: 5px;
+    z-index: 10;
+    float: left; }
+    #social-media a:first-child {
+      margin-left: 0; }
+    #social-media a img {
+      width: 30px;
+      height: 30px; }
+
+.molnarland-text.white {
+  color: white;
+  float: left; }
+  .molnarland-text.white h1 {
+    margin: 0; }
+
+#welcome {
+  position: relative; }
+
+.molnarland-text.black {
+  color: black; }
