@@ -1,5 +1,6 @@
 var gulp = require('gulp'),
 	pug = require('gulp-pug'),
+	pug2 = require('gulp-pug2'),
 	sass = require('gulp-sass'),
 	coffee = require('gulp-coffee'),
 	autoprefixer = require('gulp-autoprefixer'),
@@ -12,7 +13,7 @@ var paths = {
 		'*.pug',
 		'./blog/index.pug'
 	],
-	styles: ['./wordsoutinjs/*.sass', 'landing.sass'],
+	styles: ['./wordsoutinjs/*.sass', './style/*.sass'],
 	coffee: ['./wordsoutinjs/*.coffee'],
 	feature_js: ['./blog/src/*.js', './blog/model/*.js', './blog/controller/*.js']
 };
@@ -23,7 +24,7 @@ var basePath = './',
 
 gulp.task('pug', function build_html (done) {
 	gulp.src(paths.views, base)
-		.pipe(pug({
+		.pipe(pug2({
 			pretty: true
 		}))
 		.pipe(gulp.dest(basePath));

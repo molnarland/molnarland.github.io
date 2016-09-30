@@ -781,5 +781,3 @@
 /***/ }
 /******/ ]);
 //# sourceMappingURL=main.js.map
-
-/* Generated with WebPack*/

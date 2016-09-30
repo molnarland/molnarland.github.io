@@ -2,19 +2,31 @@ doctype html
 html
 	head
 		title molnarland
-		link(href="landing.css" type="text/css" rel="stylesheet")
+		link(href="style/landing.css" type="text/css" rel="stylesheet")
 	body
-		| Please check out my social media accounts!
-		br
-		| I planning and developing this landing page yet.
-		br
-		a(href="twitter.com/molnarland") Twitter
-		br
-		a(href="github.com/molnarland") GitHub
-		br
-		a(href="#") LinkedIn
-		br
-		br
-		a(href="/wordsoutinjs") wordsOutInJS
-		br
-		a(href="/blog") My personal blog
+		mixin molnarland-text(heading)
+			.molnarland-text(class!=attributes.class)
+				#{heading}
+					each val, index in ['m', 'o', 'l', 'n', 'a', 'r', 'l', 'a', 'n', 'd']
+						span(class= "molnarland-" + index)= val
+
+		section#menu
+			#social-media
+				a(href="http://twitter.com/molnarland")#twitter-link
+					img(alt="molnarland-twitter" src="pics/twitter_icon.png")
+				a(href="http://github.com/molnarland")#github-link
+					img(alt="molnarland-github" src="pics/github_icon.png")
+				a(href="http://linkedin.com/in/molnarland")#linkedin-link
+					img(alt="molnarland-linkedin" src="pics/linkedin_icon.png")
+
+			+molnarland-text("h1")(class="white hide")
+
+
+		section#welcome
+			+molnarland-text("h1")(class="black")
+
+			a(href="/wordsoutinjs") woi		
+
+		.bla(style="height:100000px")
+
+		script(src="script/landing.js")
