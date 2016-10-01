@@ -10,13 +10,13 @@ export default class PublicController
         const that = this,
             dc = new DatabaseController();
 
-        /*dc.select('posts', (result) =>
-        {
-            that.posts = result;
-        }, {}, () =>
-        {
-            return that.postPreviews();
-        });*/
+        // dc.select('posts', (result) =>
+        // {
+        //     that.posts = result;
+        // }, {}, () =>
+        // {
+        //     return that.postPreviews();
+        // });
 
         this.iWillGo();
     }
@@ -32,6 +32,28 @@ export default class PublicController
         for (let i = from; i < to; i++)
         {
             const post = this.posts[i];
+            let content;
+
+            if (post.language[this.language])
+            {
+                content = post.language[this.language];
+            }
+            else
+            {
+                switch (this.language)
+                {
+                    case 'hu':
+                        content = post.language['en'];
+                        break;
+                    case 'en':
+                    default:
+                        content = post.language['hu'];
+                        break;
+                }
+            }
+
+
+
 
             html += `<section class="post-preview">
                         <div class="blog-header">
@@ -40,7 +62,7 @@ export default class PublicController
                                 <div class="created">${post.created}</div>
                             </div>
                         </div>
-                        ${post.language[this.language]}
+                        ${content}
                     </section>`;
         }
 
