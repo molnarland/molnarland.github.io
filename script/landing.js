@@ -1,22 +1,19 @@
+
+
 window.onscroll = function ()
 {
 	var scroll = scrollTop();
 
-	setElementOpacity('#menu .molnarland-text', scroll / 200);
+	setElementOpacity('#navbar .molnarland-text', scroll / 200);
 	setElementOpacity('#welcome .molnarland-text', 1 - (scroll / 200));
 
 	if (scroll > 100) 
 	{
-		//TODO make paralax show/hide with #menu and #welcome .molnarland-text
-
-		addString('#menu', ' top-fix')
+		addString('#navbar', ' top-fix')
 	}
 	else
 	{
-		addString('#menu .molnarland-text', ' hide');
-		replaceString('#welcome .molnarland-text', 'hide');
-
-		replaceString('#menu', 'top-fix');
+		replaceString('#navbar', 'top-fix');
 	}
 }
 

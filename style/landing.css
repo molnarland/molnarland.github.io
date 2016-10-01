@@ -2,10 +2,19 @@ body {
   margin: 0;
   padding: 0; }
 
+a {
+  text-decoration: none; }
+
 .molnarland-text {
   opacity: 1; }
   .molnarland-text.hide {
     opacity: 0; }
+  .molnarland-text span {
+    -webkit-transition: 0.1s ease-out;
+    transition: 0.1s ease-out; }
+    .molnarland-text span:hover {
+      -webkit-transition: 0.1s ease-in;
+      transition: 0.1s ease-in; }
 
 .molnarland-0:hover {
   color: red; }
@@ -37,16 +46,25 @@ body {
 .molnarland-9:hover {
   color: green; }
 
-#menu {
-  width: 100vw;
+#navbar {
+  width: -webkit-calc(100vw - 10px);
+  width: calc(100vw - 10px);
   height: 60px;
-  background: black; }
-  #menu.top-fix {
+  background: black;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between; }
+  #navbar.top-fix {
     position: fixed;
-    top: 0; }
+    top: 0;
+    z-index: 9; }
 
 #social-media {
-  float: left;
   margin: 15px 10px 0; }
   #social-media a {
     margin-left: 5px;
@@ -58,14 +76,32 @@ body {
       width: 30px;
       height: 30px; }
 
-.molnarland-text.white {
-  color: white;
-  float: left; }
-  .molnarland-text.white h1 {
+#navbar .molnarland-text {
+  width: 200px;
+  height: 60px;
+  line-height: 60px;
+  text-align: center;
+  margin: 0 auto;
+  color: white; }
+  #navbar .molnarland-text h1 {
     margin: 0; }
+
+#menu {
+  margin: 0 10px;
+  padding: 0;
+  font-size: 1.05em; }
+  #menu li {
+    float: left;
+    border-left: 1px #263238 solid; }
+    #menu li:first-child {
+      border-left: none; }
+    #menu li a {
+      display: block;
+      line-height: 20px;
+      padding: 20px;
+      color: white; }
 
 #welcome {
   position: relative; }
-
-.molnarland-text.black {
-  color: black; }
+  #welcome .molnarland-text {
+    color: black; }

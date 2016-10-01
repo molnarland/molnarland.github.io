@@ -10,7 +10,7 @@ html
 					each val, index in ['m', 'o', 'l', 'n', 'a', 'r', 'l', 'a', 'n', 'd']
 						span(class= "molnarland-" + index)= val
 
-		section#menu
+		section#navbar
 			#social-media
 				a(href="http://twitter.com/molnarland")#twitter-link
 					img(alt="molnarland-twitter" src="pics/twitter_icon.png")
@@ -19,14 +19,19 @@ html
 				a(href="http://linkedin.com/in/molnarland")#linkedin-link
 					img(alt="molnarland-linkedin" src="pics/linkedin_icon.png")
 
-			+molnarland-text("h1")(class="white hide")
+			+molnarland-text("h1")(class="hide")
+
+			ul#menu
+				each val, index in [{text: 'WordsOutInJS', link: '/wordsoutinjs'}, {text: 'Blog', link: '/blog'}]
+					li
+						a(href=val.link)= val.text
+
+		//#menu
 
 
 		section#welcome
 			+molnarland-text("h1")(class="black")
 
-			a(href="/wordsoutinjs") woi		
-
-		.bla(style="height:100000px")
+		//#section
 
 		script(src="script/landing.js")
