@@ -146,6 +146,25 @@ a {
   .border-from-left:hover:before, .border-from-left:hover:active, .border-from-left:hover:focus {
     right: 0; }
 
+@media (max-width: 600px) {
+  #social-media {
+    margin: 20px 5px 0 10px; }
+    #social-media a img {
+      width: 20px;
+      height: 20px; }
+  #navbar .molnarland-text {
+    width: 90px;
+    font-size: .5em; }
+  #menu {
+    margin: 0 10px 0 5px; }
+    #menu li a {
+      padding: 20px 10px;
+      font-size: .7em; } }
+
+@media (max-width: 350px) {
+  #navbar .molnarland-text {
+    display: none; } }
+
 #welcome {
   position: relative; }
   #welcome .molnarland-text {
