@@ -1,0 +1,79 @@
+=trans($sec: .5, $type: ease)
+	transition: #{$sec}s $type
+		
+
+
+
+		
+=position-from-error($position, $from)
+	@error "#{$position} position and #{$from} from value can't mixing"
+	
+
+//$class: string - custom
+//$position: string - top, bottom, left, right
+//$form: string - top, bottom, left, right, center, middle
+//$color: string, hex - custom
+//$height: string - custom
+=border-animation($class, $position, $from, $color: green, $size: 5px)
+	$to: right
+	@if($from == left)
+		$to: right
+	@else if($from == right)
+		$to: left
+	@else if($from == top)
+		$to: bottom
+	@else if($from == bottom)
+		$to: top
+				
+	
+	.#{$class}
+		display: inline-block
+		position: relative
+		overflow: hidden
+		transform: translateX(0)
+		&:before
+			content: ""
+			position: absolute
+			z-index: -1
+			+trans()
+			background: $color
+			
+			@if($position == top or $position == bottom)
+				height: $size
+			@else if($position == left or $position == right)
+				width: $size
+			@else
+				@error "#{$position} position value not understandable"
+				
+			#{$position}: 0
+			
+			@if($from == center)
+				@if($position == top or $position == bottom)
+					left: 50%
+					right: 50%
+					transition-property: left, right
+				@else
+					+position-from-error($position, $from)
+			@else if($from == middle)
+				@if($position == left or $position == right)
+					top: 50%
+					bottom: 50%
+					transition-property: top, bottom
+				@else
+					+position-from-error($position, $from)
+			@else
+				#{$from}: 0
+				#{$to}: 100%
+				transition-property: $to
+				
+		&:hover:before
+			@if($from == center)
+				@if($position == top or $position == bottom)
+					left: 0
+					right: 0
+			@else if($from == middle)
+				@if($position == left or $position == right)
+					top: 0
+					bottom: 0
+			@else
+				#{$to}: 0

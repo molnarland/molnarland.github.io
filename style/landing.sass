@@ -1,9 +1,8 @@
+@import _mixins.sass
+
 $menuHeight: 60px
 $socials: 3
 $molnarlandCharCount: 9
-
-=trans($sec: .5, $type: ease)
-	transition: #{$sec}s $type
 
 body
 	margin: 0
@@ -35,7 +34,6 @@ a
 		@else if $index >= $second
 			color: green
 							   
-
 	
 @import _navbar.sass
 @import _welcome.sass

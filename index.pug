@@ -3,6 +3,7 @@ html
 	head
 		title molnarland
 		link(href="style/landing.css" type="text/css" rel="stylesheet")
+		meta(name="viewport" content="width=device-width, initial-scale=1")
 	body
 		mixin molnarland-text(heading)
 			.molnarland-text(class!=attributes.class)
@@ -23,7 +24,13 @@ html
 
 			ul#menu
 				each val, index in [{text: 'WordsOutInJS', link: '/wordsoutinjs'}, {text: 'Blog', link: '/blog'}]
-					li
+					-liClass = 'border-from-left';
+					if index % 2 == 0
+						-liClass = 'border-from-right';
+					else
+						-liClass = 'border-from-left';
+
+					li(class=liClass)
 						a(href=val.link)= val.text
 
 		//#menu
