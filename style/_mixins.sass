@@ -66,14 +66,15 @@
 				#{$to}: 100%
 				transition-property: $to
 				
-		&:hover:before
-			@if($from == center)
-				@if($position == top or $position == bottom)
-					left: 0
-					right: 0
-			@else if($from == middle)
-				@if($position == left or $position == right)
-					top: 0
-					bottom: 0
-			@else
-				#{$to}: 0
+		&:hover
+			&:before, &:active, &:focus
+				@if($from == center)
+					@if($position == top or $position == bottom)
+						left: 0
+						right: 0
+				@else if($from == middle)
+					@if($position == left or $position == right)
+						top: 0
+						bottom: 0
+				@else
+					#{$to}: 0

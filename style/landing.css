@@ -120,7 +120,7 @@ a {
     left: 100%;
     -webkit-transition-property: left;
     transition-property: left; }
-  .border-from-right:hover:before {
+  .border-from-right:hover:before, .border-from-right:hover:active, .border-from-right:hover:focus {
     left: 0; }
 
 .border-from-left {
@@ -143,7 +143,7 @@ a {
     right: 100%;
     -webkit-transition-property: right;
     transition-property: right; }
-  .border-from-left:hover:before {
+  .border-from-left:hover:before, .border-from-left:hover:active, .border-from-left:hover:focus {
     right: 0; }
 
 #welcome {
