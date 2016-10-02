@@ -11,7 +11,8 @@ var paths = {
 	views: [
 		'./wordsoutinjs/**/*.pug',
 		'*.pug',
-		'./blog/index.pug'
+		'./blog/index.pug',
+		'./blog/admin/index.pug'
 	],
 	styles: ['./wordsoutinjs/*.sass', './style/*.sass'],
 	coffee: ['./wordsoutinjs/*.coffee'],

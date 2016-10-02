@@ -48,8 +48,13 @@
 	
 	var _imports = __webpack_require__(1);
 	
-	//TODO
-	var pc = new _imports.PublicController();
+	var parameters = __webpack_require__(6).getUrlParameters();
+	
+	if (parameters[0][0] === 'blog' && parameters[0][1] === 'admin') {
+	    var ac = new _imports.AdminController();
+	} else {
+	    var pc = new _imports.PublicController();
+	}
 
 /***/ },
 /* 1 */
@@ -60,7 +65,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.PublicController = exports.DatabaseController = exports.PostModel = exports.LabelModel = exports.LanguageModel = undefined;
+	exports.AdminController = exports.PublicController = exports.DatabaseController = exports.PostModel = exports.LabelModel = exports.LanguageModel = undefined;
 	
 	var _LanguageModel = __webpack_require__(2);
 	
@@ -82,6 +87,10 @@
 	
 	var _PublicController2 = _interopRequireDefault(_PublicController);
 	
+	var _AdminController = __webpack_require__(8);
+	
+	var _AdminController2 = _interopRequireDefault(_AdminController);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	exports.LanguageModel = _LanguageModel2.default;
@@ -89,6 +98,7 @@
 	exports.PostModel = _PostModel2.default;
 	exports.DatabaseController = _DatabaseController2.default;
 	exports.PublicController = _PublicController2.default;
+	exports.AdminController = _AdminController2.default;
 
 /***/ },
 /* 2 */
@@ -680,11 +690,86 @@
 	    return loop;
 	}
 	
+	/**
+	 * @return {array}
+	 */
+	function getUrlPath() {
+	    var path = [];
+	
+	    var url = window.location.href.replace('http://', ''),
+	        splittedWithPer = url.split('/'),
+	        splittedWithPerLength = splittedWithPer.length;
+	
+	    if (splittedWithPerLength > 1 && splittedWithPer[1] !== "") {
+	        for (var i = 1; i < splittedWithPerLength; i++) {
+	            if (!(i === splittedWithPerLength - 1 && splittedWithPer[i].charAt(0) === '?')) {
+	                path.push(splittedWithPer[i]);
+	            }
+	        }
+	    } else {
+	        path = null;
+	    }
+	
+	    return path;
+	}
+	
+	/**
+	 * @return {object}
+	 */
+	function getUrlQuery() {
+	    var query = {};
+	
+	    var splittedParameters = window.location.href.split('?')[1];
+	
+	    if (splittedParameters) {
+	        splittedParameters = splittedParameters.split('&');
+	        var _iteratorNormalCompletion = true;
+	        var _didIteratorError = false;
+	        var _iteratorError = undefined;
+	
+	        try {
+	            for (var _iterator = splittedParameters[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	                var parameter = _step.value;
+	
+	                var pair = parameter.split('=');
+	                query[pair[0]] = pair[1];
+	            }
+	        } catch (err) {
+	            _didIteratorError = true;
+	            _iteratorError = err;
+	        } finally {
+	            try {
+	                if (!_iteratorNormalCompletion && _iterator.return) {
+	                    _iterator.return();
+	                }
+	            } finally {
+	                if (_didIteratorError) {
+	                    throw _iteratorError;
+	                }
+	            }
+	        }
+	    } else {
+	        query = null;
+	    }
+	
+	    return query;
+	}
+	
+	/**
+	 * @return {[array, object]}
+	 */
+	function getUrlParameters() {
+	    return [getUrlPath(), getUrlQuery()];
+	}
+	
 	module.exports = {
 	    isEmptyObject: isEmptyObject,
 	    checkType: checkType,
 	    checkSomeTypes: checkSomeTypes,
-	    asyncLoop: asyncLoop
+	    asyncLoop: asyncLoop,
+	    getUrlPath: getUrlPath,
+	    getUrlQuery: getUrlQuery,
+	    getUrlParameters: getUrlParameters
 	};
 
 /***/ },
@@ -715,13 +800,13 @@
 	        var that = this,
 	            dc = new _imports.DatabaseController();
 	
-	        /*dc.select('posts', (result) =>
-	        {
-	            that.posts = result;
-	        }, {}, () =>
-	        {
-	            return that.postPreviews();
-	        });*/
+	        // dc.select('posts', (result) =>
+	        // {
+	        //     that.posts = result;
+	        // }, {}, () =>
+	        // {
+	        //     return that.postPreviews();
+	        // });
 	
 	        this.iWillGo();
 	    }
@@ -742,8 +827,23 @@
 	
 	            for (var i = from; i < to; i++) {
 	                var post = this.posts[i];
+	                var content = void 0;
 	
-	                html += '<section class="post-preview">\n                        <div class="blog-header">\n                            <h2 class="post-title"></h2>\n                            <div class="post-datas">\n                                <div class="created">' + post.created + '</div>\n                            </div>\n                        </div>\n                        ' + post.language[this.language] + '\n                    </section>';
+	                if (post.language[this.language]) {
+	                    content = post.language[this.language];
+	                } else {
+	                    switch (this.language) {
+	                        case 'hu':
+	                            content = post.language['en'];
+	                            break;
+	                        case 'en':
+	                        default:
+	                            content = post.language['hu'];
+	                            break;
+	                    }
+	                }
+	
+	                html += '<section class="post-preview">\n                        <div class="blog-header">\n                            <h2 class="post-title"></h2>\n                            <div class="post-datas">\n                                <div class="created">' + post.created + '</div>\n                            </div>\n                        </div>\n                        ' + content + '\n                    </section>';
 	            }
 	
 	            document.getElementById(this.bodyId).innerHTML = html;
@@ -777,6 +877,24 @@
 	}();
 	
 	exports.default = PublicController;
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var AdminController = function AdminController() {
+	    _classCallCheck(this, AdminController);
+	};
+	
+	exports.default = AdminController;
 
 /***/ }
 /******/ ]);

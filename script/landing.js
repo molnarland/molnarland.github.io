@@ -6,6 +6,7 @@ window.onscroll = function ()
 
 	setElementOpacity('#navbar .molnarland-text', scroll / 200);
 	setElementOpacity('#welcome .molnarland-text', 1 - (scroll / 200));
+	//TODO #welcome .molnarland-text move to bottom when scrolling
 
 	if (scroll > 100) 
 	{

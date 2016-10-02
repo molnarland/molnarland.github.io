@@ -120,9 +120,75 @@ function asyncLoop(iterations, func, callback)
     return loop;
 }
 
+/**
+ * @return {array}
+ */
+function getUrlPath()
+{
+    let path = [];
+
+    const url = window.location.href.replace('http://', ''),
+        splittedWithPer = url.split('/'),
+        splittedWithPerLength = splittedWithPer.length;
+
+    if (splittedWithPerLength > 1 && splittedWithPer[1] !== "")
+    {
+        for (let i = 1; i < splittedWithPerLength; i++)
+        {
+            if (!(i === splittedWithPerLength - 1 && splittedWithPer[i].charAt(0) === '?'))
+            {
+                path.push(splittedWithPer[i]);
+            }
+        }
+    }
+    else
+    {
+        path = null;
+    }
+
+    return path;
+}
+
+/**
+ * @return {object}
+ */
+function getUrlQuery()
+{
+    let query = {};
+
+    let splittedParameters = window.location.href.split('?')[1];
+
+    if (splittedParameters)
+    {
+        splittedParameters = splittedParameters.split('&')
+        for(let parameter of splittedParameters)
+        {
+            const pair = parameter.split('=');
+            query[pair[0]] = pair[1];
+        }
+    }
+    else
+    {
+        query = null;
+    }
+
+    return query;
+}
+
+/**
+ * @return {[array, object]}
+ */
+function getUrlParameters()
+{
+    return [getUrlPath(), getUrlQuery()];
+}
+
 module.exports = {
     isEmptyObject: isEmptyObject,
     checkType: checkType,
     checkSomeTypes: checkSomeTypes,
-    asyncLoop: asyncLoop
+    asyncLoop: asyncLoop,
+    getUrlPath: getUrlPath,
+    getUrlQuery: getUrlQuery,
+    getUrlParameters: getUrlParameters,
 };
