@@ -1,24 +1,20 @@
+include _mixins.pug
+
 doctype html
-html
+html(lang="en")
 	head
 		title molnarland
+		link(href="style/libs/hint.base.min.css" type="text/css" rel="stylesheet")
 		link(href="style/landing.css" type="text/css" rel="stylesheet")
 		meta(name="viewport" content="width=device-width, initial-scale=1")
 	body
-		mixin molnarland-text(heading)
-			.molnarland-text(class!=attributes.class)
-				#{heading}
-					each val, index in ['m', 'o', 'l', 'n', 'a', 'r', 'l', 'a', 'n', 'd']
-						span(class= "molnarland-" + index)= val
-
-		section#navbar
-			#social-media
-				a(href="http://twitter.com/molnarland")#twitter-link
-					img(alt="molnarland-twitter" src="pics/twitter_icon.png")
-				a(href="http://github.com/molnarland")#github-link
-					img(alt="molnarland-github" src="pics/github_icon.png")
-				a(href="http://linkedin.com/in/molnarland")#linkedin-link
-					img(alt="molnarland-linkedin" src="pics/linkedin_icon.png")
+		header#navbar
+			#contacts
+				+contact("http://twitter.com/molnarland", "twitter")
+				+contact("mailto:rrmolnar@gmail.com", "email")(label="rrmolnar@gmail.com")
+				+contact("http://github.com/molnarland", "github")
+				+contact("tel:07436716743", "phone")(label="07436716743")
+				+contact("http://linkedin.com/in/molnarland", "linkedin")
 
 			+molnarland-text("h1")(class="hide")
 
@@ -37,10 +33,53 @@ html
 
 
 		section#welcome
+			p Welcome
 			+molnarland-text("h1")(class="black")
 
-		.bla(style="height:100000px")
+		//#welcome
 
-		//#section
+		hr
+
+		section#iam
+			h3 I am
+			p
+				| Roland Molnar. So I'm a&nbsp;
+				b PHP&nbsp;
+				| and&nbsp;
+				b JavaScript FullStack webdeveloper
+				| . I&nbsp;
+				span.red-text &#9829;
+				| coding everytime. This is my hobby too after than sport, health, learning, reading.
+				| I'm open-minded, open to lot of things.
+
+		//#iam
+
+		hr
+
+		section#works
+			h3 My projects
+			.center-content
+				+work(
+					"ingyenpia.png",
+					"Ingyenpia.hu",
+					"I creating this hungarian website with my marketing and seo wizard friend with citizens of Budapest.",
+					"http://ingyenpia.hu"
+				)
+				+work(
+					"ugyeszsegiszemle.png",
+					"Ügyészségi Szemle (Prosecution's Newspaper)",
+					"I coded for Hungarian Prosecution with Laravel and jQuery.",
+					"http://ugyeszsegiszemle.hu"
+				)
+
+		hr
+
+		footer
+			span#inBirmingham
+				| I came to Birmingham
+				time
+				| &nbsp;ago.
+			span#code
+				a(href="https://github.com/molnarland/molnarland.github.io/") View code for this site
 
 		script(src="script/landing.js")

@@ -1,31 +1,59 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>molnarland</title>
+    <link href="style/libs/hint.base.min.css" type="text/css" rel="stylesheet">
     <link href="style/landing.css" type="text/css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   <body>
-    <section id="navbar">
-      <div id="social-media"><a href="http://twitter.com/molnarland" id="twitter-link"><img alt="molnarland-twitter" src="pics/twitter_icon.png"></a><a href="http://github.com/molnarland" id="github-link"><img alt="molnarland-github" src="pics/github_icon.png"></a><a href="http://linkedin.com/in/molnarland" id="linkedin-link"><img alt="molnarland-linkedin" src="pics/linkedin_icon.png"></a></div>
-          <div class="molnarland-text hide">
-            <h1><span class="molnarland-0">m</span><span class="molnarland-1">o</span><span class="molnarland-2">l</span><span class="molnarland-3">n</span><span class="molnarland-4">a</span><span class="molnarland-5">r</span><span class="molnarland-6">l</span><span class="molnarland-7">a</span><span class="molnarland-8">n</span><span class="molnarland-9">d</span>
-            </h1>
-          </div>
+    <header id="navbar">
+      <div id="contacts"><a class="hint--bottom-right" href="http://twitter.com/molnarland" id="twitter-link" aria-label="http://twitter.com/molnarland"><img alt="molnarland-twitter" src="pics/icons/twitter.png"/></a><a class="hint--bottom-right" href="mailto:rrmolnar@gmail.com" id="email-link" aria-label="rrmolnar@gmail.com"><img alt="molnarland-email" src="pics/icons/email.png"/></a><a class="hint--bottom-right" href="http://github.com/molnarland" id="github-link" aria-label="http://github.com/molnarland"><img alt="molnarland-github" src="pics/icons/github.png"/></a><a class="hint--bottom-right" href="tel:07436716743" id="phone-link" aria-label="07436716743"><img alt="molnarland-phone" src="pics/icons/phone.png"/></a><a class="hint--bottom-right" href="http://linkedin.com/in/molnarland" id="linkedin-link" aria-label="http://linkedin.com/in/molnarland"><img alt="molnarland-linkedin" src="pics/icons/linkedin.png"/></a>
+      </div>
+      <div class="molnarland-text hide">
+        <h1><span class="molnarland-0">m</span><span class="molnarland-1">o</span><span class="molnarland-2">l</span><span class="molnarland-3">n</span><span class="molnarland-4">a</span><span class="molnarland-5">r</span><span class="molnarland-6">l</span><span class="molnarland-7">a</span><span class="molnarland-8">n</span><span class="molnarland-9">d</span>
+        </h1>
+      </div>
       <ul id="menu">
         <li class="border-from-right"><a href="/wordsoutinjs">WordsOutInJS</a></li>
         <li class="border-from-left"><a href="/blog">Blog</a></li>
       </ul>
-    </section>
+    </header>
     <!--#menu-->
     <section id="welcome">
-          <div class="molnarland-text black">
-            <h1><span class="molnarland-0">m</span><span class="molnarland-1">o</span><span class="molnarland-2">l</span><span class="molnarland-3">n</span><span class="molnarland-4">a</span><span class="molnarland-5">r</span><span class="molnarland-6">l</span><span class="molnarland-7">a</span><span class="molnarland-8">n</span><span class="molnarland-9">d</span>
-            </h1>
-          </div>
+      <p>Welcome</p>
+      <div class="molnarland-text black">
+        <h1><span class="molnarland-0">m</span><span class="molnarland-1">o</span><span class="molnarland-2">l</span><span class="molnarland-3">n</span><span class="molnarland-4">a</span><span class="molnarland-5">r</span><span class="molnarland-6">l</span><span class="molnarland-7">a</span><span class="molnarland-8">n</span><span class="molnarland-9">d</span>
+        </h1>
+      </div>
     </section>
-    <div class="bla" style="height:100000px"></div>
-    <!--#section-->
+    <!--#welcome-->
+    <hr>
+    <section id="iam">
+      <h3>I am</h3>
+      <p>Roland Molnar. So I'm a&nbsp;<b>PHP&nbsp;</b>and&nbsp;<b>JavaScript FullStack webdeveloper</b>. I&nbsp;<span class="red-text">&#9829;</span>
+        coding everytime. This is my hobby too after than sport, health, learning, reading.
+        I'm open-minded, open to lot of things.
+      </p>
+    </section>
+    <!--#iam-->
+    <hr>
+    <section id="works">
+      <h3>My projects</h3>
+      <div class="center-content">
+        <aside><a href="http://ingyenpia.hu" target="_blank">
+            <div class="work-img-box"><img src="pics/works/ingyenpia.png" alt="Ingyenpia.hu"/></div>
+            <h5 class="title">Ingyenpia.hu</h5>
+            <p class="content">I creating this hungarian website with my marketing and seo wizard friend with citizens of Budapest.</p></a></aside>
+        <aside><a href="http://ugyeszsegiszemle.hu" target="_blank">
+            <div class="work-img-box"><img src="pics/works/ugyeszsegiszemle.png" alt="Ügyészségi Szemle (Prosecution's Newspaper)"/></div>
+            <h5 class="title">Ügyészségi Szemle (Prosecution's Newspaper)</h5>
+            <p class="content">I coded for Hungarian Prosecution with Laravel and jQuery.</p></a></aside>
+      </div>
+    </section>
+    <hr>
+    <footer><span id="inBirmingham">I came to Birmingham
+        <time></time>&nbsp;ago.</span><span id="code"><a href="https://github.com/molnarland/molnarland.github.io/">View code for this site</a></span></footer>
     <script src="script/landing.js"></script>
   </body>
 </html>

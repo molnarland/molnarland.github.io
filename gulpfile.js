@@ -5,22 +5,30 @@ var gulp = require('gulp'),
 	coffee = require('gulp-coffee'),
 	autoprefixer = require('gulp-autoprefixer'),
 	webpack = require('gulp-webpack'),
+	babel = require('gulp-babel'),
 	browserSync = require('browser-sync').create();
 
 var paths = {
 	views: [
 		'./wordsoutinjs/**/*.pug',
-		'*.pug',
+		'index.pug',
 		'./blog/index.pug',
 		'./blog/admin/index.pug'
 	],
 	styles: ['./wordsoutinjs/*.sass', './style/*.sass'],
 	coffee: ['./wordsoutinjs/*.coffee'],
-	feature_js: ['./blog/src/*.js', './blog/model/*.js', './blog/controller/*.js']
+	blogJs: ['./blog/src/*.js', './blog/model/*.js', './blog/controller/*.js'],
+	landingJs: ['script/es6/*.js']
 };
 
 var basePath = './',
 		base = {base: basePath};
+
+function reloadBrowser(done)
+{
+	browserSync.reload();
+	done();
+}
 
 
 gulp.task('pug', function build_html (done) {
@@ -30,8 +38,7 @@ gulp.task('pug', function build_html (done) {
 		}))
 		.pipe(gulp.dest(basePath));
 
-	browserSync.reload();
-	done();
+	reloadBrowser(done);
 });
 
 gulp.task('sass', function build_sass (done) {
@@ -43,8 +50,7 @@ gulp.task('sass', function build_sass (done) {
 		}))
 		.pipe(gulp.dest(basePath));
 
-	browserSync.reload();
-	done();
+	reloadBrowser(done);
 });
 
 gulp.task('coffee', function build_coffee (done) {
@@ -52,20 +58,27 @@ gulp.task('coffee', function build_coffee (done) {
 		.pipe(coffee({bare: true})/*.on('error', gutil.log)*/)
 		.pipe(gulp.dest(basePath));
 
-	browserSync.reload();
-	done();
+	reloadBrowser(done);
 });
 
-gulp.task('webpack', function (done) {
-	gulp.src(paths.feature_js)
+gulp.task('blog-js', function (done) {
+	gulp.src(paths.blogJs)
 		.pipe(webpack(require('./webpack.config')))
 		.pipe(gulp.dest('blog/dist/'));
 
-	browserSync.reload();
-	done();
+	reloadBrowser(done);
 });
 
-gulp.task('server', ['pug', 'sass', 'coffee', 'webpack'], function () {
+gulp.task('landing-js', function (done) {
+	gulp.src(paths.landingJs)
+		.pipe(babel())
+		.pipe(gulp.dest('script'));
+
+	reloadBrowser(done);
+});
+
+
+gulp.task('server', ['pug', 'sass', 'coffee', 'blog-js', 'landing-js'], function () {
 	browserSync.init(['index.html'], {
 		server: './',
 		open: false
@@ -78,7 +91,8 @@ function watch () {
 	gulp.watch(paths.views, ['pug']);
 	gulp.watch(paths.styles, ['sass']);
 	gulp.watch(paths.coffee, ['coffee']);
-	gulp.watch(paths.feature_js, ['webpack']);
+	gulp.watch(paths.blogJs, ['blog-js']);
+	gulp.watch(paths.landingJs, ['landing-js']);
 }
 
 gulp.task('watch', watch());

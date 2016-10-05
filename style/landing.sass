@@ -10,6 +10,9 @@ body
 	
 a
 	text-decoration: none
+	
+.red-text
+	color: red
 
 .molnarland-text
 	opacity: 1
@@ -19,6 +22,18 @@ a
 		+trans(.1, ease-out)
 		&:hover
 			+trans(.1, ease-in)
+		
+.center-content
+	width: 75%
+	min-width: 250px
+	max-width: 1000px
+	margin: 0 auto
+	
+.flex-breakline
+	width: 100%
+	
+section
+	padding: 0 15px
 
 	
 @for $index from 0 through $molnarlandCharCount
@@ -35,5 +50,7 @@ a
 			color: green
 							   
 	
-@import _navbar.sass
-@import _welcome.sass
+@import _navbar
+@import _welcome
+@import _iam
+@import _works

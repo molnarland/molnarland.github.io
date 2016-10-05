@@ -5,6 +5,9 @@ body {
 a {
   text-decoration: none; }
 
+.red-text {
+  color: red; }
+
 .molnarland-text {
   opacity: 1; }
   .molnarland-text.hide {
@@ -15,6 +18,18 @@ a {
     .molnarland-text span:hover {
       -webkit-transition: 0.1s ease-in;
       transition: 0.1s ease-in; }
+
+.center-content {
+  width: 75%;
+  min-width: 250px;
+  max-width: 1000px;
+  margin: 0 auto; }
+
+.flex-breakline {
+  width: 100%; }
+
+section {
+  padding: 0 15px; }
 
 .molnarland-0:hover {
   color: red; }
@@ -57,21 +72,20 @@ a {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
       -ms-flex-pack: justify;
-          justify-content: space-between; }
-  #navbar.top-fix {
-    position: fixed;
-    top: 0;
-    z-index: 9; }
+          justify-content: space-between;
+  position: fixed;
+  top: 0;
+  z-index: 9; }
 
-#social-media {
+#contacts {
   margin: 15px 10px 0; }
-  #social-media a {
+  #contacts a {
     margin-left: 5px;
     z-index: 10;
     float: left; }
-    #social-media a:first-child {
+    #contacts a:first-child {
       margin-left: 0; }
-    #social-media a img {
+    #contacts a img {
       width: 30px;
       height: 30px; }
 
@@ -146,10 +160,10 @@ a {
   .border-from-left:hover:before, .border-from-left:hover:active, .border-from-left:hover:focus {
     right: 0; }
 
-@media (max-width: 600px) {
-  #social-media {
+@media (max-width: 655px) {
+  #contacts {
     margin: 20px 5px 0 10px; }
-    #social-media a img {
+    #contacts a img {
       width: 20px;
       height: 20px; }
   #navbar .molnarland-text {
@@ -161,11 +175,43 @@ a {
       padding: 20px 10px;
       font-size: .7em; } }
 
-@media (max-width: 350px) {
+@media (max-width: 420px) {
   #navbar .molnarland-text {
     display: none; } }
 
 #welcome {
+  margin-top: 60px;
   position: relative; }
   #welcome .molnarland-text {
     color: black; }
+
+#works aside {
+  width: 250px;
+  margin: 15px;
+  border: 1px solid #000; }
+  #works aside .title, #works aside .content {
+    text-align: center;
+    color: #000;
+    margin: 0;
+    padding: 10px; }
+
+#works > div {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: space-around;
+      -ms-flex-pack: distribute;
+          justify-content: space-around;
+  -webkit-flex-wrap: wrap;
+      -ms-flex-wrap: wrap;
+          flex-wrap: wrap; }
+
+.work-img-box {
+  width: 250px;
+  height: 300px; }
+  .work-img-box img {
+    width: 240px;
+    height: 290px;
+    margin-top: 5px;
+    margin-left: 5px; }

@@ -4,12 +4,12 @@
 	background: black
 	display: flex
 	justify-content: space-between
-	&.top-fix
-		position: fixed
-		top: 0
-		z-index: 9
+	//&.top-fix
+	position: fixed
+	top: 0
+	z-index: 9
 
-#social-media
+#contacts
 	margin: $menuHeight/4 10px 0
 	a
 		margin-left: $menuHeight / 12
@@ -49,8 +49,8 @@
 +border-animation(border-from-right, bottom, right)
 +border-animation(border-from-left, bottom, left)
 
-@media(max-width: 600px)
-	#social-media
+@media(max-width: 655px)
+	#contacts
 		margin: $menuHeight/3 5px 0 10px
 		a img
 			width: $menuHeight / 3
@@ -66,6 +66,6 @@
 			padding: 20px 10px
 			font-size: .7em
 			
-@media(max-width: 350px)
+@media(max-width: 420px)
 	#navbar .molnarland-text
 		display: none

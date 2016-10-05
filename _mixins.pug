@@ -1,0 +1,24 @@
+mixin contact(url, social)
+    -label="";
+    if(!attributes.label)
+        -label = url;
+    else
+        -label = attributes.label
+
+    a(href=url id=social + "-link" class="hint--bottom-right" aria-label=label)
+        img(alt="molnarland-" + social src="pics/icons/" + social + ".png")
+
+
+mixin molnarland-text(heading)
+    .molnarland-text(class!=attributes.class)
+        #{heading}
+            each val, index in ['m', 'o', 'l', 'n', 'a', 'r', 'l', 'a', 'n', 'd']
+                span(class= "molnarland-" + index)= val
+
+mixin work(picture, title, content, url)
+    aside(class!=attributes.class)
+        a(href=url target="_blank")
+            div.work-img-box
+                img(src="pics/works/" + picture alt=title)
+            h5.title= title
+            p.content= content
