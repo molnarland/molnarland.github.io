@@ -69,8 +69,6 @@ function inBirmingham()
 
 inBirmingham();
 
-alert(window.innerWidth + " " + window.width);
-
 setInterval(inBirmingham, 60000);
 
 function scrollTop()
