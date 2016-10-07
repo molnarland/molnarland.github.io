@@ -18,6 +18,12 @@ a {
     .molnarland-text span:hover {
       -webkit-transition: 0.1s ease-in;
       transition: 0.1s ease-in; }
+      .molnarland-text span:hover[hover-color="red"] {
+        color: red; }
+      .molnarland-text span:hover[hover-color="yellow"] {
+        color: gold; }
+      .molnarland-text span:hover[hover-color="green"] {
+        color: green; }
 
 .center-content {
   width: 75%;
@@ -31,35 +37,8 @@ a {
 section {
   padding: 0 15px; }
 
-.molnarland-0:hover {
-  color: red; }
-
-.molnarland-1:hover {
-  color: red; }
-
-.molnarland-2:hover {
-  color: red; }
-
-.molnarland-3:hover {
-  color: gold; }
-
-.molnarland-4:hover {
-  color: gold; }
-
-.molnarland-5:hover {
-  color: gold; }
-
-.molnarland-6:hover {
-  color: green; }
-
-.molnarland-7:hover {
-  color: green; }
-
-.molnarland-8:hover {
-  color: green; }
-
-.molnarland-9:hover {
-  color: green; }
+hr {
+  margin: 0; }
 
 #navbar {
   width: 100%;
@@ -181,9 +160,49 @@ section {
 
 #welcome {
   margin-top: 60px;
+  background-image: url("../pics/WP.jpg");
+  background-position: center center;
+  background-size: cover;
+  background-attachment: fixed;
+  height: 500px;
   position: relative; }
+  #welcome:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 111, 255, 0.4);
+    z-index: 1;
+    width: 100%;
+    height: 100%; }
+  #welcome .molnarland-text, #welcome #welcome-text {
+    position: absolute; }
   #welcome .molnarland-text {
     color: black; }
+
+#welcome-container {
+  position: relative;
+  z-index: 2;
+  width: 90vw;
+  height: 100%;
+  margin: 0 auto; }
+
+#welcome-text {
+  top: 20%;
+  -webkit-border-radius: 50%;
+          border-radius: 50%;
+  position: relative;
+  width: 200px; }
+  #welcome-text span {
+    text-transform: uppercase;
+    height: 200px;
+    width: 20px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    -webkit-transform-origin: bottom center;
+        -ms-transform-origin: bottom center;
+            transform-origin: bottom center; }
 
 #works aside {
   width: 250px;

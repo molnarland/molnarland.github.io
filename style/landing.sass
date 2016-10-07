@@ -22,7 +22,14 @@ a
 		+trans(.1, ease-out)
 		&:hover
 			+trans(.1, ease-in)
+			&[hover-color="red"]
+				color: red
+			&[hover-color="yellow"]
+				color: gold
+			&[hover-color="green"]
+				color: green
 		
+
 .center-content
 	width: 75%
 	min-width: 250px
@@ -34,20 +41,11 @@ a
 	
 section
 	padding: 0 15px
-
 	
-@for $index from 0 through $molnarlandCharCount
-	.molnarland-#{$index}:hover
-		$first: $molnarlandCharCount / 3
-		$second: $first * 2
-		$third: $molnarlandCharCount
+hr
+	margin: 0
 
-		@if $index < $first
-			color: red
-		@else if $index >= $first and $index < $second
-			color: gold
-		@else if $index >= $second
-			color: green
+
 							   
 	
 @import _navbar

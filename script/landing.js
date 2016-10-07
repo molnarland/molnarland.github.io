@@ -1,12 +1,36 @@
 'use strict';
 
+window.onload = function () {
+	inBirmingham();
+	setInterval(inBirmingham, 60000);
+};
+
+var welcomeTextPositionIsLeft = void 0,
+    welcomeTextStartRotate = void 0,
+    welcomeTextMaxRotate = void 0;
+
+var welcomeTextId = '#welcome-text';
+
+welcomeTextPosition();
+
 window.onscroll = function () {
 	var scroll = scrollTop();
 
-	setElementOpacity('#navbar .molnarland-text', scroll / 200);
-	setElementOpacity('#welcome .molnarland-text', 1 - scroll / 200);
-	//TODO #welcome .molnarland-text move to bottom when scrolling
-	//TODO #navbar shadow-bottom bigger when scrolling
+	if (scroll < 500) {
+		setElementOpacity('#navbar .molnarland-text', scroll / 200);
+		setElementOpacity('#welcome .molnarland-text', 1 - scroll / 200);
+		//TODO #welcome .molnarland-text move to bottom when scrolling
+		//TODO #navbar shadow-bottom bigger when scrolling
+
+		bridgeToLine('#welcome-text span', scroll / 10);
+		if (getElementStyleValue(document.querySelector(welcomeTextId).style.transform) <= 0) {
+			var newRotate = welcomeTextStartRotate + scroll / (5 / ((welcomeTextMaxRotate - welcomeTextStartRotate) / 65));
+
+			newRotate = newRotate > 0 ? 0 : newRotate;
+
+			setElementRotate(welcomeTextId, newRotate);
+		}
+	}
 
 	// if (scroll > 60)
 	// {
@@ -17,6 +41,77 @@ window.onscroll = function () {
 	// 	replaceString('#navbar', 'top-fix');
 	// }
 };
+
+function welcomeTextPosition() {
+	welcomeTextPositionIsLeft = /*randomNumber(1) === 1*/false;
+
+	if (welcomeTextPositionIsLeft) {
+		var max = 20,
+		    random = randomNumber(max);
+
+		welcomeTextStartRotate = -((max - random) * 1.5 + 30);
+		welcomeTextMaxRotate = 60;
+
+		setElementLeft(welcomeTextId, random, '%');
+		setElementRotate(welcomeTextId, welcomeTextStartRotate);
+	} else {
+		var _max = 84,
+		    _random = randomNumber(_max, 64);
+
+		welcomeTextStartRotate = -((_max - _random) * 1.5);
+		welcomeTextMaxRotate = 30;
+
+		setElementLeft(welcomeTextId, _random, '%');
+		setElementRotate(welcomeTextId, welcomeTextStartRotate);
+	}
+}
+
+function bridgeToLine(selector, deg) {
+	if (checkSelector(selector)) {
+		for (var index in document.querySelectorAll(selector)) {
+			if (!isNaN(index)) {
+				var minRotate = 0,
+				    leftMultiplier = 2 * index,
+				    maxLeft = leftMultiplier * 20,
+				    indexMultiple = index * 10;
+
+				var nextRotate = indexMultiple - deg * 2.5;
+				nextRotate = nextRotate < minRotate ? minRotate : nextRotate;
+
+				var nextLeft = (indexMultiple - nextRotate) * 3;
+				nextLeft = nextLeft > maxLeft ? maxLeft : nextLeft;
+
+				var customSelector = selector + '.bridge-' + index;
+				setElementRotate(customSelector, nextRotate);
+				setElementLeft(customSelector, nextLeft);
+			}
+		}
+	}
+}
+
+function setElementRotate(selector, degree) {
+	checkSelector(selector, function () {
+		document.querySelector(selector).style.transform = 'rotate(' + degree + 'deg)';
+	});
+}
+
+/**
+ * @param {string} style
+ * @return {number}
+ */
+function getElementStyleValue(style) {
+	var match = style.match(/-?\d.?\d/g);
+
+	return match ? Number(match[0]) : 0;
+}
+
+function setElementLeft(selector, value) {
+	var unit = arguments.length <= 2 || arguments[2] === undefined ? 'px' : arguments[2];
+
+	checkSelector(selector, function () {
+		document.querySelector(selector).style.left = '' + value + unit;
+	});
+}
 
 function inBirmingham() {
 	var start = new Date(2016, 8, 14, 12, 0, 0),
@@ -62,10 +157,6 @@ function inBirmingham() {
 	document.querySelector('#inBirmingham time').innerHTML = differenceDateInText;
 }
 
-inBirmingham();
-
-setInterval(inBirmingham, 60000);
-
 function scrollTop() {
 	return document.body.scrollTop > 0 ? document.body.scrollTop : document.documentElement.scrollTop;
 }
@@ -87,16 +178,26 @@ function addString(selector, string) {
 	}
 }
 
-function checkSelector(selector) {
+function checkSelector(selector, next) {
 	if (!document.querySelector(selector)) {
 		throw new Error(selector + ' selector isn\'t exist');
+	}
+
+	if (typeof next === 'function') {
+		return next();
 	}
 
 	return true;
 }
 
 function setElementOpacity(selector, opacity) {
-	if (checkSelector(selector)) {
+	checkSelector(selector, function () {
 		document.querySelector(selector).style.opacity = opacity;
-	}
+	});
+}
+
+function randomNumber(max) {
+	var min = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
+
+	return Math.floor(Math.random() * (max - min + 1)) + min;
 }

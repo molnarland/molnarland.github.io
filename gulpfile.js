@@ -1,5 +1,4 @@
 var gulp = require('gulp'),
-	pug = require('gulp-pug'),
 	pug2 = require('gulp-pug2'),
 	sass = require('gulp-sass'),
 	coffee = require('gulp-coffee'),
@@ -71,7 +70,7 @@ gulp.task('blog-js', function (done) {
 
 gulp.task('landing-js', function (done) {
 	gulp.src(paths.landingJs)
-		.pipe(babel())
+		.pipe(babel()).on('error', console.error.bind(console))
 		.pipe(gulp.dest('script'));
 
 	reloadBrowser(done);

@@ -1,6 +1,6 @@
 mixin contact(url, social)
     -label="";
-    if(!attributes.label)
+    if (!attributes.label)
         -label = url;
     else
         -label = attributes.label
@@ -9,11 +9,22 @@ mixin contact(url, social)
         img(alt="molnarland-" + social src="pics/icons/" + social + ".png")
 
 
-mixin molnarland-text(heading)
+mixin rasta-text(text, heading)
     .molnarland-text(class!=attributes.class)
         #{heading}
-            each val, index in ['m', 'o', 'l', 'n', 'a', 'r', 'l', 'a', 'n', 'd']
-                span(class= "molnarland-" + index)= val
+            -first = text.length / 3;
+            -second = first * 2;
+
+            each item, index in text
+                if (index < first)
+                    span(hover-color="red" class= "molnarland-" + index)= item
+                else if (index >= first && index < second)
+                    span(hover-color="yellow" class= "molnarland-" + index)= item
+                else if (index >= second)
+                    span(hover-color="green" class= "molnarland-" + index)= item
+
+
+
 
 mixin work(picture, title, content, url)
     aside(class!=attributes.class)

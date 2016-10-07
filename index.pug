@@ -16,7 +16,7 @@ html(lang="en")
 				+contact("tel:07436716743", "phone")(label="07436716743")
 				+contact("http://linkedin.com/in/molnarland", "linkedin")
 
-			+molnarland-text("h1")(class="hide")
+			+rasta-text("molnarland", "h1")(class="hide")
 
 			ul#menu
 				each val, index in [{text: 'WordsOutInJS', link: '/wordsoutinjs'}, {text: 'Blog', link: '/blog'}]
@@ -33,8 +33,12 @@ html(lang="en")
 
 
 		section#welcome
-			p Welcome
-			+molnarland-text("h1")(class="black")
+			#welcome-container
+				#welcome-text
+					-rotate = 10
+					each item, index in "WELCOME"
+						span(class="bridge-" + index style="transform:rotate("+(index*rotate)+"deg)")= item
+				+rasta-text("Roland Molnar", "h1")(class="black")
 
 		//#welcome
 
