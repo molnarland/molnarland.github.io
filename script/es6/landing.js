@@ -9,7 +9,7 @@ let welcomeTextPositionIsLeft = 'center',
 	welcomeTextMaxRotate;
 
 var ua = window.navigator.userAgent;
-var msie = ua.indexOf("MSIE ");
+var msie = ua.indexOf("IE ");
 if (msie > 0)
 {
 	document.querySelector('#navbar').style.background = 'pink';
