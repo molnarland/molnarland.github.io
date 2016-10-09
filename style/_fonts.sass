@@ -31,6 +31,8 @@
 		font-style: $style
 		src: url("fonts/" + $font + "-" + $url + $fileType)
 			
+	
+	
 =set-italic-and-normal-font-face($font, $weight, $fileType: ".ttf")
 	+set-font-face($font, $weight, normal, $fileType)
 	+set-font-face($font, $weight, italic, $fileType)
@@ -42,4 +44,8 @@
 +set-font-face(Ubuntu, normal, italic)
 +set-italic-and-normal-font-face(Ubuntu, medium)
 +set-italic-and-normal-font-face(Ubuntu, bold)
+
+@font-face
+	font-family: CHM
+	src: url("fonts/Calligraphy_Hand_Made.ttf")
 	

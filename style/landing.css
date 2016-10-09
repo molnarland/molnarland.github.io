@@ -46,6 +46,10 @@
   font-style: italic;
   src: url("fonts/Ubuntu-BoldItalic.ttf"); }
 
+@font-face {
+  font-family: CHM;
+  src: url("fonts/Calligraphy_Hand_Made.ttf"); }
+
 html, body {
   overflow-x: hidden; }
 
@@ -127,7 +131,9 @@ hr {
   line-height: 60px;
   text-align: center;
   margin: 0 auto;
-  color: white; }
+  color: white;
+  font-family: CHM;
+  font-size: 1.3em; }
   #navbar .molnarland-text h1 {
     margin: 0; }
 
@@ -200,7 +206,7 @@ hr {
       height: 20px; }
   #navbar .molnarland-text {
     width: 90px;
-    font-size: .5em; }
+    font-size: .8em; }
   #menu {
     margin: 0 10px 0 5px; }
     #menu li a {
