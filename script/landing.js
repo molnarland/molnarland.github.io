@@ -9,6 +9,12 @@ var welcomeTextPositionIsLeft = 'center',
     welcomeTextStartRotate = void 0,
     welcomeTextMaxRotate = void 0;
 
+var ua = window.navigator.userAgent;
+var msie = ua.indexOf("MSIE ");
+if (msie > 0) {
+	document.querySelector('#navbar').style.background = 'pink';
+}
+
 var welcomeTextId = '#welcome-text',
     photoOfMeId = '#photo-of-me';
 
