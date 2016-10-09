@@ -1,6 +1,59 @@
+@font-face {
+  font-family: Ubuntu;
+  font-weight: 300;
+  font-style: normal;
+  src: url("fonts/Ubuntu-Light.ttf"); }
+
+@font-face {
+  font-family: Ubuntu;
+  font-weight: 300;
+  font-style: italic;
+  src: url("fonts/Ubuntu-LightItalic.ttf"); }
+
+@font-face {
+  font-family: Ubuntu;
+  font-weight: 400;
+  font-style: normal;
+  src: url("fonts/Ubuntu-Regular.ttf"); }
+
+@font-face {
+  font-family: Ubuntu;
+  font-weight: 400;
+  font-style: italic;
+  src: url("fonts/Ubuntu-Italic.ttf"); }
+
+@font-face {
+  font-family: Ubuntu;
+  font-weight: 500;
+  font-style: normal;
+  src: url("fonts/Ubuntu-Medium.ttf"); }
+
+@font-face {
+  font-family: Ubuntu;
+  font-weight: 500;
+  font-style: italic;
+  src: url("fonts/Ubuntu-MediumItalic.ttf"); }
+
+@font-face {
+  font-family: Ubuntu;
+  font-weight: 700;
+  font-style: normal;
+  src: url("fonts/Ubuntu-Bold.ttf"); }
+
+@font-face {
+  font-family: Ubuntu;
+  font-weight: 700;
+  font-style: italic;
+  src: url("fonts/Ubuntu-BoldItalic.ttf"); }
+
+html, body {
+  overflow-x: hidden; }
+
 body {
   margin: 0;
-  padding: 0; }
+  padding: 0;
+  font-family: Ubuntu;
+  font-size: 16px; }
 
 a {
   text-decoration: none; }
@@ -151,21 +204,21 @@ hr {
   #menu {
     margin: 0 10px 0 5px; }
     #menu li a {
-      padding: 20px 10px;
-      font-size: .7em; } }
+      padding: 20px 10px; } }
 
-@media (max-width: 420px) {
+@media (max-width: 440px) {
   #navbar .molnarland-text {
     display: none; } }
 
 #welcome {
   margin-top: 60px;
-  background-image: url("../pics/WP.jpg");
+  background-image: url("../pics/welcome-background.jpg");
   background-position: center center;
   background-size: cover;
   background-attachment: fixed;
   height: 500px;
-  position: relative; }
+  position: relative;
+  color: #000; }
   #welcome:after {
     content: "";
     position: absolute;
@@ -178,7 +231,13 @@ hr {
   #welcome .molnarland-text, #welcome #welcome-text {
     position: absolute; }
   #welcome .molnarland-text {
-    color: black; }
+    font-size: 2em;
+    width: 100%;
+    left: 0;
+    right: 0;
+    bottom: 10%;
+    margin: 0 auto;
+    text-align: center; }
 
 #welcome-container {
   position: relative;
@@ -192,7 +251,8 @@ hr {
   -webkit-border-radius: 50%;
           border-radius: 50%;
   position: relative;
-  width: 200px; }
+  width: 200px;
+  font-size: 1.3em; }
   #welcome-text span {
     text-transform: uppercase;
     height: 200px;
@@ -203,6 +263,36 @@ hr {
     -webkit-transform-origin: bottom center;
         -ms-transform-origin: bottom center;
             transform-origin: bottom center; }
+
+#photo-of-me {
+  position: absolute;
+  top: 25%;
+  background: rgba(0, 0, 0, 0.3);
+  width: 160px;
+  height: 210px; }
+  #photo-of-me img {
+    width: 140px;
+    height: 190px;
+    margin-top: 10px;
+    margin-left: 10px; }
+  #photo-of-me.center {
+    left: 0;
+    right: 0;
+    margin: auto; }
+  #photo-of-me.left {
+    left: 5%; }
+  #photo-of-me.right {
+    right: 5%; }
+
+@media (max-width: 800px) {
+  #welcome-text {
+    top: 5%; } }
+
+@media (max-width: 380px) {
+  #welcome {
+    padding: 0; }
+  #welcome-container {
+    width: 100%; } }
 
 #works aside {
   width: 250px;
@@ -235,3 +325,7 @@ hr {
     height: 290px;
     margin-top: 5px;
     margin-left: 5px; }
+
+@media (max-width: 350px) {
+  body {
+    font-size: 13px; } }

@@ -1,12 +1,18 @@
-@import _mixins.sass
+@import _fonts
+@import _mixins
 
 $menuHeight: 60px
 $socials: 3
 $molnarlandCharCount: 9
 
+html, body
+	overflow-x: hidden
+
 body
 	margin: 0
 	padding: 0
+	font-family: Ubuntu
+	font-size: 16px
 	
 a
 	text-decoration: none
@@ -44,11 +50,15 @@ section
 	
 hr
 	margin: 0
-
-
+		
 							   
-	
+
 @import _navbar
 @import _welcome
 @import _iam
 @import _works
+
+
+@media(max-width: 350px)
+	body
+		font-size: 13px

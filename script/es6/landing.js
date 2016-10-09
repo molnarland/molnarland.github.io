@@ -4,17 +4,28 @@ window.onload = () =>
 	setInterval(inBirmingham, 60000);
 };
 
-let welcomeTextPositionIsLeft,
+let welcomeTextPositionIsLeft = 'center',
 	welcomeTextStartRotate,
 	welcomeTextMaxRotate;
 
-const welcomeTextId = '#welcome-text';
+const welcomeTextId = '#welcome-text',
+    photoOfMeId = '#photo-of-me';
 
-welcomeTextPosition();
+let windowWidth = window.innerWidth;
+
+
+onloadAndOnresizeFunctions();
+
+document.querySelector('body').onresize = () =>
+{
+    windowWidth = window.innerWidth;
+
+    onloadAndOnresizeFunctions();
+};
 
 window.onscroll = () =>
 {
-	var scroll = scrollTop();
+	let scroll = scrollTop();
 
 	if (scroll < 500)
 	{
@@ -45,32 +56,103 @@ window.onscroll = () =>
 	// }
 };
 
-function welcomeTextPosition()
+function onloadAndOnresizeFunctions()
 {
-	welcomeTextPositionIsLeft = /*randomNumber(1) === 1*/ false;
-
-	if (welcomeTextPositionIsLeft)
+    welcomeTextPosition(() =>
 	{
-		const max = 20,
-			random = randomNumber(max);
+		photoOfMePosition();
+	});
+}
 
-		welcomeTextStartRotate = -((max - random) * 1.5 + 30);
-		welcomeTextMaxRotate = 60;
+function photoOfMePosition()
+{
+	removeClass(photoOfMeId, 'center');
+	removeClass(photoOfMeId, 'left');
+	removeClass(photoOfMeId, 'right');
 
-		setElementLeft(welcomeTextId, random, '%');
-		setElementRotate(welcomeTextId, welcomeTextStartRotate);
+	if (welcomeTextPositionIsLeft === 'center')
+	{
+		addClass(photoOfMeId, 'center');
+	}
+	else if (welcomeTextPositionIsLeft)
+	{
+		addClass(photoOfMeId, 'right');
 	}
 	else
 	{
-		const max = 84,
-			random = randomNumber(max, 64);
-
-		welcomeTextStartRotate = -((max - random) * 1.5);
-		welcomeTextMaxRotate = 30;
-
-		setElementLeft(welcomeTextId, random, '%');
-		setElementRotate(welcomeTextId, welcomeTextStartRotate);
+		addClass(photoOfMeId, 'left');
 	}
+}
+
+
+function welcomeTextPosition(callback)
+{
+    if (windowWidth >= 800)
+    {
+        welcomeTextPositionIsLeft = randomNumber(1) === 1;
+
+        if (welcomeTextPositionIsLeft) {
+            const max = 20,
+                random = randomNumber(max);
+
+            welcomeTextStartRotate = -((max - random) * 1.5 + 30);
+            welcomeTextMaxRotate = 60;
+
+            setElementLeft(welcomeTextId, random, '%');
+            setElementRotate(welcomeTextId, welcomeTextStartRotate);
+        }
+        else
+        {
+            let max, min;
+
+            if (windowWidth >= 1200)
+            {
+                max = 84;
+                min = 64;
+            }
+            else if (windowWidth < 1200 && windowWidth >= 800)
+            {
+                max = 76;
+                min = 56;
+            }
+
+            const random = randomNumber(max, min);
+
+            welcomeTextStartRotate = -((max - random) * 1.5);
+            welcomeTextMaxRotate = 30;
+
+            setElementLeft(welcomeTextId, random, '%');
+            setElementRotate(welcomeTextId, welcomeTextStartRotate);
+        }
+    }
+    else
+    {
+    	welcomeTextPositionIsLeft = 'center';
+
+        welcomeTextStartRotate = -29;
+        welcomeTextMaxRotate = 29;
+
+        setElementRotate(welcomeTextId, -29);
+
+
+        let ratio = 1;
+
+        if (windowWidth < 800 && windowWidth > 370)
+        {
+            ratio = 800 / 35;
+        }
+        else if (windowWidth <= 370)
+        {
+            ratio = 370 / 18;
+        }
+
+        setElementLeft(welcomeTextId, windowWidth / ratio, '%');
+    }
+
+    if (typeof callback === 'function')
+    {
+        callback();
+    }
 }
 
 function bridgeToLine(selector, deg)
@@ -104,7 +186,10 @@ function setElementRotate(selector, degree)
 {
 	checkSelector(selector, () =>
 	{
-		document.querySelector(selector).style.transform = `rotate(${degree}deg)`;
+	    for(let value of ['transform', 'webkitTransform', 'oTransform', 'msTransform', 'mozTransform'])
+        {
+            document.querySelector(selector).style[value] = `rotate(${degree}deg)`;
+        }
 	});
 }
 
@@ -188,20 +273,20 @@ function substring(value, string)
 	return value.indexOf(string) !== -1;
 }
 
-function replaceString(selector, string)
+function removeClass(selector, cssClass)
 {
 	let cssClassName = document.querySelector(selector).className;
-	if (substring(cssClassName, string)) 
+	if (substring(cssClassName, cssClass))
 	{
-		document.querySelector(selector).className = cssClassName.replace(string, '');
+		document.querySelector(selector).className = cssClassName.replace(cssClass, '');
 	}
 }
 
-function addString(selector, string)
+function addClass(selector, cssClass)
 {
-	if (!substring(document.querySelector(selector).className, string)) 
+	if (checkSelector(selector) && !substring(document.querySelector(selector).className, cssClass))
 	{
-		document.querySelector(selector).className += string;
+		document.querySelector(selector).className += cssClass;
 	}
 }
 
@@ -209,7 +294,7 @@ function checkSelector(selector, next)
 {
 	if (!document.querySelector(selector))
 	{
-		throw new Error(selector + ' selector isn\'t exist');
+		throw new Error(`'${selector}' selector isn\'t exist`);
 	}
 
 	if (typeof next === 'function')

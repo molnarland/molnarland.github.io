@@ -78,3 +78,13 @@
 						bottom: 0
 				@else
 					#{$to}: 0
+
+																		 
+=centerPictureInDiv($div-width, $div-height, $img-margin)
+	width: $div-width
+	height: $div-height
+	img
+		width: $div-width - $img-margin * 2
+		height: $div-height - $img-margin * 2
+		margin-top: $img-margin
+		margin-left: $img-margin

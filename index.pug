@@ -2,88 +2,88 @@ include _mixins.pug
 
 doctype html
 html(lang="en")
-	head
-		title molnarland
-		link(href="style/libs/hint.base.min.css" type="text/css" rel="stylesheet")
-		link(href="style/landing.css" type="text/css" rel="stylesheet")
-		meta(name="viewport" content="width=device-width, initial-scale=1")
-	body
-		header#navbar
-			#contacts
-				+contact("http://twitter.com/molnarland", "twitter")
-				+contact("mailto:rrmolnar@gmail.com", "email")(label="rrmolnar@gmail.com")
-				+contact("http://github.com/molnarland", "github")
-				+contact("tel:07436716743", "phone")(label="07436716743")
-				+contact("http://linkedin.com/in/molnarland", "linkedin")
+    head
+        title molnarland
+        link(href="style/libs/hint.base.min.css" type="text/css" rel="stylesheet")
+        link(href="style/landing.css" type="text/css" rel="stylesheet")
+        meta(name="viewport" content="width=device-width, initial-scale=1")
+    body
+        header#navbar
+            #contacts
+                +contact("http://twitter.com/molnarland", "twitter")
+                +contact("mailto:rrmolnar@gmail.com", "email")(label="rrmolnar@gmail.com")
+                +contact("http://github.com/molnarland", "github")
+                +contact("tel:07436716743", "phone")(label="07436716743")
+                +contact("http://linkedin.com/in/molnarland", "linkedin")
 
-			+rasta-text("molnarland", "h1")(class="hide")
+            +rasta-text("molnarland", "h1")(class="hide")
 
-			ul#menu
-				each val, index in [{text: 'WordsOutInJS', link: '/wordsoutinjs'}, {text: 'Blog', link: '/blog'}]
-					-liClass = 'border-from-left';
-					if index % 2 == 0
-						-liClass = 'border-from-right';
-					else
-						-liClass = 'border-from-left';
+            ul#menu
+                each val, index in [{text: 'WordsOutInJS', link: '/wordsoutinjs'}, {text: 'Blog', link: '/blog'}]
+                    -liClass = 'border-from-left';
+                    if index % 2 == 0
+                        -liClass = 'border-from-right';
+                    else
+                        -liClass = 'border-from-left';
 
-					li(class=liClass)
-						a(href=val.link)= val.text
+                    li(class=liClass)
+                        a(href=val.link)= val.text
+        //#menu
 
-		//#menu
+
+        section#welcome
+            #welcome-container
+                #welcome-text
+                    -rotate = 10
+                    each item, index in "WELCOME"
+                        span(class="bridge-" + index style="transform:rotate(" + (index * rotate) + "deg)")= item
+                +rasta-text("Roland Molnar", "h1")(class="black")
+                #photo-of-me
+                    img(src="pics/photo-of-me.jpeg" alt="Roland Molnar")
+        //#welcome
 
 
-		section#welcome
-			#welcome-container
-				#welcome-text
-					-rotate = 10
-					each item, index in "WELCOME"
-						span(class="bridge-" + index style="transform:rotate("+(index*rotate)+"deg)")= item
-				+rasta-text("Roland Molnar", "h1")(class="black")
+        section#iam
+            h3 I am
+            p
+                b PHP&nbsp;
+                | and&nbsp;
+                b JavaScript FullStack webdeveloper
+                | . I&nbsp;
+                span.red-text &#9829;&nbsp;
+                | coding&nbsp;
+                b webpages
+                | everytime. This is my hobby too after than sport, health, learning, reading.
+                | I'm open-minded, open to lot of things.
 
-		//#welcome
+        //#iam
 
-		hr
+        hr
 
-		section#iam
-			h3 I am
-			p
-				| Roland Molnar. So I'm a&nbsp;
-				b PHP&nbsp;
-				| and&nbsp;
-				b JavaScript FullStack webdeveloper
-				| . I&nbsp;
-				span.red-text &#9829;
-				| coding everytime. This is my hobby too after than sport, health, learning, reading.
-				| I'm open-minded, open to lot of things.
+        section#works
+            h3 My projects
+            .center-content
+                +work(
+                    "ingyenpia.png",
+                    "Ingyenpia.hu",
+                    "I creating this hungarian website with my marketing and seo wizard friend with citizens of Budapest.",
+                    "http://ingyenpia.hu"
+                )
+                +work(
+                    "ugyeszsegiszemle.png",
+                    "Ügyészségi Szemle (Prosecution's Newspaper)",
+                    "I coded for Hungarian Prosecution with Laravel and jQuery.",
+                    "http://ugyeszsegiszemle.hu"
+                )
 
-		//#iam
+        hr
 
-		hr
+        footer
+            span#inBirmingham
+                | I came to Birmingham
+                time
+                | &nbsp;ago.
+            span#code
+                a(href="https://github.com/molnarland/molnarland.github.io/") View code for this site
 
-		section#works
-			h3 My projects
-			.center-content
-				+work(
-					"ingyenpia.png",
-					"Ingyenpia.hu",
-					"I creating this hungarian website with my marketing and seo wizard friend with citizens of Budapest.",
-					"http://ingyenpia.hu"
-				)
-				+work(
-					"ugyeszsegiszemle.png",
-					"Ügyészségi Szemle (Prosecution's Newspaper)",
-					"I coded for Hungarian Prosecution with Laravel and jQuery.",
-					"http://ugyeszsegiszemle.hu"
-				)
-
-		hr
-
-		footer
-			span#inBirmingham
-				| I came to Birmingham
-				time
-				| &nbsp;ago.
-			span#code
-				a(href="https://github.com/molnarland/molnarland.github.io/") View code for this site
-
-		script(src="script/landing.js")
+        script(src="script/landing.js")
