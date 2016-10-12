@@ -3,20 +3,21 @@
 window.onload = function () {
 	inBirmingham();
 	setInterval(inBirmingham, 60000);
+
+	alert(isTouchDevice());
+};
+
+function isTouchDevice() {
+	return !!('ontouchstart' in window) || !!('msmaxtouchpoints' in window.navigator);
 };
 
 var welcomeTextPositionIsLeft = 'center',
     welcomeTextStartRotate = void 0,
     welcomeTextMaxRotate = void 0;
 
-var ua = window.navigator.userAgent;
-var msie = ua.indexOf("IE ");
-if (msie > 0) {
-	document.querySelector('#navbar').style.background = 'pink';
-}
-
 var welcomeTextId = '#welcome-text',
-    photoOfMeId = '#photo-of-me';
+    photoOfMeId = '#photo-of-me',
+    rastaTextClass = '.rasta-text';
 
 var windowWidth = window.innerWidth;
 
@@ -32,12 +33,11 @@ window.onscroll = function () {
 	var scroll = scrollTop();
 
 	if (scroll < 500) {
-		setElementOpacity('#navbar .molnarland-text', scroll / 200);
-		setElementOpacity('#welcome .molnarland-text', 1 - scroll / 200);
-		//TODO #welcome .molnarland-text move to bottom when scrolling
+		setElementOpacity('#navbar ' + rastaTextClass, scroll / 200);
+		setElementOpacity('#welcome ' + rastaTextClass, 1 - scroll / 200);
 		//TODO #navbar shadow-bottom bigger when scrolling
 
-		bridgeToLine('#welcome-text span', scroll / 10);
+		bridgeToLine(welcomeTextId + ' span', scroll / 10);
 		if (getElementStyleValue(document.querySelector(welcomeTextId).style.transform) <= 0) {
 			var newRotate = welcomeTextStartRotate + scroll / (5 / ((welcomeTextMaxRotate - welcomeTextStartRotate) / 65));
 

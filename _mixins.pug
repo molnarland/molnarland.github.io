@@ -10,18 +10,23 @@ mixin contact(url, social)
 
 
 mixin rasta-text(text, heading)
-    .molnarland-text(class!=attributes.class)
+    .rasta-text(class!=attributes.class)
         #{heading}
             -first = (text.length - 1) / 3;
             -second = first * 2;
 
             each item, index in text
-                if (index < first)
-                    span(hover-color="red" class= "molnarland-" + index)= item
-                else if (index >= first && index < second)
-                    span(hover-color="yellow" class= "molnarland-" + index)= item
-                else if (index >= second)
-                    span(hover-color="green" class= "molnarland-" + index)= item
+                if (item === ' ')
+                    -first++;
+                    -second++;
+                    span(class="molnarland-" + index)= item
+                else
+                    if (index < first)
+                        span(hover-color="red" class="molnarland-" + index)= item
+                    else if (index >= first && index < second)
+                        span(hover-color="yellow" class="molnarland-" + index)= item
+                    else if (index >= second)
+                        span(hover-color="green" class="molnarland-" + index)= item
 
 
 

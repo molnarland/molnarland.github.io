@@ -57,7 +57,8 @@ body {
   margin: 0;
   padding: 0;
   font-family: Ubuntu;
-  font-size: 16px; }
+  font-size: 16px;
+  line-height: 150%; }
 
 a {
   text-decoration: none; }
@@ -65,21 +66,21 @@ a {
 .red-text {
   color: red; }
 
-.molnarland-text {
+.rasta-text {
   opacity: 1; }
-  .molnarland-text.hide {
+  .rasta-text.hide {
     opacity: 0; }
-  .molnarland-text span {
+  .rasta-text span {
     -webkit-transition: 0.1s ease-out;
     transition: 0.1s ease-out; }
-    .molnarland-text span:hover {
+    .rasta-text span:hover {
       -webkit-transition: 0.1s ease-in;
       transition: 0.1s ease-in; }
-      .molnarland-text span:hover[hover-color="red"] {
+      .rasta-text span:hover[hover-color="red"] {
         color: red; }
-      .molnarland-text span:hover[hover-color="yellow"] {
+      .rasta-text span:hover[hover-color="yellow"] {
         color: gold; }
-      .molnarland-text span:hover[hover-color="green"] {
+      .rasta-text span:hover[hover-color="green"] {
         color: green; }
 
 .center-content {
@@ -92,7 +93,10 @@ a {
   width: 100%; }
 
 section {
-  padding: 0 15px; }
+  padding: 20px 15px; }
+  section h3 {
+    font-size: 2em;
+    margin: 0; }
 
 hr {
   margin: 0; }
@@ -125,7 +129,7 @@ hr {
       width: 30px;
       height: 30px; }
 
-#navbar .molnarland-text {
+#navbar .rasta-text {
   width: 200px;
   height: 60px;
   line-height: 60px;
@@ -134,7 +138,7 @@ hr {
   color: white;
   font-family: CHM;
   font-size: 1.3em; }
-  #navbar .molnarland-text h1 {
+  #navbar .rasta-text h1 {
     margin: 0; }
 
 #menu {
@@ -204,7 +208,7 @@ hr {
     #contacts a img {
       width: 20px;
       height: 20px; }
-  #navbar .molnarland-text {
+  #navbar .rasta-text {
     width: 90px;
     font-size: .8em; }
   #menu {
@@ -213,7 +217,7 @@ hr {
       padding: 20px 10px; } }
 
 @media (max-width: 440px) {
-  #navbar .molnarland-text {
+  #navbar .rasta-text {
     display: none; } }
 
 #welcome {
@@ -234,14 +238,14 @@ hr {
     z-index: 1;
     width: 100%;
     height: 100%; }
-  #welcome .molnarland-text, #welcome #welcome-text {
+  #welcome .rasta-text, #welcome #welcome-text {
     position: absolute; }
-  #welcome .molnarland-text {
+  #welcome .rasta-text {
     font-size: 2em;
     width: 100%;
     left: 0;
     right: 0;
-    bottom: 10%;
+    bottom: 2%;
     margin: 0 auto;
     text-align: center; }
 
@@ -300,18 +304,54 @@ hr {
   #welcome-container {
     width: 100%; } }
 
-#works aside {
-  width: 250px;
-  min-width: 250px;
-  margin: 15px;
-  border: 1px solid #000; }
-  #works aside .title, #works aside .content {
-    text-align: center;
-    color: #000;
-    margin: 0;
-    padding: 10px; }
+#iam {
+  background: -webkit-gradient(linear, left top, right top, from(#999), to(#eee));
+  background: -webkit-linear-gradient(left, #999, #eee);
+  background: linear-gradient(to right, #999, #eee);
+  padding: 20px 3%; }
+  #iam .content {
+    font-size: 1.2em;
+    margin-left: 20px;
+    width: 100%;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+        -ms-flex-pack: justify;
+            justify-content: space-between; }
 
-#works > div {
+#iam-text {
+  width: 60%; }
+
+#iam-photo {
+  width: 200px;
+  height: 200px;
+  margin-right: 10%; }
+
+@media (max-width: 800px) {
+  #iam-text {
+    width: 55%; } }
+
+@media (max-width: 600px) {
+  #iam .content {
+    -webkit-flex-wrap: wrap;
+        -ms-flex-wrap: wrap;
+            flex-wrap: wrap; }
+  #iam-text {
+    width: 95%; }
+  #iam-photo {
+    margin: auto; } }
+
+@media (max-width: 400px) {
+  #iam .content {
+    margin-left: 0; } }
+
+#works .rasta-text {
+  margin-bottom: 20px; }
+
+#works .center-content {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -322,6 +362,16 @@ hr {
   -webkit-flex-wrap: wrap;
       -ms-flex-wrap: wrap;
           flex-wrap: wrap; }
+  #works .center-content aside {
+    width: 250px;
+    min-width: 250px;
+    margin: 15px;
+    border: 1px solid #000; }
+    #works .center-content aside .title, #works .center-content aside .content {
+      text-align: center;
+      color: #000;
+      margin: 0;
+      padding: 10px; }
 
 .work-img-box {
   width: 250px;

@@ -3,21 +3,23 @@ $work-height: 300px
 $img-margin: 5px
 
 #works
-	aside
-		width: $work-width
-		min-width: $work-width
-		margin: 15px
-		border: 1px solid #000
-		.title, .content
-			text-align: center
-			color: #000
-			margin: 0
-			padding: $img-margin * 2
-			
-	& > div
+	.rasta-text
+		margin-bottom: 20px
+	.center-content
 		display: flex
 		justify-content: space-around
 		flex-wrap: wrap
+		aside
+			width: $work-width
+			min-width: $work-width
+			margin: 15px
+			border: 1px solid #000
+			.title, .content
+				text-align: center
+				color: #000
+				margin: 0
+				padding: $img-margin * 2
+				
 
 .work-img-box
 	+centerPictureInDiv($work-width, $work-height, $img-margin)
