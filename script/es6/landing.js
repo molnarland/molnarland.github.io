@@ -2,11 +2,7 @@ window.onload = () =>
 {
 	inBirmingham();
 	setInterval(inBirmingham, 60000);
-
-	alert(isTouchDevice());
 };
-
-function isTouchDevice() {return !!('ontouchstart' in window) || !!('msmaxtouchpoints' in window.navigator);};
 
 let welcomeTextPositionIsLeft = 'center',
 	welcomeTextStartRotate,
@@ -18,7 +14,7 @@ const welcomeTextId = '#welcome-text',
 
 let windowWidth = window.innerWidth;
 
-
+isTouchDevice();
 onloadAndOnresizeFunctions();
 
 document.querySelector('body').onresize = () =>
@@ -59,6 +55,19 @@ window.onscroll = () =>
 	// 	replaceString('#navbar', 'top-fix');
 	// }
 };
+
+
+function isTouchDevice()
+{
+	if(('ontouchstart' in window) || ('msmaxtouchpoints' in window.navigator))
+	{
+		addClass('body', 'touch');
+	}
+	else
+	{
+		addClass('body', 'click');
+	}
+}
 
 function onloadAndOnresizeFunctions()
 {
