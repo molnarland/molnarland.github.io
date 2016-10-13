@@ -56,7 +56,7 @@ html(lang="en")
                     b webpages
                     | everytime. This is my hobby too after than sport, health, learning, reading.
                     | I'm open-minded, open to lot of things. I know how important a great website with
-                    | beautiful design and fast loading of good, modern company.
+                    | beautiful design and fast loading for a good, modern company.
                 #iam-photo
                     img(src="http://placehold.it/200x200")
         //#iam
@@ -69,15 +69,26 @@ html(lang="en")
                     "Ingyenpia.hu",
                     "I creating this hungarian website with my marketing and seo wizard friend with citizens of Budapest.",
                     "http://ingyenpia.hu"
-                )
+                )(class="work")
                 +work(
                     "ugyeszsegiszemle.png",
                     "Ügyészségi Szemle (Prosecution's Newspaper)",
                     "I coded for Hungarian Prosecution with Laravel and jQuery.",
                     "http://ugyeszsegiszemle.hu"
-                )
+                )(class="work")
+        //#works
 
-        //hr
+        section#contact-now
+            +rasta-text("We work together... Just contact me in", "h3")
+            .center-content
+                a(href="mailto:rrmolnar@gmail.com").action
+                    h5.tool Email
+                    p.info rrmolnar@gmail.com
+                a(href="tel:07436716743").action
+                    h5.tool Phone
+                    p.info 07436716743
+        //#contact-now
+
 
         footer
             span#inBirmingham
@@ -86,7 +97,6 @@ html(lang="en")
                 | &nbsp;ago.
             span#code
                 a(href="https://github.com/molnarland/molnarland.github.io/") View code for this site
-
 
 
         script(src="script/landing.js")

@@ -3,23 +3,46 @@ $work-height: 300px
 $img-margin: 5px
 
 #works
+	background: #eee
 	.rasta-text
 		margin-bottom: 20px
-	.center-content
+
+aside.work
+	width: $work-width
+	min-width: $work-width
+	margin: 15px
+	border: 1px solid #000
+	.title
+		font-size: 1.2em
+	.content
+		font-size: 1em
+	.title, .content
+		text-align: center
+		margin: 0
+		padding: $img-margin * 2
+		
+		
+body.click aside.work
+	position: relative
+	.text
+		position: absolute
+		top: 0
+		left: 0
+		bottom: 0
+		right: 0
+		margin: auto
 		display: flex
-		justify-content: space-around
-		flex-wrap: wrap
-		aside
-			width: $work-width
-			min-width: $work-width
-			margin: 15px
-			border: 1px solid #000
-			.title, .content
-				text-align: center
-				color: #000
-				margin: 0
-				padding: $img-margin * 2
-				
+		flex-direction: column
+		justify-content: center
+		color: white
+		//background: rgba(0, 0, 0, .8)
+		background: rgba(0, 111, 255, .9)
+		opacity: 0
+		+trans()
+	&:hover .text
+		opacity: 1
+		+trans()
+		
 
 .work-img-box
 	+centerPictureInDiv($work-width, $work-height, $img-margin)
