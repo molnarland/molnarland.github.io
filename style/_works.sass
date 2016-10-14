@@ -11,7 +11,7 @@ aside.work
 	width: $work-width
 	min-width: $work-width
 	margin: 15px
-	border: 1px solid #000
+	border-radius: $imageBorderRadius
 	.title
 		font-size: 1.2em
 	.content
@@ -21,9 +21,11 @@ aside.work
 		margin: 0
 		padding: $img-margin * 2
 		
-		
-body.click aside.work
+
+body.click aside.work //in computer or laptop
+	$color: #fff
 	position: relative
+	background: #dedede
 	.text
 		position: absolute
 		top: 0
@@ -34,14 +36,36 @@ body.click aside.work
 		display: flex
 		flex-direction: column
 		justify-content: center
-		color: white
-		//background: rgba(0, 0, 0, .8)
+		color: $color
 		background: rgba(0, 111, 255, .9)
+		border-radius: 5$imageBorderRadius
 		opacity: 0
 		+trans()
 	&:hover .text
 		opacity: 1
 		+trans()
+	
+		
+body.touch aside.work //in mobile device
+	$color: #000
+	&:nth-child(even)
+		background: linear-gradient(to top, #999, #eee)
+	&:nth-child(odd)
+		background: linear-gradient(to bottom, #999, #eee)
+	.text
+		color: $color
+	.title
+		position: relative
+		&:after
+			content: ''
+			position: absolute
+			bottom: 7px
+			left: 0
+			right: 0
+			margin: auto
+			width: 20%
+			height: 1px
+			background: $color
 		
 
 .work-img-box
