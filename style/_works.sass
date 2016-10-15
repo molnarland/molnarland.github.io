@@ -38,7 +38,7 @@ body.click aside.work //in computer or laptop
 		justify-content: center
 		color: $color
 		background: rgba(0, 111, 255, .9)
-		border-radius: 5$imageBorderRadius
+		border-radius: $imageBorderRadius
 		opacity: 0
 		+trans()
 	&:hover .text
@@ -48,10 +48,11 @@ body.click aside.work //in computer or laptop
 		
 body.touch aside.work //in mobile device
 	$color: #000
-	&:nth-child(even)
-		background: linear-gradient(to top, #999, #eee)
-	&:nth-child(odd)
-		background: linear-gradient(to bottom, #999, #eee)
+	background: lighten($darkerBgColorInGradient, 20px)
+	//&:nth-child(even)
+	//	+gradient(to top, null)
+	//&:nth-child(odd)
+	//	+gradient(to bottom, null)
 	.text
 		color: $color
 	.title

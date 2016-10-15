@@ -405,8 +405,8 @@ body.click aside.work {
             justify-content: center;
     color: #fff;
     background: rgba(0, 111, 255, 0.9);
-    -webkit-border-radius: 5 5px;
-            border-radius: 5 5px;
+    -webkit-border-radius: 5px;
+            border-radius: 5px;
     opacity: 0;
     -webkit-transition: 0.5s ease;
     transition: 0.5s ease; }
@@ -415,31 +415,22 @@ body.click aside.work {
     -webkit-transition: 0.5s ease;
     transition: 0.5s ease; }
 
-body.touch aside.work:nth-child(even) {
-  background: -webkit-gradient(linear, left bottom, left top, from(#999), to(#eee));
-  background: -webkit-linear-gradient(bottom, #999, #eee);
-  background: linear-gradient(to top, #999, #eee); }
-
-body.touch aside.work:nth-child(odd) {
-  background: -webkit-gradient(linear, left top, left bottom, from(#999), to(#eee));
-  background: -webkit-linear-gradient(top, #999, #eee);
-  background: linear-gradient(to bottom, #999, #eee); }
-
-body.touch aside.work .text {
-  color: #000; }
-
-body.touch aside.work .title {
-  position: relative; }
-  body.touch aside.work .title:after {
-    content: '';
-    position: absolute;
-    bottom: 7px;
-    left: 0;
-    right: 0;
-    margin: auto;
-    width: 20%;
-    height: 1px;
-    background: #000; }
+body.touch aside.work {
+  background: #cccccc; }
+  body.touch aside.work .text {
+    color: #000; }
+  body.touch aside.work .title {
+    position: relative; }
+    body.touch aside.work .title:after {
+      content: '';
+      position: absolute;
+      bottom: 7px;
+      left: 0;
+      right: 0;
+      margin: auto;
+      width: 20%;
+      height: 1px;
+      background: #000; }
 
 .work-img-box {
   width: 250px;

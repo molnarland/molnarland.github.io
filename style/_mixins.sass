@@ -88,3 +88,12 @@
 		height: $div-height - $img-margin * 2
 		margin-top: $img-margin
 		margin-left: $img-margin
+		
+		
+		
+
+=gradient($to, $lighterPercent: 80%)
+	@if($lighterPercent == null)
+		background: linear-gradient($to, $darkerBgColorInGradient, $ligherBgColorInGradient)
+	@else
+		background: linear-gradient($to, $darkerBgColorInGradient, $ligherBgColorInGradient $lighterPercent)
