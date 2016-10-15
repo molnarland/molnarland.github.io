@@ -53,7 +53,8 @@ window.onscroll = function () {
 };
 
 function isTouchDevice() {
-	if ('ontouchstart' in window || 'msmaxtouchpoints' in window.navigator) {
+	// if(('ontouchstart' in window) || ('msmaxtouchpoints' in window.navigator))
+	if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
 		addClass('body', 'touch');
 	} else {
 		addClass('body', 'click');
