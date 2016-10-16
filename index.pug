@@ -33,6 +33,7 @@ html(lang="en")
 
         section#welcome
             #welcome-container
+                h2#questions
                 #welcome-text
                     -rotate = 10
                     each item, index in "WELCOME"
@@ -58,7 +59,7 @@ html(lang="en")
                     | I'm open-minded, open to lot of things. I know how important a great website with
                     | beautiful design and fast loading for a good, modern company.
                 #iam-photo
-                    img(src="http://placehold.it/200x200")
+                    img(src="pics/with-computer.jpg")
         //#iam
 
         section#works
@@ -89,13 +90,12 @@ html(lang="en")
                     p.info 07436716743
         //#contact-now
 
-
         footer
             span#inBirmingham
                 | I came to Birmingham
                 time
                 | &nbsp;ago.
             span#code
-                a(href="https://github.com/molnarland/molnarland.github.io/") View code for this site
+                a(href="https://github.com/molnarland/molnarland.github.io/") View code of this site
 
         script(src="script/landing.js")

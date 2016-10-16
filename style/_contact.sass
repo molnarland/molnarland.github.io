@@ -16,6 +16,8 @@
 	&:hover
 		background: #ff2000
 		+trans()
+	&:first-child
+		margin-right: 20px
 	
 .tool
 	text-transform: uppercase
@@ -25,3 +27,14 @@
 .info
 	margin: 0
 	font-size: .7em
+	
+
+@media (max-width: 860px)
+	.action:first-child
+		margin-right: 10px
+			
+@media (max-width: 840px)
+	.action:first-child
+		margin:
+			bottom: 30px
+			right: 0

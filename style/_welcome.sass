@@ -8,17 +8,8 @@ $font-color: #000
 		size: cover
 		attachment: fixed
 	height: 500px
-	position: relative
 	color: $font-color
-	&:after
-		content: ""
-		position: absolute
-		top: 0
-		left: 0
-		background-color: rgba(0, 111, 255, .4)
-		z-index: 1
-		width: 100%
-		height: 100%
+	+filter()
 	.rasta-text, #welcome-text
 		position: absolute
 	.rasta-text

@@ -3,6 +3,19 @@
 		
 
 
+=filter($bgColor: rgb(0, 111, 255), $opacity: .4)
+	position: relative
+	&:after
+		content: ""
+		position: absolute
+		top: 0
+		left: 0
+		background-color: $bgColor
+		z-index: 1
+		width: 100%
+		height: 100%
+		opacity: $opacity
+
 
 	
 =position-from-error($position, $from)

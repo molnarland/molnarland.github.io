@@ -21,14 +21,14 @@ mixin rasta-text(text, heading)
                     -textLength--;
                     -first = textLength / 3;
                     -second = first * 2;
-                    span(class="molnarland-" + index)= item
+                    span(class="rasta-" + index)= item
                 else
                     if (index < first)
-                        span(hover-color="red" class="molnarland-" + index)= item
+                        span(hover-color="red" class="rasta-" + index)= item
                     else if (index >= first && index < second)
-                        span(hover-color="yellow" class="molnarland-" + index)= item
+                        span(hover-color="yellow" class="rasta-" + index)= item
                     else if (index >= second)
-                        span(hover-color="green" class="molnarland-" + index)= item
+                        span(hover-color="green" class="rasta-" + index)= item
 
 
 
