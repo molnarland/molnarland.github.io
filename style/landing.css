@@ -237,28 +237,17 @@ hr {
   background-size: cover;
   background-attachment: fixed;
   height: 500px;
-  color: #000;
-  position: relative; }
-  #welcome:after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-color: #006fff;
-    z-index: 1;
-    width: 100%;
-    height: 100%;
-    opacity: 0.4; }
+  color: #eee; }
   #welcome .rasta-text, #welcome #welcome-text {
     position: absolute; }
   #welcome .rasta-text {
-    font-size: 2em;
     width: 100%;
     left: 0;
     right: 0;
     bottom: 2%;
     margin: 0 auto;
-    text-align: center; }
+    text-align: center;
+    font-size: 2em; }
 
 #welcome-container {
   position: relative;
@@ -268,12 +257,12 @@ hr {
   margin: 0 auto; }
 
 #welcome-text {
-  top: 20%;
+  top: 40%;
   -webkit-border-radius: 50%;
           border-radius: 50%;
   position: relative;
   width: 200px;
-  font-size: 1.3em; }
+  font-size: 1.8em; }
   #welcome-text span {
     text-transform: uppercase;
     height: 200px;
@@ -329,11 +318,19 @@ hr {
     margin: auto;
     width: 50px;
     height: 1px;
-    background: #000; }
+    background: #eee;
+    -webkit-transition: 0.5s ease;
+    transition: 0.5s ease; }
+  #answer:hover:after {
+    -webkit-transition: 0.5s ease;
+    transition: 0.5s ease;
+    width: 70px;
+    height: 2px; }
 
 @media (max-width: 800px) {
   #welcome-text {
-    top: 5%; } }
+    top: 5%;
+    color: #222; } }
 
 @media (max-width: 380px) {
   #welcome {
@@ -459,7 +456,9 @@ body.touch aside.work {
     margin: auto;
     width: 20%;
     height: 1px;
-    background: #000; }
+    background: #000;
+    -webkit-transition: 0.5s ease;
+    transition: 0.5s ease; }
 
 .work-img-box {
   width: 250px;

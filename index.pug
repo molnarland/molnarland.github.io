@@ -9,13 +9,17 @@ html(lang="en")
         link(href="style/landing.css" type="text/css" rel="stylesheet")
 
         +metaTag("viewport", "width=device-width, initial-scale=1")
+        +metaTag("keywords", "molnarland,php,javascript,js,fullstack")
         +metaTag("description", "Roland Molnar is PHP & JavaScript fullstack developer for a modern, professional, custom webpages if you need a successful business.")
         +metaTag("robots", "index, follow")
         +metaTag("googlebot", "index, follow")
-        +metaTag("keywords", "molnarland,php,javascript,js,fullstack")
 
         link(rel="icon" href="pics/icons/globe.png" type="image/png")
 
+        +openGraphMeta("url", "http://molnarland.github.io")
+        +openGraphMeta("type", "portfolio")
+        +openGraphMeta("title", "PHP & JS fullstack developer portfolio")
+        +openGraphMeta("description", "Roland Molnar for a modern, professional, custom webpages if you need a successful business.")
         +openGraphMeta("image", "http://molnarland.github.io/pics/photo-of-me.jpeg")
     body
         header#navbar
@@ -79,12 +83,12 @@ html(lang="en")
                 +work(
                     "ingyenpia.png",
                     "Ingyenpia.hu",
-                    "I creating this hungarian website with my marketing and seo wizard friend with citizens of Budapest.",
+                    "I'm creating this hungarian website with my marketing and seo wizard friend with citizens of Budapest.",
                     "http://ingyenpia.hu"
                 )(class="work")
                 +work(
                     "ugyeszsegiszemle.png",
-                    "Prosecution's Newspaper",
+                    "Prosecution's News",
                     "I coded for Hungarian Prosecution with Laravel and jQuery.",
                     "http://ugyeszsegiszemle.hu"
                 )(class="work")

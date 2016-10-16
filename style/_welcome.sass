@@ -1,4 +1,4 @@
-$font-color: #000
+$font-color: #eee
 
 #welcome
 	margin-top: $menuHeight
@@ -9,17 +9,17 @@ $font-color: #000
 		attachment: fixed
 	height: 500px
 	color: $font-color
-	+filter()
+	//+filter()
 	.rasta-text, #welcome-text
 		position: absolute
 	.rasta-text
-		font-size: 2em
 		width: 100%
 		left: 0
 		right: 0
 		bottom: 2%
 		margin: 0 auto
 		text-align: center
+		font-size: 2em
 	
 	
 #welcome-container
@@ -30,11 +30,11 @@ $font-color: #000
 	margin: 0 auto
 		
 #welcome-text
-	top: 20%
+	top: 40%
 	border-radius: 50%
 	position: relative
 	width: 200px
-	font-size: 1.3em
+	font-size: 1.8em
 	span
 		text-transform: uppercase
 		height: 200px
@@ -73,13 +73,15 @@ $font-color: #000
 	bottom: 3%
 	+underline(50px, $font-color, 2px)
 	cursor: pointer
+	&:hover:after
+		+trans()
+		width: 70px
+		height: 2px
 
-	
-	
-	
 @media(max-width: 800px)
 	#welcome-text
 		top: 5%
+		color: #222
 	
 		
 @media(max-width: 380px)
