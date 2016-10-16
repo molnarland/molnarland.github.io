@@ -4,6 +4,10 @@ mixin metaTag(name, content)
 mixin openGraphMeta(prop, content)
     meta(property="og:" + prop content=content)
 
+mixin twitterMeta(name, content)
+    +metaTag("twitter:" + name, content)
+
+
 mixin contact(url, social)
     -label = "";
     if (!attributes.label)
