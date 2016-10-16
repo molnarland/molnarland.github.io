@@ -110,3 +110,17 @@
 		background: linear-gradient($to, $darkerBgColorInGradient, $ligherBgColorInGradient)
 	@else
 		background: linear-gradient($to, $darkerBgColorInGradient, $ligherBgColorInGradient $lighterPercent)
+		
+		
+		
+=underline($width, $color, $bottom)
+	&:after
+		content: ''
+		position: absolute
+		bottom: $bottom
+		left: 0
+		right: 0
+		margin: auto
+		width: $width
+		height: 1px
+		background: $color

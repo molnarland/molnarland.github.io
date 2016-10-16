@@ -307,6 +307,29 @@ hr {
   #photo-of-me.right {
     right: 5%; }
 
+#questions, #answer {
+  position: absolute;
+  font-size: 1em;
+  text-align: center;
+  width: 100%;
+  margin: 0; }
+
+#questions {
+  bottom: 17%; }
+
+#answer {
+  bottom: 3%; }
+  #answer:after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 50px;
+    height: 1px;
+    background: #000; }
+
 @media (max-width: 800px) {
   #welcome-text {
     top: 5%; } }
@@ -316,6 +339,10 @@ hr {
     padding: 0; }
   #welcome-container {
     width: 100%; } }
+
+@media (max-width: 350px) {
+  #questions {
+    bottom: 14%; } }
 
 #iam {
   background: -webkit-gradient(linear, left top, right top, from(#999), color-stop(80%, #eee));
@@ -422,18 +449,16 @@ body.touch aside.work {
   background: #cccccc; }
   body.touch aside.work .text {
     color: #000; }
-  body.touch aside.work .title {
-    position: relative; }
-    body.touch aside.work .title:after {
-      content: '';
-      position: absolute;
-      bottom: 7px;
-      left: 0;
-      right: 0;
-      margin: auto;
-      width: 20%;
-      height: 1px;
-      background: #000; }
+  body.touch aside.work .title:after {
+    content: '';
+    position: absolute;
+    bottom: 7px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 20%;
+    height: 1px;
+    background: #000; }
 
 .work-img-box {
   width: 250px;

@@ -20,7 +20,8 @@ $font-color: #000
 		bottom: 2%
 		margin: 0 auto
 		text-align: center
-		
+	
+	
 #welcome-container
 	position: relative
 	z-index: 2
@@ -58,7 +59,22 @@ $font-color: #000
 	&.right
 		right: 5%
 	
+#questions, #answer
+	position: absolute
+	font-size: 1em
+	text-align: center
+	width: 100%
+	margin: 0
+	
+#questions
+	bottom: 17%
+	
+#answer
+	bottom: 3%
+	+underline(50px, $font-color, 2px)
 
+	
+	
 @media(max-width: 800px)
 	#welcome-text
 		top: 5%
@@ -71,5 +87,6 @@ $font-color: #000
 	#welcome-container
 		width: 100%
 		
-	
-	
+@media (max-width: 350px)
+	#questions
+		bottom: 14%
