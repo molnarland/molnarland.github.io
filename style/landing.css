@@ -318,7 +318,8 @@ hr {
   bottom: 17%; }
 
 #answer {
-  bottom: 3%; }
+  bottom: 3%;
+  cursor: pointer; }
   #answer:after {
     content: '';
     position: absolute;
