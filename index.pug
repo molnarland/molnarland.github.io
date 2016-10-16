@@ -3,10 +3,20 @@ include _mixins.pug
 doctype html
 html(lang="en")
     head
-        title molnarland
+        title Roland Molnar - Fullstack developer portfolio
+        meta(charset="utf-8")
         link(href="style/libs/hint.base.min.css" type="text/css" rel="stylesheet")
         link(href="style/landing.css" type="text/css" rel="stylesheet")
-        meta(name="viewport" content="width=device-width, initial-scale=1")
+
+        +metaTag("viewport", "width=device-width, initial-scale=1")
+        +metaTag("description", "Roland Molnar is PHP & JavaScript fullstack developer for a modern, professional, custom webpages if you need a successful business.")
+        +metaTag("robots", "index, follow")
+        +metaTag("googlebot", "index, follow")
+        +metaTag("keywords", "molnarland,php,javascript,js,fullstack")
+
+        link(rel="icon" href="pics/icons/globe.png" type="image/png")
+
+        +openGraphMeta("image", "http://molnarland.github.io/pics/photo-of-me.jpeg")
     body
         header#navbar
             #contacts
@@ -37,7 +47,7 @@ html(lang="en")
                     -rotate = 10
                     each item, index in "WELCOME"
                         span(class="bridge-" + index style="transform:rotate(" + (index * rotate) + "deg)")= item
-                h2#questions Need you successful business? Need you a professional website?
+                h2#questions Need you successful business? Need you a professional webpage?
                 +rasta-text("Roland Molnar", "h1")(class="black")
                 h2#answer Solution is here
                 #photo-of-me
@@ -81,7 +91,7 @@ html(lang="en")
         //#works
 
         section#contact-now
-            +rasta-text("We work together... Just contact me in", "h3")
+            +rasta-text("We work together... Just contact me on", "h3")
             .center-content
                 a(href="mailto:rrmolnar@gmail.com").action
                     h5.tool Email
