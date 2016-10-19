@@ -254,10 +254,10 @@ hr {
     width: 100%;
     left: 0;
     right: 0;
-    bottom: 2%;
+    bottom: 3%;
     margin: 0 auto;
     text-align: center;
-    font-size: 2em; }
+    font-size: 1.7em; }
 
 #welcome-container {
   position: relative;
