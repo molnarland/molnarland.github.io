@@ -237,7 +237,18 @@ hr {
   background-size: cover;
   background-attachment: fixed;
   height: 500px;
-  color: #eee; }
+  color: #eee;
+  position: relative; }
+  #welcome:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #000;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    opacity: 0.2; }
   #welcome .rasta-text, #welcome #welcome-text {
     position: absolute; }
   #welcome .rasta-text {
@@ -258,8 +269,7 @@ hr {
 
 #welcome-text {
   top: 40%;
-  -webkit-border-radius: 50%;
-          border-radius: 50%;
+  border-radius: 50%;
   position: relative;
   width: 200px;
   font-size: 1.8em; }
@@ -280,8 +290,7 @@ hr {
   background: rgba(0, 0, 0, 0.3);
   width: 160px;
   height: 210px;
-  -webkit-border-radius: 5px;
-          border-radius: 5px; }
+  border-radius: 5px; }
   #photo-of-me img {
     width: 140px;
     height: 190px;
@@ -304,10 +313,10 @@ hr {
   margin: 0; }
 
 #questions {
-  bottom: 17%; }
+  bottom: 18%; }
 
 #answer {
-  bottom: 3%;
+  bottom: 2%;
   cursor: pointer; }
   #answer:after {
     content: '';
@@ -396,9 +405,9 @@ hr {
 aside.work {
   width: 250px;
   min-width: 250px;
+  max-width: 250px;
   margin: 15px;
-  -webkit-border-radius: 5px;
-          border-radius: 5px; }
+  border-radius: 5px; }
   aside.work .title {
     font-size: 1.2em; }
   aside.work .content {
@@ -433,8 +442,7 @@ body.click aside.work {
             justify-content: center;
     color: #fff;
     background: rgba(0, 111, 255, 0.9);
-    -webkit-border-radius: 5px;
-            border-radius: 5px;
+    border-radius: 5px;
     opacity: 0;
     -webkit-transition: 0.5s ease;
     transition: 0.5s ease; }
@@ -485,8 +493,7 @@ body.touch aside.work {
   background: #ff4000;
   -webkit-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
           box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
-  -webkit-border-radius: 5px;
-          border-radius: 5px;
+  border-radius: 5px;
   -webkit-transition: 0.5s ease;
   transition: 0.5s ease; }
   .action:hover {
@@ -531,6 +538,12 @@ footer {
     width: 100%;
     height: 100%;
     opacity: 0.4; }
+  footer:hover #inBirmingham {
+    -webkit-transition: 1.5s ease;
+    transition: 1.5s ease;
+    -webkit-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+            transform: rotate(0deg); }
 
 #inBirmingham, #code {
   position: absolute;
@@ -540,8 +553,12 @@ footer {
   color: #ddd; }
 
 #inBirmingham {
+  -webkit-transition: 0.5s ease;
+  transition: 0.5s ease;
   font-size: 1.1em;
-  top: 30px; }
+  top: 30px;
+  -webkit-transform: rotateX(90deg);
+          transform: rotateX(90deg); }
 
 #code, #code a, #code:hover, #code:hover a {
   -webkit-transition: 0.5s ease;

@@ -30,8 +30,7 @@ p, input[type="range"], label {
   line-height: 1; }
 
 input[type="text"], input[type="button"], a.btn {
-  -webkit-border-radius: 10px;
-          border-radius: 10px; }
+  border-radius: 10px; }
 
 input[type="text"], input[type="button"] {
   padding: 5px;
@@ -54,8 +53,7 @@ p, label {
   text-align: center;
   text-shadow: 3px 5px 5px #707070;
   line-height: 55px;
-  -webkit-border-radius: 50%;
-          border-radius: 50%;
+  border-radius: 50%;
   -webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25) inset;
           box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25) inset; }
   .arrow-back :hover {
@@ -64,8 +62,7 @@ p, label {
     color: #08AB04; }
 
 .gray, #description, #download, .settings, #generated-code {
-  -webkit-border-radius: 6px;
-          border-radius: 6px; }
+  border-radius: 6px; }
 
 .gray, #description, #download, .settings {
   -webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);

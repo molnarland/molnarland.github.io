@@ -9,7 +9,7 @@ $font-color: #eee
 		attachment: fixed
 	height: 500px
 	color: $font-color
-	//+filter()
+	+filter(#000, .2)
 	.rasta-text, #welcome-text
 		position: absolute
 	.rasta-text
@@ -67,10 +67,10 @@ $font-color: #eee
 	margin: 0
 	
 #questions
-	bottom: 17%
+	bottom: 18%
 	
 #answer
-	bottom: 3%
+	bottom: 2%
 	+underline(50px, $font-color, 2px)
 	cursor: pointer
 	&:hover:after

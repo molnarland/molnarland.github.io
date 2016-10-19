@@ -8,7 +8,9 @@ footer
 		position: center 25%
 		size: cover
 	+filter(darken(rgb(0, 111, 255), 20px))
-	//+filter(#000)
+	&:hover #inBirmingham
+		+trans(1.5)
+		transform: rotate(0deg)
 	
 #inBirmingham, #code
 	position: absolute
@@ -18,8 +20,10 @@ footer
 	color: #ddd
 	
 #inBirmingham
+	+trans()
 	font-size: 1.1em
 	top: $footerPadding * 2
+	transform: rotateX(90deg)
 	
 #code, #code a, #code:hover, #code:hover a
 	+trans()
