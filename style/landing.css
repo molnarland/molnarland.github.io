@@ -84,7 +84,6 @@ a {
         color: green; }
 
 .center-content {
-  width: 75%;
   min-width: 250px;
   max-width: 1000px;
   margin: 0 auto;
@@ -541,9 +540,8 @@ footer {
   footer:hover #inBirmingham {
     -webkit-transition: 1.5s ease;
     transition: 1.5s ease;
-    -webkit-transform: rotate(0deg);
-        -ms-transform: rotate(0deg);
-            transform: rotate(0deg); }
+    -webkit-transform: rotateX(0deg);
+            transform: rotateX(0deg); }
 
 #inBirmingham, #code {
   position: absolute;
