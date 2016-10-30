@@ -1,3 +1,26 @@
+function start()
+{
+    const adminController = require('../src/imports').AdminController,
+        publicController = require('../src/imports').PublicController;
+    let parameters = getUrlParameters();
+
+
+    if (parameters[0][0] === 'blog' && parameters[0][1] === 'admin')
+    {
+        const ac = new adminController({
+            file: parameters[0][2]
+        });
+    }
+    else if(parameters[0][0] === 'blog')
+    {
+        const pc = new publicController();
+    }
+    else
+    {
+        location.href = '/';
+    }
+}
+
 /**
  * @param {object} obj
  * @return {boolean}
@@ -121,7 +144,7 @@ function asyncLoop(iterations, func, callback)
 }
 
 /**
- * @return {array}
+ * @return {[]}
  */
 function getUrlPath()
 {
@@ -160,7 +183,7 @@ function getUrlQuery()
 
     if (splittedParameters)
     {
-        splittedParameters = splittedParameters.split('&')
+        splittedParameters = splittedParameters.split('&');
         for(let parameter of splittedParameters)
         {
             const pair = parameter.split('=');
@@ -176,19 +199,49 @@ function getUrlQuery()
 }
 
 /**
- * @return {[array, object]}
+ * @return {[]}
+ */
+function getUrlHash()
+{
+    let hashes = [];
+
+    let splittedHashes = window.location.href.split('#');
+
+    if (splittedHashes = splittedHashes[1])
+    {
+        splittedHashes = splittedHashes.split('/');
+
+        if (splittedHashes)
+        {
+            for (let path of splittedHashes)
+            {
+                if (path)
+                {
+                    hashes.push(path);
+                }
+            }
+        }
+    }
+
+    return hashes;
+}
+
+/**
+ * @return {[[], object]}
  */
 function getUrlParameters()
 {
-    return [getUrlPath(), getUrlQuery()];
+    return [getUrlPath(), getUrlQuery(), getUrlHash()];
 }
 
 module.exports = {
+    start: start,
     isEmptyObject: isEmptyObject,
     checkType: checkType,
     checkSomeTypes: checkSomeTypes,
     asyncLoop: asyncLoop,
     getUrlPath: getUrlPath,
     getUrlQuery: getUrlQuery,
+    getUrlHash: getUrlHash,
     getUrlParameters: getUrlParameters,
 };

@@ -9,7 +9,7 @@ export default class DatabaseController
      * @param {function} modelCallback
      * @return {function(LanguageModel[]|LabelModel[]|boolean)}
      */
-    select (from, end, clauses = {}, modelCallback)
+    select (from, end, clauses = {}, modelCallback = null)
     {
         require('../src/helpers').checkSomeTypes(
             ['string', 'function'], [from, end]
@@ -27,14 +27,22 @@ export default class DatabaseController
             let array = [];
             const that = this;
 
-            for (let object of response)
+            for (let index in response)
             {
-                this.runClauses(clauses, object, function (add, result)
+                this.runClauses(clauses, response[index], function (add, result)
                 {
                     // if all ok, add to result this object
                     if (add)
                     {
-                        array.push(new model(result, modelCallback));
+                        //only once add a modelCallback
+                        /*if (index < response.length - 1)
+                        {
+                            array.push(new model(result));
+                        }
+                        else
+                        {*/
+                            array.push(new model(result, modelCallback));
+                        /*}*/
                     }
 
                 });
@@ -77,18 +85,17 @@ export default class DatabaseController
 
                 this.loadJSON(json, (result) =>
                 {
-                    result = result.find((object) =>
-                    {
-                        return object[opt1] === from[opt2]
-                            || object[opt2] === from[opt1];
-                    });
+                    result = result.find(
+                        (object) => object[opt1] === from[opt2] || object[opt2] === from[opt1]
+                    );
+
 
                     if (result)
                     {
                         let model = getModel(from);
                         if (!model)
                         {
-                            from.language = new model(result);
+                            from.content = new model(result);
                             return callback(okay, from);
                         }
                     }
@@ -140,7 +147,7 @@ export default class DatabaseController
     {
         let xobj = new XMLHttpRequest();
         xobj.overrideMimeType("application/json");
-        xobj.open('GET', `json/${filename}.json`, true);
+        xobj.open('GET', `/blog/json/${filename}.json`, true);
         xobj.onreadystatechange = () =>
         {
             if (xobj.readyState == 4 && xobj.status == "200")

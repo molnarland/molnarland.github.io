@@ -1,0 +1,23 @@
+doctype html
+html
+    head
+        title molnarland's blog - admin - labels
+        link(href="../style/admin-labels.css" type="text/css" rel="stylesheet")
+    body
+        #wrapper
+
+        input#new-open(type="checkbox")
+        label(for="new-open") New label
+
+        #new(style="opacity:1")
+            label(for="hu-name") Hungarian name
+            input(type="text" id="hu-name")
+
+            label(for="en-name") English name
+            input(type="text" id="en-name")
+
+            button#new-label Add label
+
+        button#save-change Save change
+
+        script(src="../dist/main.js")

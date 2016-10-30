@@ -1,0 +1,12 @@
+#new {
+  opacity: 0;
+  -webkit-transition: 0.2s ease;
+  transition: 0.2s ease; }
+
+#new-open {
+  display: none;
+  cursor: pointer; }
+  #new-open:checked ~ #new {
+    opacity: 1;
+    -webkit-transition: 0.2s ease;
+    transition: 0.2s ease; }

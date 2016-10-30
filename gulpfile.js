@@ -12,9 +12,9 @@ var paths = {
 		'./wordsoutinjs/**/*.pug',
 		'index.pug',
 		'./blog/index.pug',
-		'./blog/admin/index.pug'
+		'./blog/admin/*.pug'
 	],
-	styles: ['./wordsoutinjs/*.sass', './style/*.sass'],
+	styles: ['./wordsoutinjs/*.sass', './style/*.sass', './blog/style/*.sass'],
 	coffee: ['./wordsoutinjs/*.coffee'],
 	blogJs: ['./blog/src/*.js', './blog/model/*.js', './blog/controller/*.js'],
 	landingJs: ['script/es6/*.js']
@@ -33,7 +33,8 @@ function reloadBrowser(done)
 gulp.task('pug', function build_html (done) {
 	gulp.src(paths.views, base)
 		.pipe(pug2({
-			pretty: true
+			pretty: true,
+			cache: true
 		}))
 		.pipe(gulp.dest(basePath));
 

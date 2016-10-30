@@ -6,26 +6,34 @@ export default class PostModel
     {
         this.id = attributes.id || null;
         this.created = attributes.created || null;
-        this.label_ids = attributes.label_ids || null;
-        this.lang_id = attributes.lang_id || null;
+        this.labelIds = attributes.labelIds || null;
+        this.titleId = attributes.titleId || null;
+        this.contentId = attributes.contentId || null;
+        this.urlId = attributes.urlId || null;
 
         const dc = new DatabaseController();
 
+
         this.selectLabels(() =>
         {
-            this.selectLanguages(callback, dc)
+            this.selectOne('contentId', 'content', () =>
+            {
+                this.selectOne('titleId', 'title', () =>
+                {
+                    this.selectOne('urlId', 'url', callback, dc);
+                }, dc);
+            }, dc)
         }, dc);
-
-
-        /*end of labels' select*/
     }
+
+
 
     selectLabels (callback, dc = new DatabaseController())
     {
-        if (this.label_ids)
+        if (this.labelIds)
         {
             this.labels = [];
-            const count_of_labels = this.label_ids.length,
+            const count_of_labels = this.labelIds.length,
                 that = this;
 
             for (let i = 0; i < count_of_labels; i++)
@@ -43,7 +51,7 @@ export default class PostModel
                     where: [
                         {
                             operator: '=',
-                            opt1: this.label_ids[i],
+                            opt1: this.labelIds[i],
                             opt1Avail: true,
                             opt2: 'id'
                         }
@@ -62,15 +70,16 @@ export default class PostModel
         }
     }
 
-    selectLanguages (callback, dc = new DatabaseController())
+
+    selectOne (id, real, callback, dc = new DatabaseController())
     {
-        if (this.lang_id)
+        if (this[id])
         {
             const that = this;
 
             dc.select('languages', (result) =>
             {
-                that.language = result[0];
+                that[real] = result[0];
 
                 if (typeof callback == 'function')
                 {
@@ -80,7 +89,7 @@ export default class PostModel
                 where: [
                     {
                         operator: '=',
-                        opt1: this.lang_id,
+                        opt1: this[id],
                         opt1Avail: true,
                         opt2: 'id'
                     }
@@ -89,7 +98,7 @@ export default class PostModel
         }
         else
         {
-            this.language = null
+            this[real] = null;
 
             if (typeof callback == 'function')
             {

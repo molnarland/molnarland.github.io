@@ -1,12 +1,4 @@
-import {PublicController, AdminController} from './imports';
+// import {PublicController, AdminController} from './imports';
 
-const parameters = require('./helpers').getUrlParameters();
+const parameters = require('./helpers').start();
 
-if (parameters[0][0] === 'blog' && parameters[0][1] === 'admin')
-{
-    const ac = new AdminController();
-}
-else
-{
-    const pc = new PublicController();
-}

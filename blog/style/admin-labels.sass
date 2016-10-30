@@ -1,0 +1,13 @@
+@import "../../style/mixins"
+
+#new
+	opacity: 0
+	+trans(.2)
+
+#new-open
+	display: none
+	cursor: pointer
+	&:checked ~ #new
+		opacity: 1
+		+trans(.2)
+	

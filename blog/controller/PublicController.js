@@ -4,26 +4,27 @@ export default class PublicController
 {
     constructor(language = 'en')
     {
-        this.bodyId = document.body.id = 'public';
+        this.contentElement = '#wrapper';
         this.language = language || 'hu';
 
         const that = this,
             dc = new DatabaseController();
 
-        // dc.select('posts', (result) =>
-        // {
-        //     that.posts = result;
-        // }, {}, () =>
-        // {
-        //     return that.postPreviews();
-        // });
+        dc.select('posts', (result) =>
+        {
+            that.posts = result;
+        }, {}, () =>
+        {
+            return that.postPreviews();
+        });
 
-        this.iWillGo();
+        // this.iWillGo();
     }
 
     /**
      * @param {number} from
      * @param {number} to
+     * @param {function} callback
      */
     postPreviews(from = 0, to = this.posts.length)
     {
@@ -32,47 +33,66 @@ export default class PublicController
         for (let i = from; i < to; i++)
         {
             const post = this.posts[i];
-            let content;
+            let content = this.getOneFromLanguages(post, 'content'),
+                title = this.getOneFromLanguages(post, 'title'),
+                url = this.getOneFromLanguages(post, 'url');
 
-            if (post.language[this.language])
+
+            html +=
+                `<section class="post-preview">
+                    <div class="blog-header">
+                        <h2 class="post-title">
+                            <a id="post-${i+1}" class="post-link" href="#/${url}">${title}</a>
+                        </h2>
+                        <div class="post-datas">
+                            <div class="created">${post.created}</div>
+                        </div>
+                    </div>
+                    ${content}
+                </section>`;
+        }
+
+        document.querySelector(this.contentElement).innerHTML = html;
+
+        let reStart = require('./../src/helpers').start;
+
+        for (let i = from; i < to; i++)
+        {
+            document.getElementById(`post-${i+1}`).addEventListener('click', reStart);
+        }
+    }
+
+    getOneFromLanguages(post, data)
+    {
+        let result;
+
+        if (post[data])
+        {
+            if (post[data][this.language])
             {
-                content = post.language[this.language];
+                result = post[data][this.language];
             }
             else
             {
                 switch (this.language)
                 {
                     case 'hu':
-                        content = post.language['en'];
+                        result = post[data]['en'];
                         break;
                     case 'en':
                     default:
-                        content = post.language['hu'];
+                        result = post[data]['hu'];
                         break;
                 }
             }
-
-
-
-
-            html += `<section class="post-preview">
-                        <div class="blog-header">
-                            <h2 class="post-title"></h2>
-                            <div class="post-datas">
-                                <div class="created">${post.created}</div>
-                            </div>
-                        </div>
-                        ${content}
-                    </section>`;
         }
 
-        document.getElementById(this.bodyId).innerHTML = html;
+        return (!result) ? '' : result;
     }
 
     iWillGo()
     {
         const dc = new DatabaseController();
-        this.result;
         const that = this;
 
         dc.select('posts', (result) =>
@@ -90,8 +110,8 @@ export default class PublicController
             ]
         }, () =>
         {
-            document.getElementById(this.bodyId).innerHTML
-                = this.result[0].language[this.language];
+            document.querySelector(this.contentElement).innerHTML
+                = this.result[0].content[this.content];
         });
     }
 }

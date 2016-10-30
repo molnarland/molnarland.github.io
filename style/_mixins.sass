@@ -18,7 +18,7 @@
 
 
 	
-=position-from-error($position, $from)
+=positionFromError($position, $from)
 	@error "#{$position} position and #{$from} from value can't mixing"
 	
 
@@ -27,7 +27,7 @@
 //$form: string - top, bottom, left, right, center, middle
 //$color: string, hex - custom
 //$height: string - custom
-=border-animation($class, $position, $from, $color: green, $size: 5px)
+=borderAnimation($class, $position, $from, $color: green, $size: 5px)
 	$to: right
 	@if($from == left)
 		$to: right
@@ -66,14 +66,14 @@
 					right: 50%
 					transition-property: left, right
 				@else
-					+position-from-error($position, $from)
+					+positionFromError($position, $from)
 			@else if($from == middle)
 				@if($position == left or $position == right)
 					top: 50%
 					bottom: 50%
 					transition-property: top, bottom
 				@else
-					+position-from-error($position, $from)
+					+positionFromError($position, $from)
 			@else
 				#{$from}: 0
 				#{$to}: 100%
@@ -93,17 +93,16 @@
 					#{$to}: 0
 
 																		 
-=centerPictureInDiv($div-width, $div-height, $img-margin)
-	width: $div-width
-	height: $div-height
+=centerPictureInDiv($divWidth, $divHeight, $imgMargin)
+	width: $divWidth
+	height: $divHeight
 	img
-		width: $div-width - $img-margin * 2
-		height: $div-height - $img-margin * 2
-		margin-top: $img-margin
-		margin-left: $img-margin
+		width: $divWidth - $imgMargin * 2
+		height: $divHeight - $imgMargin * 2
+		margin-top: $imgMargin
+		margin-left: $imgMargin
 		
-		
-		
+	
 
 =gradient($to, $lighterPercent: 80%)
 	@if($lighterPercent == null)
@@ -111,8 +110,8 @@
 	@else
 		background: linear-gradient($to, $darkerBgColorInGradient, $ligherBgColorInGradient $lighterPercent)
 		
-		
-		
+
+
 =underline($width, $color, $bottom)
 	&:after
 		content: ''
@@ -124,4 +123,29 @@
 		width: $width
 		height: 1px
 		background: $color
+		+trans()
+
+
+
+	
+//$from: string - top, bottom, left, right
+//$color: string, hex - custom
+=hoverFilterAnimation($from, $color)
+	display: block
+	+trans()
+	z-index: 2
+	position: relative
+	&:after
+		content: ""
+		display: block
+		position: absolute
+		#{$from}: -100%
+		left: 0
+		background: $color
+		width: 100%
+		height: 100%
+		z-index: 1
+		+trans()
+	&:hover:after
+		#{$from}: 0
 		+trans()
