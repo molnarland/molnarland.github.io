@@ -35,14 +35,14 @@ export default class DatabaseController
                     if (add)
                     {
                         //only once add a modelCallback
-                        /*if (index < response.length - 1)
+                        if (clauses.once && index < response.length - 1)
                         {
                             array.push(new model(result));
                         }
                         else
-                        {*/
+                        {
                             array.push(new model(result, modelCallback));
-                        /*}*/
+                        }
                     }
 
                 });
@@ -156,6 +156,18 @@ export default class DatabaseController
             }
         };
         xobj.send(null);
+    }
+
+
+    saveJSON (datas, filename)
+    {
+        datas = `{${filename}: ${JSON.stringify(datas)}}`;
+
+        require('../lib/FileSaver').saveAs(
+            new Blob([datas], {type: 'application/json;charset=utf8'}),
+            `${filename}.json`
+        );
+
     }
 
     /**

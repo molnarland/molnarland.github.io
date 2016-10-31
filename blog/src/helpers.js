@@ -234,6 +234,52 @@ function getUrlParameters()
     return [getUrlPath(), getUrlQuery(), getUrlHash()];
 }
 
+/**
+ * @param {number} milliseconds
+ * @return {number}
+ */
+function timeOutRestart(milliseconds = 3000)
+{
+    return setTimeout(start, milliseconds);
+}
+
+/**
+ * @param {string} selector
+ * @param {string|number|boolean} value
+ */
+function setElementValue(selector, value)
+{
+    const qs = document.querySelector.bind(document);
+
+    if (qs(selector).nodeName == 'INPUT')
+    {
+        qs(selector).value = value;
+    }
+    else
+    {
+        qs(selector).innerHTML = value;
+    }
+}
+
+/**
+ * @param {string} selector
+ * @return {string}
+ */
+function getElementValue(selector)
+{
+    const qs = document.querySelector.bind(document);
+
+    if (qs(selector).nodeName == 'INPUT')
+    {
+        return qs(selector).value;
+    }
+    else
+    {
+        return qs(selector).innerHTML;
+    }
+}
+
+
 module.exports = {
     start: start,
     isEmptyObject: isEmptyObject,
@@ -244,4 +290,7 @@ module.exports = {
     getUrlQuery: getUrlQuery,
     getUrlHash: getUrlHash,
     getUrlParameters: getUrlParameters,
+    timeOutRestart: timeOutRestart,
+    getElementValue: getElementValue,
+    setElementValue: setElementValue
 };

@@ -149,3 +149,10 @@
 	&:hover:after
 		#{$from}: 0
 		+trans()
+
+		
+=typicalBoxShadow($color: rgba(0, 0, 0, .25), $inset: false)
+	@if($inset)
+		box-shadow: 0 3px 8px $color inset
+	@else
+		box-shadow: 0 3px 8px $color

@@ -10,3 +10,10 @@
     opacity: 1;
     -webkit-transition: 0.2s ease;
     transition: 0.2s ease; }
+
+input {
+  border: 1px solid black; }
+  input.error {
+    -webkit-box-shadow: 0 3px 8px #c80000;
+            box-shadow: 0 3px 8px #c80000;
+    border: 1px solid #c80000; }

@@ -1,3 +1,5 @@
+import functions from 'functions';
+
 window.onload = () =>
 {
 	inBirmingham();
@@ -10,10 +12,7 @@ let welcomeTextPositionIsLeft = 'center',
 
 const welcomeTextId = '#welcome-text',
     photoOfMeId = '#photo-of-me',
-	rastaTextClass = '.rasta-text',
-	navbarHeight = document.querySelector('#navbar').clientHeight;
-
-console.log(navbarHeight);
+	rastaTextClass = '.rasta-text'
 
 let windowWidth = window.innerWidth;
 
@@ -29,17 +28,17 @@ document.querySelector('body').onresize = () =>
 
 document.querySelector('#answer').onclick = () =>
 {
-	smoothScroll('#iam');
+	functions.smoothScroll('#iam');
 };
 
 window.onscroll = () =>
 {
-	let scroll = scrollTop();
+	let scroll = functions.scrollTop();
 
 	if (scroll < 500)
 	{
-		setElementOpacity(`#navbar ${rastaTextClass}`, scroll / 200);
-		setElementOpacity(`#welcome ${rastaTextClass}`, 1 - (scroll / 200));
+		functions.setElementOpacity(`#navbar ${rastaTextClass}`, scroll / 200);
+		functions.setElementOpacity(`#welcome ${rastaTextClass}`, 1 - (scroll / 200));
 		//TODO #navbar shadow-bottom bigger when scrolling
 
 		bridgeToLine(`${welcomeTextId} span`, scroll / 10);
@@ -53,28 +52,18 @@ window.onscroll = () =>
 			setElementRotate(welcomeTextId, newRotate);
 		}
 	}
-
-	// if (scroll > 60)
-	// {
-	// 	addString('#navbar', ' top-fix')
-	// }
-	// else
-	// {
-	// 	replaceString('#navbar', 'top-fix');
-	// }
 };
 
 
 function isTouchDevice()
 {
-	// if(('ontouchstart' in window) || ('msmaxtouchpoints' in window.navigator))
 	if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
 	{
-		addClass('body', 'touch');
+		functions.addClass('body', 'touch');
 	}
 	else
 	{
-		addClass('body', 'click');
+		functions.addClass('body', 'click');
 	}
 }
 
@@ -88,21 +77,21 @@ function onloadAndOnresizeFunctions()
 
 function photoOfMePosition()
 {
-	removeClass(photoOfMeId, 'center');
-	removeClass(photoOfMeId, 'left');
-	removeClass(photoOfMeId, 'right');
+	functions.removeClass(photoOfMeId, 'center');
+	functions.removeClass(photoOfMeId, 'left');
+	functions.removeClass(photoOfMeId, 'right');
 
 	if (welcomeTextPositionIsLeft === 'center')
 	{
-		addClass(photoOfMeId, 'center');
+		functions.addClass(photoOfMeId, 'center');
 	}
 	else if (welcomeTextPositionIsLeft)
 	{
-		addClass(photoOfMeId, 'right');
+		functions.addClass(photoOfMeId, 'right');
 	}
 	else
 	{
-		addClass(photoOfMeId, 'left');
+		functions.addClass(photoOfMeId, 'left');
 	}
 }
 
@@ -111,11 +100,11 @@ function welcomeTextPosition(callback)
 {
     if (windowWidth >= 800)
     {
-        welcomeTextPositionIsLeft = randomNumber(1) === 1;
+        welcomeTextPositionIsLeft = functions.randomNumber(1) === 1;
 
         if (welcomeTextPositionIsLeft) {
             const max = 20,
-                random = randomNumber(max);
+                random = functions.randomNumber(max);
 
             welcomeTextStartRotate = -((max - random) * 1.5 + 30);
             welcomeTextMaxRotate = 60;
@@ -138,7 +127,7 @@ function welcomeTextPosition(callback)
                 min = 56;
             }
 
-            const random = randomNumber(max, min);
+            const random = functions.randomNumber(max, min);
 
             welcomeTextStartRotate = -((max - random) * 1.5);
             welcomeTextMaxRotate = 30;
@@ -179,7 +168,7 @@ function welcomeTextPosition(callback)
 
 function bridgeToLine(selector, deg)
 {
-	if (checkSelector(selector))
+	if (functions.checkSelector(selector))
 	{
 		for (let index in document.querySelectorAll(selector))
 		{
@@ -206,7 +195,7 @@ function bridgeToLine(selector, deg)
 
 function setElementRotate(selector, degree)
 {
-	checkSelector(selector, () =>
+	functions.checkSelector(selector, () =>
 	{
 	    for(let value of ['transform', 'webkitTransform', 'oTransform', 'msTransform', 'mozTransform'])
         {
@@ -228,7 +217,7 @@ function getElementStyleValue(style)
 
 function setElementLeft(selector, value, unit = 'px')
 {
-	checkSelector(selector, () =>
+	functions.checkSelector(selector, () =>
 	{
 		document.querySelector(selector).style.left = `${value}${unit}`;
 	})
@@ -280,160 +269,4 @@ function inBirmingham()
 	differenceDateInText = differenceDateInText.substring(0, differenceDateInText.length - 2);
 
 	document.querySelector('#inBirmingham time').innerHTML = differenceDateInText;
-}
-
-
-function scrollTop()
-{
-	// Firefox, Chrome, Opera, Safari
-	if (self.pageYOffset)
-	{
-		return self.pageYOffset;
-	}
-
-	// Internet Explorer 6 - standards mode
-	if (document.documentElement && document.documentElement.scrollTop)
-	{
-		return document.documentElement.scrollTop
-	}
-
-	// Internet Explorer 6, 7 and 8
-	if (document.body.scrollTop)
-	{
-		return document.body.scrollTop;
-	}
-
-	return 0;
-}
-
-function substring(value, string) 
-{
-	return value.indexOf(string) !== -1;
-}
-
-function removeClass(selector, cssClass)
-{
-	let cssClassName = document.querySelector(selector).className;
-	if (substring(cssClassName, cssClass))
-	{
-		document.querySelector(selector).className = cssClassName.replace(cssClass, '');
-	}
-}
-
-function addClass(selector, cssClass)
-{
-	if (checkSelector(selector) && !substring(document.querySelector(selector).className, cssClass))
-	{
-		document.querySelector(selector).className += cssClass;
-	}
-}
-
-function checkSelector(selector, next)
-{
-	if (!document.querySelector(selector))
-	{
-		throw new Error(`'${selector}' selector isn\'t exist`);
-	}
-
-	if (typeof next === 'function')
-	{
-		return next();
-	}
-
-	return true;
-}
-
-function setElementOpacity(selector, opacity) 
-{
-	checkSelector(selector, () =>
-	{
-		document.querySelector(selector).style.opacity = opacity;
-	});
-}
-
-function randomNumber(max, min = 0)
-{
-	return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function smoothScroll(selector)
-{
-	let startY = scrollTop();
-
-	elementTop(selector, (position) =>
-	{
-		let stopY = position - navbarHeight,
-			distance = stopY > startY ? stopY - startY : startY - stopY;
-
-		if (distance < 100)
-		{
-			scrollTo(0, stopY); return;
-		}
-
-		let speed = Math.round(distance / 100);
-		if (speed >= 20)
-		{
-			speed = 20;
-		}
-
-		let step = Math.round(distance / 200),
-			leapY = stopY > startY ? startY + step : startY - step,
-			timer = 0;
-
-		if (stopY > startY)
-		{
-			for (let i = startY; i < stopY; i += step)
-			{
-				setTimeout("window.scrollTo(0, "+leapY+")", timer * speed);
-
-				leapY += step;
-				if (leapY > stopY)
-				{
-					leapY = stopY;
-				}
-
-				timer++;
-			}
-
-			return;
-		}
-
-		for (let i = startY; i > stopY; i -= step)
-		{
-			setTimeout("window.scrollTo(0, "+leapY+")", timer * speed);
-
-			leapY -= step;
-			if (leapY < stopY)
-			{
-				leapY = stopY;
-			}
-
-			timer++;
-		}
-	});
-}
-
-
-function elementTop(selector, next)
-{
-	checkSelector(selector, () =>
-	{
-		const element = document.querySelector(selector);
-		let y = element.offsetTop,
-			node = element;
-		
-		while (node.offsetParent && node.offsetParent != document.body)
-		{
-			node = node.offsetParent;
-			y += node.offsetTop;
-		}
-
-
-		if (typeof next === 'function')
-		{
-			return next(y);
-		}
-
-		return y;
-	});
 }

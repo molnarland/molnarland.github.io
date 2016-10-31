@@ -56,7 +56,7 @@
 
 	'use strict';
 	
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 	
 	function start() {
 	    var adminController = __webpack_require__(2).AdminController,
@@ -291,6 +291,44 @@
 	    return [getUrlPath(), getUrlQuery(), getUrlHash()];
 	}
 	
+	/**
+	 * @param {number} milliseconds
+	 * @return {number}
+	 */
+	function timeOutRestart() {
+	    var milliseconds = arguments.length <= 0 || arguments[0] === undefined ? 3000 : arguments[0];
+	
+	    return setTimeout(start, milliseconds);
+	}
+	
+	/**
+	 * @param {string} selector
+	 * @param {string|number|boolean} value
+	 */
+	function setElementValue(selector, value) {
+	    var qs = document.querySelector.bind(document);
+	
+	    if (qs(selector).nodeName == 'INPUT') {
+	        qs(selector).value = value;
+	    } else {
+	        qs(selector).innerHTML = value;
+	    }
+	}
+	
+	/**
+	 * @param {string} selector
+	 * @return {string}
+	 */
+	function getElementValue(selector) {
+	    var qs = document.querySelector.bind(document);
+	
+	    if (qs(selector).nodeName == 'INPUT') {
+	        return qs(selector).value;
+	    } else {
+	        return qs(selector).innerHTML;
+	    }
+	}
+	
 	module.exports = {
 	    start: start,
 	    isEmptyObject: isEmptyObject,
@@ -300,7 +338,10 @@
 	    getUrlPath: getUrlPath,
 	    getUrlQuery: getUrlQuery,
 	    getUrlHash: getUrlHash,
-	    getUrlParameters: getUrlParameters
+	    getUrlParameters: getUrlParameters,
+	    timeOutRestart: timeOutRestart,
+	    getElementValue: getElementValue,
+	    setElementValue: setElementValue
 	};
 
 /***/ },
@@ -330,11 +371,11 @@
 	
 	var _DatabaseController2 = _interopRequireDefault(_DatabaseController);
 	
-	var _PublicController = __webpack_require__(7);
+	var _PublicController = __webpack_require__(10);
 	
 	var _PublicController2 = _interopRequireDefault(_PublicController);
 	
-	var _AdminController = __webpack_require__(8);
+	var _AdminController = __webpack_require__(11);
 	
 	var _AdminController2 = _interopRequireDefault(_AdminController);
 	
@@ -606,21 +647,22 @@
 	                var array = [];
 	                var that = _this;
 	
-	                for (var index in response) {
+	                var _loop = function _loop(index) {
 	                    _this.runClauses(clauses, response[index], function (add, result) {
 	                        // if all ok, add to result this object
 	                        if (add) {
 	                            //only once add a modelCallback
-	                            /*if (index < response.length - 1)
-	                            {
+	                            if (clauses.once && index < response.length - 1) {
 	                                array.push(new model(result));
+	                            } else {
+	                                array.push(new model(result, modelCallback));
 	                            }
-	                            else
-	                            {*/
-	                            array.push(new model(result, modelCallback));
-	                            /*}*/
 	                        }
 	                    });
+	                };
+	
+	                for (var index in response) {
+	                    _loop(index);
 	                }
 	
 	                return end(array);
@@ -653,7 +695,7 @@
 	                var _iteratorError = undefined;
 	
 	                try {
-	                    var _loop = function _loop() {
+	                    var _loop2 = function _loop2() {
 	                        var join = _step.value;
 	
 	                        var json = join.json || null;
@@ -684,7 +726,7 @@
 	                    };
 	
 	                    for (var _iterator = joins[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	                        _loop();
+	                        _loop2();
 	                    }
 	                } catch (err) {
 	                    _didIteratorError = true;
@@ -768,6 +810,13 @@
 	            };
 	            xobj.send(null);
 	        }
+	    }, {
+	        key: 'saveJSON',
+	        value: function saveJSON(datas, filename) {
+	            datas = '{' + filename + ': ' + JSON.stringify(datas) + '}';
+	
+	            __webpack_require__(7).saveAs(new Blob([datas], { type: 'application/json;charset=utf8' }), filename + '.json');
+	        }
 	
 	        /**
 	         *
@@ -830,6 +879,208 @@
 
 /***/ },
 /* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;"use strict";
+	
+	/* FileSaver.js
+	 * A saveAs() FileSaver implementation.
+	 * 1.3.2
+	 * 2016-06-16 18:25:19
+	 *
+	 * By Eli Grey, http://eligrey.com
+	 * License: MIT
+	 *   See https://github.com/eligrey/FileSaver.js/blob/master/LICENSE.md
+	 */
+	
+	/*global self */
+	/*jslint bitwise: true, indent: 4, laxbreak: true, laxcomma: true, smarttabs: true, plusplus: true */
+	
+	/*! @source http://purl.eligrey.com/github/FileSaver.js/blob/master/FileSaver.js */
+	
+	var saveAs = saveAs || function (view) {
+		"use strict";
+		// IE <10 is explicitly unsupported
+	
+		if (typeof view === "undefined" || typeof navigator !== "undefined" && /MSIE [1-9]\./.test(navigator.userAgent)) {
+			return;
+		}
+		var doc = view.document
+		// only get URL when necessary in case Blob.js hasn't overridden it yet
+		,
+		    get_URL = function get_URL() {
+			return view.URL || view.webkitURL || view;
+		},
+		    save_link = doc.createElementNS("http://www.w3.org/1999/xhtml", "a"),
+		    can_use_save_link = "download" in save_link,
+		    click = function click(node) {
+			var event = new MouseEvent("click");
+			node.dispatchEvent(event);
+		},
+		    is_safari = /constructor/i.test(view.HTMLElement) || view.safari,
+		    is_chrome_ios = /CriOS\/[\d]+/.test(navigator.userAgent),
+		    throw_outside = function throw_outside(ex) {
+			(view.setImmediate || view.setTimeout)(function () {
+				throw ex;
+			}, 0);
+		},
+		    force_saveable_type = "application/octet-stream"
+		// the Blob API is fundamentally broken as there is no "downloadfinished" event to subscribe to
+		,
+		    arbitrary_revoke_timeout = 1000 * 40 // in ms
+		,
+		    revoke = function revoke(file) {
+			var revoker = function revoker() {
+				if (typeof file === "string") {
+					// file is an object URL
+					get_URL().revokeObjectURL(file);
+				} else {
+					// file is a File
+					file.remove();
+				}
+			};
+			setTimeout(revoker, arbitrary_revoke_timeout);
+		},
+		    dispatch = function dispatch(filesaver, event_types, event) {
+			event_types = [].concat(event_types);
+			var i = event_types.length;
+			while (i--) {
+				var listener = filesaver["on" + event_types[i]];
+				if (typeof listener === "function") {
+					try {
+						listener.call(filesaver, event || filesaver);
+					} catch (ex) {
+						throw_outside(ex);
+					}
+				}
+			}
+		},
+		    auto_bom = function auto_bom(blob) {
+			// prepend BOM for UTF-8 XML and text/* types (including HTML)
+			// note: your browser will automatically convert UTF-16 U+FEFF to EF BB BF
+			if (/^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(blob.type)) {
+				return new Blob([String.fromCharCode(0xFEFF), blob], { type: blob.type });
+			}
+			return blob;
+		},
+		    FileSaver = function FileSaver(blob, name, no_auto_bom) {
+			if (!no_auto_bom) {
+				blob = auto_bom(blob);
+			}
+			// First try a.download, then web filesystem, then object URLs
+			var filesaver = this,
+			    type = blob.type,
+			    force = type === force_saveable_type,
+			    object_url,
+			    dispatch_all = function dispatch_all() {
+				dispatch(filesaver, "writestart progress write writeend".split(" "));
+			}
+			// on any filesys errors revert to saving with object URLs
+			,
+			    fs_error = function fs_error() {
+				if ((is_chrome_ios || force && is_safari) && view.FileReader) {
+					// Safari doesn't allow downloading of blob urls
+					var reader = new FileReader();
+					reader.onloadend = function () {
+						var url = is_chrome_ios ? reader.result : reader.result.replace(/^data:[^;]*;/, 'data:attachment/file;');
+						var popup = view.open(url, '_blank');
+						if (!popup) view.location.href = url;
+						url = undefined; // release reference before dispatching
+						filesaver.readyState = filesaver.DONE;
+						dispatch_all();
+					};
+					reader.readAsDataURL(blob);
+					filesaver.readyState = filesaver.INIT;
+					return;
+				}
+				// don't create more object URLs than needed
+				if (!object_url) {
+					object_url = get_URL().createObjectURL(blob);
+				}
+				if (force) {
+					view.location.href = object_url;
+				} else {
+					var opened = view.open(object_url, "_blank");
+					if (!opened) {
+						// Apple does not allow window.open, see https://developer.apple.com/library/safari/documentation/Tools/Conceptual/SafariExtensionGuide/WorkingwithWindowsandTabs/WorkingwithWindowsandTabs.html
+						view.location.href = object_url;
+					}
+				}
+				filesaver.readyState = filesaver.DONE;
+				dispatch_all();
+				revoke(object_url);
+			};
+			filesaver.readyState = filesaver.INIT;
+	
+			if (can_use_save_link) {
+				object_url = get_URL().createObjectURL(blob);
+				setTimeout(function () {
+					save_link.href = object_url;
+					save_link.download = name;
+					click(save_link);
+					dispatch_all();
+					revoke(object_url);
+					filesaver.readyState = filesaver.DONE;
+				});
+				return;
+			}
+	
+			fs_error();
+		},
+		    FS_proto = FileSaver.prototype,
+		    saveAs = function saveAs(blob, name, no_auto_bom) {
+			return new FileSaver(blob, name || blob.name || "download", no_auto_bom);
+		};
+		// IE 10+ (native saveAs)
+		if (typeof navigator !== "undefined" && navigator.msSaveOrOpenBlob) {
+			return function (blob, name, no_auto_bom) {
+				name = name || blob.name || "download";
+	
+				if (!no_auto_bom) {
+					blob = auto_bom(blob);
+				}
+				return navigator.msSaveOrOpenBlob(blob, name);
+			};
+		}
+	
+		FS_proto.abort = function () {};
+		FS_proto.readyState = FS_proto.INIT = 0;
+		FS_proto.WRITING = 1;
+		FS_proto.DONE = 2;
+	
+		FS_proto.error = FS_proto.onwritestart = FS_proto.onprogress = FS_proto.onwrite = FS_proto.onabort = FS_proto.onerror = FS_proto.onwriteend = null;
+	
+		return saveAs;
+	}(typeof self !== "undefined" && self || typeof window !== "undefined" && window || undefined.content);
+	// `self` is undefined in Firefox for Android content script context
+	// while `this` is nsIContentFrameMessageManager
+	// with an attribute `content` that corresponds to the window
+	
+	if (typeof module !== "undefined" && module.exports) {
+		module.exports.saveAs = saveAs;
+	} else if ("function" !== "undefined" && __webpack_require__(8) !== null && __webpack_require__(9) !== null) {
+		!(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
+			return saveAs;
+		}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	}
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
+
+	module.exports = function() { throw new Error("define cannot be used indirect"); };
+
+
+/***/ },
+/* 9 */
+/***/ function(module, exports) {
+
+	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, {}))
+
+/***/ },
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -950,7 +1201,7 @@
 	exports.default = PublicController;
 
 /***/ },
-/* 8 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1000,8 +1251,10 @@
 	
 	                _this.dc.select('labels', function (result) {
 	                    currentLabels = result;
-	                }, {}, function () {
-	                    var that = _this;
+	                }, { once: true }, function () {
+	                    var that = _this,
+	                        enSelector = '#en-name',
+	                        huSelector = '#hu-name';
 	
 	                    listingLabels();
 	
@@ -1020,9 +1273,9 @@
 	                            for (var _iterator = currentLabels[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 	                                var currentLabel = _step.value;
 	
-	                                console.log(currentLabel);
-	
-	                                html += '<section class="label" style="border:5px dotted black">\n                                <p class="id">ID: ' + currentLabel.id + '</p>\n                                <p class="hu">Hungarian: ' + currentLabel.content.hu + '</p>\n                                <p class="en">English: ' + currentLabel.content.en + '</p>\n                            </section>';
+	                                if (currentLabel.content) {
+	                                    html += labelHtmlTemplate(currentLabel.id, currentLabel.content.hu, currentLabel.content.en);
+	                                }
 	                            }
 	                        } catch (err) {
 	                            _didIteratorError = true;
@@ -1043,33 +1296,57 @@
 	                    }
 	
 	                    function newLabelClick() {
-	                        newLabels.push({
-	                            en: document.getElementById('en-name').value,
-	                            hu: document.getElementById('hu-name').value
-	                        });
+	                        var helpers = __webpack_require__(1),
+	                            functions = __webpack_require__(12);
 	
-	                        document.getElementById('en-name').value = '';
-	                        document.getElementById('hu-name').value = '';
+	                        var enName = helpers.getElementValue(enSelector),
+	                            huName = helpers.getElementValue(huSelector),
+	                            errorClass = 'error';
+	
+	                        if (enName && huName) {
+	                            newLabels.push({
+	                                en: enName,
+	                                hu: huName
+	                            });
+	
+	                            helpers.setElementValue(enSelector, '');
+	                            helpers.setElementValue(huSelector, '');
+	
+	                            document.querySelector(that.contentElement).innerHTML += labelHtmlTemplate(null, huName, enName);
+	
+	                            functions.removeClass(enSelector, errorClass);
+	                            functions.removeClass(huSelector, errorClass);
+	                        } else {
+	                            if (!enName) {
+	                                functions.addClass(enSelector, errorClass);
+	                            } else {
+	                                functions.removeClass(enSelector, errorClass);
+	                            }
+	
+	                            if (!huName) {
+	                                functions.addClass(huSelector, errorClass);
+	                            } else {
+	                                functions.removeClass(huSelector, errorClass);
+	                            }
+	                        }
 	                    }
 	
 	                    function saveChangeClick() {
+	                        var endLabels = [];
+	
+	                        //add essence of currentLabels
 	                        var _iteratorNormalCompletion2 = true;
 	                        var _didIteratorError2 = false;
 	                        var _iteratorError2 = undefined;
 	
 	                        try {
-	                            var _loop = function _loop() {
-	                                var newLabel = _step2.value;
+	                            for (var _iterator2 = currentLabels[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	                                var currentLabel = _step2.value;
 	
-	                                var existLabel = currentLabels.find(function (label) {
-	                                    return label.content.en == newLabel.en && label.content.hu == newLabel.hu;
+	                                endLabels.push({
+	                                    id: currentLabel.id,
+	                                    contentId: currentLabel.contentId
 	                                });
-	
-	                                if (!existLabel) {}
-	                            };
-	
-	                            for (var _iterator2 = newLabels[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-	                                _loop();
 	                            }
 	                        } catch (err) {
 	                            _didIteratorError2 = true;
@@ -1085,6 +1362,69 @@
 	                                }
 	                            }
 	                        }
+	
+	                        var _iteratorNormalCompletion3 = true;
+	                        var _didIteratorError3 = false;
+	                        var _iteratorError3 = undefined;
+	
+	                        try {
+	                            var _loop = function _loop() {
+	                                var newLabel = _step3.value;
+	
+	                                var existLabel = currentLabels.find(function (label) {
+	                                    return label.content.en == newLabel.en && label.content.hu == newLabel.hu;
+	                                });
+	
+	                                if (!existLabel) {
+	                                    var contentId = void 0;
+	
+	                                    var existLanguage = languages.find(function (lang) {
+	                                        return lang.en == newLabel.en && lang.hu == newLabel.hu;
+	                                    });
+	
+	                                    if (existLanguage) {
+	                                        contentId = existLanguage.id;
+	                                    } else {
+	                                        contentId = languages.length + 1;
+	
+	                                        languages.push({
+	                                            id: contentId,
+	                                            hu: newLabel.hu,
+	                                            en: newLabel.en
+	                                        });
+	                                    }
+	
+	                                    endLabels.push({
+	                                        id: endLabels.length + 1,
+	                                        contentId: contentId
+	                                    });
+	                                }
+	                            };
+	
+	                            for (var _iterator3 = newLabels[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+	                                _loop();
+	                            }
+	                        } catch (err) {
+	                            _didIteratorError3 = true;
+	                            _iteratorError3 = err;
+	                        } finally {
+	                            try {
+	                                if (!_iteratorNormalCompletion3 && _iterator3.return) {
+	                                    _iterator3.return();
+	                                }
+	                            } finally {
+	                                if (_didIteratorError3) {
+	                                    throw _iteratorError3;
+	                                }
+	                            }
+	                        }
+	
+	                        that.dc.saveJSON(languages, 'languages');
+	                        that.dc.saveJSON(endLabels, 'labels');
+	                    }
+	
+	                    function labelHtmlTemplate(id, hu, en) {
+	                        return '<section class="label" style="border:10px double black">\n                                <p class="id">ID: ' + id + '</p>\n                                <p class="hu">Hungarian: ' + hu + '</p>\n                                <p class="en">English: ' + en + '</p>\n                            </section>';
 	                    }
 	                });
 	            });
@@ -1098,6 +1438,141 @@
 	}();
 	
 	exports.default = AdminController;
+
+/***/ },
+/* 12 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	module.exports = {
+	    scrollTop: function scrollTop() {
+	        // Firefox, Chrome, Opera, Safari
+	        if (self.pageYOffset) {
+	            return self.pageYOffset;
+	        }
+	
+	        // Internet Explorer 6 - standards mode
+	        if (document.documentElement && document.documentElement.scrollTop) {
+	            return document.documentElement.scrollTop;
+	        }
+	
+	        // Internet Explorer 6, 7 and 8
+	        if (document.body.scrollTop) {
+	            return document.body.scrollTop;
+	        }
+	
+	        return 0;
+	    },
+	
+	    substring: function substring(value, string) {
+	        return value.indexOf(string) !== -1;
+	    },
+	
+	    removeClass: function removeClass(selector, cssClass) {
+	        var cssClassName = document.querySelector(selector).className;
+	        if (this.substring(cssClassName, cssClass)) {
+	            document.querySelector(selector).className = cssClassName.replace(cssClass, '');
+	        }
+	    },
+	
+	    addClass: function addClass(selector, cssClass) {
+	        if (this.checkSelector(selector) && !this.substring(document.querySelector(selector).className, cssClass)) {
+	            document.querySelector(selector).className += cssClass;
+	        }
+	    },
+	
+	    checkSelector: function checkSelector(selector, next) {
+	        if (!document.querySelector(selector)) {
+	            throw new Error('\'' + selector + '\' selector isn\'t exist');
+	        }
+	
+	        if (typeof next === 'function') {
+	            return next();
+	        }
+	
+	        return true;
+	    },
+	
+	    setElementOpacity: function setElementOpacity(selector, opacity) {
+	        this.checkSelector(selector, function () {
+	            document.querySelector(selector).style.opacity = opacity;
+	        });
+	    },
+	
+	    randomNumber: function randomNumber(max) {
+	        var min = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
+	
+	        return Math.floor(Math.random() * (max - min + 1)) + min;
+	    },
+	
+	    smoothScroll: function smoothScroll(selector) {
+	        var startY = this.scrollTop();
+	
+	        this.elementTop(selector, function (position) {
+	            var stopY = position - document.querySelector('#navbar').clientHeight,
+	                distance = stopY > startY ? stopY - startY : startY - stopY;
+	
+	            if (distance < 100) {
+	                scrollTo(0, stopY);return;
+	            }
+	
+	            var speed = Math.round(distance / 100);
+	            if (speed >= 20) {
+	                speed = 20;
+	            }
+	
+	            var step = Math.round(distance / 200),
+	                leapY = stopY > startY ? startY + step : startY - step,
+	                timer = 0;
+	
+	            if (stopY > startY) {
+	                for (var i = startY; i < stopY; i += step) {
+	                    setTimeout("window.scrollTo(0, " + leapY + ")", timer * speed);
+	
+	                    leapY += step;
+	                    if (leapY > stopY) {
+	                        leapY = stopY;
+	                    }
+	
+	                    timer++;
+	                }
+	
+	                return;
+	            }
+	
+	            for (var _i = startY; _i > stopY; _i -= step) {
+	                setTimeout("window.scrollTo(0, " + leapY + ")", timer * speed);
+	
+	                leapY -= step;
+	                if (leapY < stopY) {
+	                    leapY = stopY;
+	                }
+	
+	                timer++;
+	            }
+	        });
+	    },
+	
+	    elementTop: function elementTop(selector, next) {
+	        this.checkSelector(selector, function () {
+	            var element = document.querySelector(selector);
+	            var y = element.offsetTop,
+	                node = element;
+	
+	            while (node.offsetParent && node.offsetParent != document.body) {
+	                node = node.offsetParent;
+	                y += node.offsetTop;
+	            }
+	
+	            if (typeof next === 'function') {
+	                return next(y);
+	            }
+	
+	            return y;
+	        });
+	    }
+	};
 
 /***/ }
 /******/ ]);

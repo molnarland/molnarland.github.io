@@ -21,7 +21,7 @@ var paths = {
 };
 
 var basePath = './',
-		base = {base: basePath};
+	base = {base: basePath};
 
 function reloadBrowser(done)
 {

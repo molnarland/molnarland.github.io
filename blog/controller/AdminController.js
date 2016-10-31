@@ -37,9 +37,11 @@ export default class AdminController
             this.dc.select('labels', (result) =>
             {
                 currentLabels = result;
-            }, {}, () =>
+            }, {once: true}, () =>
             {
-                const that = this;
+                const that = this,
+                    enSelector = '#en-name',
+                    huSelector = '#hu-name';
 
                 listingLabels();
 
@@ -54,14 +56,10 @@ export default class AdminController
 
                     for(let currentLabel of currentLabels)
                     {
-                        console.log(currentLabel);
-
-                        html +=
-                            `<section class="label" style="border:5px dotted black">
-                                <p class="id">ID: ${currentLabel.id}</p>
-                                <p class="hu">Hungarian: ${currentLabel.content.hu}</p>
-                                <p class="en">English: ${currentLabel.content.en}</p>
-                            </section>`;
+                        if (currentLabel.content)
+                        {
+                            html += labelHtmlTemplate(currentLabel.id, currentLabel.content.hu, currentLabel.content.en)
+                        }
                     }
 
                     document.querySelector(that.contentElement).innerHTML = html;
@@ -69,17 +67,64 @@ export default class AdminController
 
                 function newLabelClick()
                 {
-                    newLabels.push({
-                        en: document.getElementById('en-name').value,
-                        hu: document.getElementById('hu-name').value
-                    });
+                    const helpers = require('../src/helpers'),
+                        functions = require('../../script/es6/functions');
 
-                    document.getElementById('en-name').value = '';
-                    document.getElementById('hu-name').value = '';
+                    const enName = helpers.getElementValue(enSelector),
+                        huName = helpers.getElementValue(huSelector),
+                        errorClass = 'error';
+
+                    if (enName && huName)
+                    {
+                        newLabels.push({
+                            en: enName,
+                            hu: huName
+                        });
+
+                        helpers.setElementValue(enSelector, '');
+                        helpers.setElementValue(huSelector, '');
+
+                        document.querySelector(that.contentElement).innerHTML +=
+                            labelHtmlTemplate(null, huName, enName);
+
+                        functions.removeClass(enSelector, errorClass);
+                        functions.removeClass(huSelector, errorClass);
+                    }
+                    else
+                    {
+                        if (!enName)
+                        {
+                            functions.addClass(enSelector, errorClass);
+                        }
+                        else
+                        {
+                            functions.removeClass(enSelector, errorClass);
+                        }
+
+                        if (!huName)
+                        {
+                            functions.addClass(huSelector, errorClass);
+                        }
+                        else
+                        {
+                            functions.removeClass(huSelector, errorClass);
+                        }
+                    }
                 }
 
                 function saveChangeClick()
                 {
+                    let endLabels = [];
+
+                    //add essence of currentLabels
+                    for(let currentLabel of currentLabels)
+                    {
+                        endLabels.push({
+                            id: currentLabel.id,
+                            contentId: currentLabel.contentId
+                        })
+                    }
+
                     for(let newLabel of newLabels)
                     {
                         const existLabel = currentLabels.find(
@@ -89,9 +134,48 @@ export default class AdminController
 
                         if (!existLabel)
                         {
-                            
+                            let contentId;
+
+
+                            const existLanguage = languages.find(
+                                (lang) => lang.en == newLabel.en && lang.hu == newLabel.hu
+                            );
+
+                            if (existLanguage)
+                            {
+                                contentId = existLanguage.id;
+                            }
+                            else
+                            {
+                                contentId = languages.length + 1;
+
+                                languages.push({
+                                    id: contentId,
+                                    hu: newLabel.hu,
+                                    en: newLabel.en
+                                });
+                            }
+
+
+                            endLabels.push({
+                                id: endLabels.length + 1,
+                                contentId: contentId
+                            });
                         }
                     }
+
+
+                    that.dc.saveJSON(languages, 'languages');
+                    that.dc.saveJSON(endLabels, 'labels');
+                }
+
+                function labelHtmlTemplate(id, hu, en)
+                {
+                    return `<section class="label" style="border:10px double black">
+                                <p class="id">ID: ${id}</p>
+                                <p class="hu">Hungarian: ${hu}</p>
+                                <p class="en">English: ${en}</p>
+                            </section>`;
                 }
             });
         });

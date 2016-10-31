@@ -1,5 +1,11 @@
 'use strict';
 
+var _functions = require('functions');
+
+var _functions2 = _interopRequireDefault(_functions);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 window.onload = function () {
 	inBirmingham();
 	setInterval(inBirmingham, 60000);
@@ -11,10 +17,7 @@ var welcomeTextPositionIsLeft = 'center',
 
 var welcomeTextId = '#welcome-text',
     photoOfMeId = '#photo-of-me',
-    rastaTextClass = '.rasta-text',
-    navbarHeight = document.querySelector('#navbar').clientHeight;
-
-console.log(navbarHeight);
+    rastaTextClass = '.rasta-text';
 
 var windowWidth = window.innerWidth;
 
@@ -28,15 +31,15 @@ document.querySelector('body').onresize = function () {
 };
 
 document.querySelector('#answer').onclick = function () {
-	smoothScroll('#iam');
+	_functions2.default.smoothScroll('#iam');
 };
 
 window.onscroll = function () {
-	var scroll = scrollTop();
+	var scroll = _functions2.default.scrollTop();
 
 	if (scroll < 500) {
-		setElementOpacity('#navbar ' + rastaTextClass, scroll / 200);
-		setElementOpacity('#welcome ' + rastaTextClass, 1 - scroll / 200);
+		_functions2.default.setElementOpacity('#navbar ' + rastaTextClass, scroll / 200);
+		_functions2.default.setElementOpacity('#welcome ' + rastaTextClass, 1 - scroll / 200);
 		//TODO #navbar shadow-bottom bigger when scrolling
 
 		bridgeToLine(welcomeTextId + ' span', scroll / 10);
@@ -48,23 +51,13 @@ window.onscroll = function () {
 			setElementRotate(welcomeTextId, newRotate);
 		}
 	}
-
-	// if (scroll > 60)
-	// {
-	// 	addString('#navbar', ' top-fix')
-	// }
-	// else
-	// {
-	// 	replaceString('#navbar', 'top-fix');
-	// }
 };
 
 function isTouchDevice() {
-	// if(('ontouchstart' in window) || ('msmaxtouchpoints' in window.navigator))
 	if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-		addClass('body', 'touch');
+		_functions2.default.addClass('body', 'touch');
 	} else {
-		addClass('body', 'click');
+		_functions2.default.addClass('body', 'click');
 	}
 }
 
@@ -75,26 +68,26 @@ function onloadAndOnresizeFunctions() {
 }
 
 function photoOfMePosition() {
-	removeClass(photoOfMeId, 'center');
-	removeClass(photoOfMeId, 'left');
-	removeClass(photoOfMeId, 'right');
+	_functions2.default.removeClass(photoOfMeId, 'center');
+	_functions2.default.removeClass(photoOfMeId, 'left');
+	_functions2.default.removeClass(photoOfMeId, 'right');
 
 	if (welcomeTextPositionIsLeft === 'center') {
-		addClass(photoOfMeId, 'center');
+		_functions2.default.addClass(photoOfMeId, 'center');
 	} else if (welcomeTextPositionIsLeft) {
-		addClass(photoOfMeId, 'right');
+		_functions2.default.addClass(photoOfMeId, 'right');
 	} else {
-		addClass(photoOfMeId, 'left');
+		_functions2.default.addClass(photoOfMeId, 'left');
 	}
 }
 
 function welcomeTextPosition(callback) {
 	if (windowWidth >= 800) {
-		welcomeTextPositionIsLeft = randomNumber(1) === 1;
+		welcomeTextPositionIsLeft = _functions2.default.randomNumber(1) === 1;
 
 		if (welcomeTextPositionIsLeft) {
 			var max = 20,
-			    random = randomNumber(max);
+			    random = _functions2.default.randomNumber(max);
 
 			welcomeTextStartRotate = -((max - random) * 1.5 + 30);
 			welcomeTextMaxRotate = 60;
@@ -113,7 +106,7 @@ function welcomeTextPosition(callback) {
 				min = 56;
 			}
 
-			var _random = randomNumber(_max, min);
+			var _random = _functions2.default.randomNumber(_max, min);
 
 			welcomeTextStartRotate = -((_max - _random) * 1.5);
 			welcomeTextMaxRotate = 30;
@@ -146,7 +139,7 @@ function welcomeTextPosition(callback) {
 }
 
 function bridgeToLine(selector, deg) {
-	if (checkSelector(selector)) {
+	if (_functions2.default.checkSelector(selector)) {
 		for (var index in document.querySelectorAll(selector)) {
 			if (!isNaN(index)) {
 				var minRotate = 0,
@@ -169,7 +162,7 @@ function bridgeToLine(selector, deg) {
 }
 
 function setElementRotate(selector, degree) {
-	checkSelector(selector, function () {
+	_functions2.default.checkSelector(selector, function () {
 		var _arr = ['transform', 'webkitTransform', 'oTransform', 'msTransform', 'mozTransform'];
 
 		for (var _i = 0; _i < _arr.length; _i++) {
@@ -192,7 +185,7 @@ function getElementStyleValue(style) {
 function setElementLeft(selector, value) {
 	var unit = arguments.length <= 2 || arguments[2] === undefined ? 'px' : arguments[2];
 
-	checkSelector(selector, function () {
+	_functions2.default.checkSelector(selector, function () {
 		document.querySelector(selector).style.left = '' + value + unit;
 	});
 }
@@ -239,131 +232,4 @@ function inBirmingham() {
 	differenceDateInText = differenceDateInText.substring(0, differenceDateInText.length - 2);
 
 	document.querySelector('#inBirmingham time').innerHTML = differenceDateInText;
-}
-
-function scrollTop() {
-	// Firefox, Chrome, Opera, Safari
-	if (self.pageYOffset) {
-		return self.pageYOffset;
-	}
-
-	// Internet Explorer 6 - standards mode
-	if (document.documentElement && document.documentElement.scrollTop) {
-		return document.documentElement.scrollTop;
-	}
-
-	// Internet Explorer 6, 7 and 8
-	if (document.body.scrollTop) {
-		return document.body.scrollTop;
-	}
-
-	return 0;
-}
-
-function substring(value, string) {
-	return value.indexOf(string) !== -1;
-}
-
-function removeClass(selector, cssClass) {
-	var cssClassName = document.querySelector(selector).className;
-	if (substring(cssClassName, cssClass)) {
-		document.querySelector(selector).className = cssClassName.replace(cssClass, '');
-	}
-}
-
-function addClass(selector, cssClass) {
-	if (checkSelector(selector) && !substring(document.querySelector(selector).className, cssClass)) {
-		document.querySelector(selector).className += cssClass;
-	}
-}
-
-function checkSelector(selector, next) {
-	if (!document.querySelector(selector)) {
-		throw new Error('\'' + selector + '\' selector isn\'t exist');
-	}
-
-	if (typeof next === 'function') {
-		return next();
-	}
-
-	return true;
-}
-
-function setElementOpacity(selector, opacity) {
-	checkSelector(selector, function () {
-		document.querySelector(selector).style.opacity = opacity;
-	});
-}
-
-function randomNumber(max) {
-	var min = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
-
-	return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function smoothScroll(selector) {
-	var startY = scrollTop();
-
-	elementTop(selector, function (position) {
-		var stopY = position - navbarHeight,
-		    distance = stopY > startY ? stopY - startY : startY - stopY;
-
-		if (distance < 100) {
-			scrollTo(0, stopY);return;
-		}
-
-		var speed = Math.round(distance / 100);
-		if (speed >= 20) {
-			speed = 20;
-		}
-
-		var step = Math.round(distance / 200),
-		    leapY = stopY > startY ? startY + step : startY - step,
-		    timer = 0;
-
-		if (stopY > startY) {
-			for (var i = startY; i < stopY; i += step) {
-				setTimeout("window.scrollTo(0, " + leapY + ")", timer * speed);
-
-				leapY += step;
-				if (leapY > stopY) {
-					leapY = stopY;
-				}
-
-				timer++;
-			}
-
-			return;
-		}
-
-		for (var _i2 = startY; _i2 > stopY; _i2 -= step) {
-			setTimeout("window.scrollTo(0, " + leapY + ")", timer * speed);
-
-			leapY -= step;
-			if (leapY < stopY) {
-				leapY = stopY;
-			}
-
-			timer++;
-		}
-	});
-}
-
-function elementTop(selector, next) {
-	checkSelector(selector, function () {
-		var element = document.querySelector(selector);
-		var y = element.offsetTop,
-		    node = element;
-
-		while (node.offsetParent && node.offsetParent != document.body) {
-			node = node.offsetParent;
-			y += node.offsetTop;
-		}
-
-		if (typeof next === 'function') {
-			return next(y);
-		}
-
-		return y;
-	});
 }

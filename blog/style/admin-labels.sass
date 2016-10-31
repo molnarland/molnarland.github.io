@@ -1,5 +1,8 @@
 @import "../../style/mixins"
 
+$red: rgb(200, 0, 0)
+
+
 #new
 	opacity: 0
 	+trans(.2)
@@ -11,3 +14,8 @@
 		opacity: 1
 		+trans(.2)
 	
+input
+	border: 1px solid rgb(0, 0, 0)
+	&.error
+		+typicalBoxShadow($red)
+		border: 1px solid $red
