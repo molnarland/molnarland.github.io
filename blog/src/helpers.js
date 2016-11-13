@@ -279,6 +279,32 @@ function getElementValue(selector)
     }
 }
 
+function ifExistCallbackICall(callback, args)
+{
+    if (typeof callback === 'function')
+    {
+        callback(args);
+    }
+}
+
+//Returns true if it is a DOM node
+function isNode(object)
+{
+    return (
+        typeof Node === "object" ? object instanceof Node :
+        object && typeof object === "object" && typeof object.nodeType === "number" && typeof object.nodeName === "string"
+    );
+}
+
+//Returns true if it is a DOM element
+function isHtmlElement(object)
+{
+    return (
+        typeof HTMLElement === "object" ? object instanceof HTMLElement : //DOM2
+        object && typeof object === "object" && object !== null && object.nodeType === 1 && typeof object.nodeName === "string"
+    );
+}
+
 
 module.exports = {
     start: start,
@@ -292,5 +318,8 @@ module.exports = {
     getUrlParameters: getUrlParameters,
     timeOutRestart: timeOutRestart,
     getElementValue: getElementValue,
-    setElementValue: setElementValue
+    setElementValue: setElementValue,
+    ifExistCallbackICall: ifExistCallbackICall,
+    isNode: isNode,
+    isHtmlElement: isHtmlElement
 };

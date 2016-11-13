@@ -161,7 +161,7 @@ export default class DatabaseController
 
     saveJSON (datas, filename)
     {
-        datas = `{${filename}: ${JSON.stringify(datas)}}`;
+        datas = `{"${filename}": ${JSON.stringify(datas)}}`;
 
         require('../lib/FileSaver').saveAs(
             new Blob([datas], {type: 'application/json;charset=utf8'}),

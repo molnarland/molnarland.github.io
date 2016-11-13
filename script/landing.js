@@ -1,6 +1,6 @@
 'use strict';
 
-var _functions = require('functions');
+var _functions = require('./functions');
 
 var _functions2 = _interopRequireDefault(_functions);
 

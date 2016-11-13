@@ -329,6 +329,23 @@
 	    }
 	}
 	
+	function ifExistCallbackICall(callback, args) {
+	    if (typeof callback === 'function') {
+	        callback(args);
+	    }
+	}
+	
+	//Returns true if it is a DOM node
+	function isNode(object) {
+	    return (typeof Node === 'undefined' ? 'undefined' : _typeof(Node)) === "object" ? object instanceof Node : object && (typeof object === 'undefined' ? 'undefined' : _typeof(object)) === "object" && typeof object.nodeType === "number" && typeof object.nodeName === "string";
+	}
+	
+	//Returns true if it is a DOM element
+	function isHtmlElement(object) {
+	    return (typeof HTMLElement === 'undefined' ? 'undefined' : _typeof(HTMLElement)) === "object" ? object instanceof HTMLElement : //DOM2
+	    object && (typeof object === 'undefined' ? 'undefined' : _typeof(object)) === "object" && object !== null && object.nodeType === 1 && typeof object.nodeName === "string";
+	}
+	
 	module.exports = {
 	    start: start,
 	    isEmptyObject: isEmptyObject,
@@ -341,7 +358,10 @@
 	    getUrlParameters: getUrlParameters,
 	    timeOutRestart: timeOutRestart,
 	    getElementValue: getElementValue,
-	    setElementValue: setElementValue
+	    setElementValue: setElementValue,
+	    ifExistCallbackICall: ifExistCallbackICall,
+	    isNode: isNode,
+	    isHtmlElement: isHtmlElement
 	};
 
 /***/ },
@@ -813,7 +833,7 @@
 	    }, {
 	        key: 'saveJSON',
 	        value: function saveJSON(datas, filename) {
-	            datas = '{' + filename + ': ' + JSON.stringify(datas) + '}';
+	            datas = '{"' + filename + '": ' + JSON.stringify(datas) + '}';
 	
 	            __webpack_require__(7).saveAs(new Blob([datas], { type: 'application/json;charset=utf8' }), filename + '.json');
 	        }
@@ -1220,6 +1240,9 @@
 	    function AdminController(args) {
 	        _classCallCheck(this, AdminController);
 	
+	        this.helpers = __webpack_require__(1);
+	        this.functions = __webpack_require__(12);
+	
 	        this.contentElement = '#wrapper';
 	        this.dc = new _imports.DatabaseController();
 	
@@ -1242,6 +1265,10 @@
 	        value: function labels() {
 	            var _this = this;
 	
+	            var that = this,
+	                enSelector = '#en-name',
+	                huSelector = '#hu-name';
+	
 	            var languages = [],
 	                newLabels = [],
 	                currentLabels = [];
@@ -1252,182 +1279,334 @@
 	                _this.dc.select('labels', function (result) {
 	                    currentLabels = result;
 	                }, { once: true }, function () {
-	                    var that = _this,
-	                        enSelector = '#en-name',
-	                        huSelector = '#hu-name';
-	
 	                    listingLabels();
 	
 	                    document.getElementById('new-label').addEventListener('click', newLabelClick);
 	
 	                    document.getElementById('save-change').addEventListener('click', saveChangeClick);
-	
-	                    function listingLabels() {
-	                        var html = '';
-	
-	                        var _iteratorNormalCompletion = true;
-	                        var _didIteratorError = false;
-	                        var _iteratorError = undefined;
-	
-	                        try {
-	                            for (var _iterator = currentLabels[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	                                var currentLabel = _step.value;
-	
-	                                if (currentLabel.content) {
-	                                    html += labelHtmlTemplate(currentLabel.id, currentLabel.content.hu, currentLabel.content.en);
-	                                }
-	                            }
-	                        } catch (err) {
-	                            _didIteratorError = true;
-	                            _iteratorError = err;
-	                        } finally {
-	                            try {
-	                                if (!_iteratorNormalCompletion && _iterator.return) {
-	                                    _iterator.return();
-	                                }
-	                            } finally {
-	                                if (_didIteratorError) {
-	                                    throw _iteratorError;
-	                                }
-	                            }
-	                        }
-	
-	                        document.querySelector(that.contentElement).innerHTML = html;
-	                    }
-	
-	                    function newLabelClick() {
-	                        var helpers = __webpack_require__(1),
-	                            functions = __webpack_require__(12);
-	
-	                        var enName = helpers.getElementValue(enSelector),
-	                            huName = helpers.getElementValue(huSelector),
-	                            errorClass = 'error';
-	
-	                        if (enName && huName) {
-	                            newLabels.push({
-	                                en: enName,
-	                                hu: huName
-	                            });
-	
-	                            helpers.setElementValue(enSelector, '');
-	                            helpers.setElementValue(huSelector, '');
-	
-	                            document.querySelector(that.contentElement).innerHTML += labelHtmlTemplate(null, huName, enName);
-	
-	                            functions.removeClass(enSelector, errorClass);
-	                            functions.removeClass(huSelector, errorClass);
-	                        } else {
-	                            if (!enName) {
-	                                functions.addClass(enSelector, errorClass);
-	                            } else {
-	                                functions.removeClass(enSelector, errorClass);
-	                            }
-	
-	                            if (!huName) {
-	                                functions.addClass(huSelector, errorClass);
-	                            } else {
-	                                functions.removeClass(huSelector, errorClass);
-	                            }
-	                        }
-	                    }
-	
-	                    function saveChangeClick() {
-	                        var endLabels = [];
-	
-	                        //add essence of currentLabels
-	                        var _iteratorNormalCompletion2 = true;
-	                        var _didIteratorError2 = false;
-	                        var _iteratorError2 = undefined;
-	
-	                        try {
-	                            for (var _iterator2 = currentLabels[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-	                                var currentLabel = _step2.value;
-	
-	                                endLabels.push({
-	                                    id: currentLabel.id,
-	                                    contentId: currentLabel.contentId
-	                                });
-	                            }
-	                        } catch (err) {
-	                            _didIteratorError2 = true;
-	                            _iteratorError2 = err;
-	                        } finally {
-	                            try {
-	                                if (!_iteratorNormalCompletion2 && _iterator2.return) {
-	                                    _iterator2.return();
-	                                }
-	                            } finally {
-	                                if (_didIteratorError2) {
-	                                    throw _iteratorError2;
-	                                }
-	                            }
-	                        }
-	
-	                        var _iteratorNormalCompletion3 = true;
-	                        var _didIteratorError3 = false;
-	                        var _iteratorError3 = undefined;
-	
-	                        try {
-	                            var _loop = function _loop() {
-	                                var newLabel = _step3.value;
-	
-	                                var existLabel = currentLabels.find(function (label) {
-	                                    return label.content.en == newLabel.en && label.content.hu == newLabel.hu;
-	                                });
-	
-	                                if (!existLabel) {
-	                                    var contentId = void 0;
-	
-	                                    var existLanguage = languages.find(function (lang) {
-	                                        return lang.en == newLabel.en && lang.hu == newLabel.hu;
-	                                    });
-	
-	                                    if (existLanguage) {
-	                                        contentId = existLanguage.id;
-	                                    } else {
-	                                        contentId = languages.length + 1;
-	
-	                                        languages.push({
-	                                            id: contentId,
-	                                            hu: newLabel.hu,
-	                                            en: newLabel.en
-	                                        });
-	                                    }
-	
-	                                    endLabels.push({
-	                                        id: endLabels.length + 1,
-	                                        contentId: contentId
-	                                    });
-	                                }
-	                            };
-	
-	                            for (var _iterator3 = newLabels[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-	                                _loop();
-	                            }
-	                        } catch (err) {
-	                            _didIteratorError3 = true;
-	                            _iteratorError3 = err;
-	                        } finally {
-	                            try {
-	                                if (!_iteratorNormalCompletion3 && _iterator3.return) {
-	                                    _iterator3.return();
-	                                }
-	                            } finally {
-	                                if (_didIteratorError3) {
-	                                    throw _iteratorError3;
-	                                }
-	                            }
-	                        }
-	
-	                        that.dc.saveJSON(languages, 'languages');
-	                        that.dc.saveJSON(endLabels, 'labels');
-	                    }
-	
-	                    function labelHtmlTemplate(id, hu, en) {
-	                        return '<section class="label" style="border:10px double black">\n                                <p class="id">ID: ' + id + '</p>\n                                <p class="hu">Hungarian: ' + hu + '</p>\n                                <p class="en">English: ' + en + '</p>\n                            </section>';
-	                    }
 	                });
 	            });
+	
+	            function listingLabels() {
+	                var html = '';
+	
+	                var _iteratorNormalCompletion = true;
+	                var _didIteratorError = false;
+	                var _iteratorError = undefined;
+	
+	                try {
+	                    for (var _iterator = currentLabels[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	                        var currentLabel = _step.value;
+	
+	                        if (currentLabel.content) {
+	                            html += labelHtmlTemplate(currentLabel.id, currentLabel.content.hu, currentLabel.content.en);
+	                        }
+	                    }
+	                } catch (err) {
+	                    _didIteratorError = true;
+	                    _iteratorError = err;
+	                } finally {
+	                    try {
+	                        if (!_iteratorNormalCompletion && _iterator.return) {
+	                            _iterator.return();
+	                        }
+	                    } finally {
+	                        if (_didIteratorError) {
+	                            throw _iteratorError;
+	                        }
+	                    }
+	                }
+	
+	                document.querySelector(that.contentElement).innerHTML = html;
+	
+	                addAllDeleteEvent();
+	                addAllUpdateEvent();
+	            }
+	
+	            function newLabelClick() {
+	                var enName = that.helpers.getElementValue(enSelector),
+	                    huName = that.helpers.getElementValue(huSelector),
+	                    errorClass = 'error';
+	
+	                if (enName && huName) {
+	                    newLabels.push({
+	                        en: enName,
+	                        hu: huName
+	                    });
+	
+	                    that.helpers.setElementValue(enSelector, '');
+	                    that.helpers.setElementValue(huSelector, '');
+	
+	                    document.querySelector(that.contentElement).innerHTML += labelHtmlTemplate(null, huName, enName);
+	
+	                    this.functions.removeClass(enSelector, errorClass);
+	                    this.functions.removeClass(huSelector, errorClass);
+	
+	                    addAllDeleteEvent();
+	                    addAllUpdateEvent();
+	                } else {
+	                    if (!enName) {
+	                        that.functions.addClass(enSelector, errorClass);
+	                    } else {
+	                        that.functions.removeClass(enSelector, errorClass);
+	                    }
+	
+	                    if (!huName) {
+	                        that.functions.addClass(huSelector, errorClass);
+	                    } else {
+	                        that.functions.removeClass(huSelector, errorClass);
+	                    }
+	                }
+	            }
+	
+	            function saveChangeClick() {
+	                var endLabels = [];
+	
+	                //add essence of currentLabels
+	
+	                var _loop = function _loop(index) {
+	                    var currentLabel = currentLabels[index];
+	                    var originalLabelInfos = {};
+	
+	                    getLabelInfosFromNodeAndChangeNodeHtml(document.querySelector(that.contentElement).childNodes[index], function (attr) {
+	                        originalLabelInfos[attr.elem] = attr.node.dataset.original;
+	                    });
+	
+	                    var languageIndex = languages.indexOf(languages.find(function (language) {
+	                        return language.hu == originalLabelInfos.hu && language.en == originalLabelInfos.en;
+	                    }));
+	
+	                    languages[languageIndex].hu = currentLabel.content.hu;
+	                    languages[languageIndex].en = currentLabel.content.en;
+	
+	                    endLabels.push({
+	                        id: currentLabel.id,
+	                        contentId: currentLabel.contentId
+	                    });
+	                };
+	
+	                for (var index in currentLabels) {
+	                    _loop(index);
+	                }
+	
+	                var _iteratorNormalCompletion2 = true;
+	                var _didIteratorError2 = false;
+	                var _iteratorError2 = undefined;
+	
+	                try {
+	                    var _loop2 = function _loop2() {
+	                        var newLabel = _step2.value;
+	
+	                        var existLabel = currentLabels.find(function (label) {
+	                            return label.content.en == newLabel.en && label.content.hu == newLabel.hu;
+	                        });
+	
+	                        if (!existLabel) {
+	                            var contentId = void 0;
+	
+	                            var existLanguage = languages.find(function (lang) {
+	                                return lang.en == newLabel.en && lang.hu == newLabel.hu;
+	                            });
+	
+	                            if (existLanguage) {
+	                                contentId = existLanguage.id;
+	                            } else {
+	                                contentId = languages.length + 1;
+	
+	                                languages.push({
+	                                    id: contentId,
+	                                    hu: newLabel.hu,
+	                                    en: newLabel.en
+	                                });
+	                            }
+	
+	                            endLabels.push({
+	                                id: endLabels.length + 1,
+	                                contentId: contentId
+	                            });
+	                        }
+	                    };
+	
+	                    for (var _iterator2 = newLabels[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	                        _loop2();
+	                    }
+	                } catch (err) {
+	                    _didIteratorError2 = true;
+	                    _iteratorError2 = err;
+	                } finally {
+	                    try {
+	                        if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	                            _iterator2.return();
+	                        }
+	                    } finally {
+	                        if (_didIteratorError2) {
+	                            throw _iteratorError2;
+	                        }
+	                    }
+	                }
+	
+	                that.dc.saveJSON(languages, 'languages');
+	                that.dc.saveJSON(endLabels, 'labels');
+	            }
+	
+	            function labelHtmlTemplate(id, hu, en) {
+	                return '<section id="label-' + id + '" class="label" style="border:10px double black">\n                                <p data-original="' + id + '" class="id">ID: <var>' + id + '</var></p>\n                                <p data-original="' + hu + '" class="hu">Hungarian: <var>' + hu + '</var></p>\n                                <p data-original="' + en + '" class="en">English: <var>' + en + '</var></p>\n                                <button class="update" data-clicked="0">Update</button>\n                                <button class="delete">Delete</button>\n                            </section>';
+	            }
+	
+	            function getDataFromPElement(p) {
+	                var varTag = p.childNodes[1],
+	                    child = varTag.childNodes[0];
+	
+	                if (child.nodeName === 'INPUT') {
+	                    return child.value;
+	                } else {
+	                    return varTag.innerHTML;
+	                }
+	            }
+	
+	            function getLabelInfosFromNodeAndChangeNodeHtml(labelSection, callback) {
+	                var result = {};
+	                var callCallback = that.helpers.ifExistCallbackICall;
+	
+	                var _iteratorNormalCompletion3 = true;
+	                var _didIteratorError3 = false;
+	                var _iteratorError3 = undefined;
+	
+	                try {
+	                    for (var _iterator3 = labelSection.childNodes[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+	                        var child = _step3.value;
+	
+	                        switch (child.className) {
+	                            case 'id':
+	                                result.id = getDataFromPElement(child);
+	                                callCallback(callback, { elem: 'id', node: child, data: result.id });
+	                                break;
+	                            case 'hu':
+	                                result.hu = getDataFromPElement(child);
+	                                callCallback(callback, { elem: 'hu', node: child, data: result.hu });
+	                                break;
+	                            case 'en':
+	                                result.en = getDataFromPElement(child);
+	                                callCallback(callback, { elem: 'en', node: child, data: result.en });
+	                                break;
+	                            default:
+	                                break;
+	                        }
+	                    }
+	                } catch (err) {
+	                    _didIteratorError3 = true;
+	                    _iteratorError3 = err;
+	                } finally {
+	                    try {
+	                        if (!_iteratorNormalCompletion3 && _iterator3.return) {
+	                            _iterator3.return();
+	                        }
+	                    } finally {
+	                        if (_didIteratorError3) {
+	                            throw _iteratorError3;
+	                        }
+	                    }
+	                }
+	
+	                return result;
+	            }
+	
+	            function searchLabel(datas, callback) {
+	                var labelInfos = that.helpers.isHtmlElement(datas) ? getLabelInfosFromNodeAndChangeNodeHtml(datas) : datas;
+	
+	                if (labelInfos.id != 'null') //these labels still be
+	                    {
+	                        var arrayIndex = currentLabels.indexOf(currentLabels.find(function (value) {
+	                            return value.id == labelInfos.id && value.content.hu == labelInfos.hu && value.content.en == labelInfos.en;
+	                        }));
+	
+	                        if (arrayIndex > -1) {
+	                            return callback(currentLabels, arrayIndex, true);
+	                        }
+	                    } else //these labels maybe will be, other objects
+	                    {
+	                        var _arrayIndex = newLabels.indexOf(newLabels.find(function (value) {
+	                            return value.hu == labelInfos.hu && value.en == labelInfos.en;
+	                        }));
+	
+	                        if (_arrayIndex > -1) {
+	                            return callback(newLabels, _arrayIndex, false);
+	                        }
+	                    }
+	
+	                return callback(false, false, false);
+	            }
+	
+	            function addAllDeleteEvent() {
+	                Array.from(document.querySelectorAll('.label .delete')).forEach(function (button) {
+	                    button.addEventListener('click', function (event) {
+	                        var section = event.target.parentNode;
+	
+	                        searchLabel(section, function (labelArray, index) {
+	                            labelArray.splice(index, 1);
+	                        });
+	
+	                        section.parentNode.removeChild(section);
+	                    });
+	                });
+	            }
+	
+	            function addAllUpdateEvent() {
+	                Array.from(document.querySelectorAll('.label .update')).forEach(function (button) {
+	                    button.addEventListener('click', function (event) {
+	                        var section = event.target.parentNode;
+	
+	                        if (button.dataset.clicked == '0') {
+	                            button.dataset.clicked = '1';
+	                            button.innerHTML = 'Save';
+	
+	                            /*let labelInfos = */getLabelInfosFromNodeAndChangeNodeHtml(section, function (args) {
+	                                var elem = args.elem,
+	                                    node = args.node,
+	                                    data = args.data;
+	
+	                                node.dataset.oldValue = data;
+	
+	                                node.childNodes[1].innerHTML = '<input type="text" value="' + data + '">';
+	                            });
+	                        } else if (button.dataset.clicked == '1') {
+	                            (function () {
+	                                button.dataset.clicked = '0';
+	                                button.innerHTML = 'Update';
+	
+	                                var oldLabels = {};
+	
+	                                var labelInfos = getLabelInfosFromNodeAndChangeNodeHtml(section, function (args) {
+	                                    var elem = args.elem,
+	                                        node = args.node /*,
+	                                                         data = args.data*/;
+	
+	                                    oldLabels[elem] = node.dataset.oldValue;
+	                                    delete node.dataset.oldValue;
+	
+	                                    node.childNodes[1].innerHTML = args.data;
+	                                });
+	
+	                                searchLabel(oldLabels, function (labelArray, index, isCurrent) {
+	                                    if (labelArray) {
+	                                        if (isCurrent) {
+	                                            labelArray[index].id = labelInfos.id;
+	                                            labelArray[index].content.hu = labelInfos.hu;
+	                                            labelArray[index].content.en = labelInfos.en;
+	                                        } else {
+	                                            labelArray[index].id = labelInfos.id;
+	                                            labelArray[index].hu = labelInfos.hu;
+	                                            labelArray[index].en = labelInfos.en;
+	                                        }
+	                                    }
+	
+	                                    console.log(currentLabels);
+	                                });
+	                            })();
+	                        }
+	                    });
+	                });
+	            }
 	        }
 	    }, {
 	        key: 'posts',
