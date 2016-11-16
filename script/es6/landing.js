@@ -1,5 +1,3 @@
-import functions from './functions';
-
 window.onload = () =>
 {
 	inBirmingham();
@@ -12,7 +10,7 @@ let welcomeTextPositionIsLeft = 'center',
 
 const welcomeTextId = '#welcome-text',
     photoOfMeId = '#photo-of-me',
-	rastaTextClass = '.rasta-text'
+	rastaTextClass = '.rasta-text';
 
 let windowWidth = window.innerWidth;
 
@@ -28,17 +26,17 @@ document.querySelector('body').onresize = () =>
 
 document.querySelector('#answer').onclick = () =>
 {
-	functions.smoothScroll('#iam');
+	smoothScroll('#iam');
 };
 
 window.onscroll = () =>
 {
-	let scroll = functions.scrollTop();
+	let scroll = scrollTop();
 
 	if (scroll < 500)
 	{
-		functions.setElementOpacity(`#navbar ${rastaTextClass}`, scroll / 200);
-		functions.setElementOpacity(`#welcome ${rastaTextClass}`, 1 - (scroll / 200));
+		setElementOpacity(`#navbar ${rastaTextClass}`, scroll / 200);
+		setElementOpacity(`#welcome ${rastaTextClass}`, 1 - (scroll / 200));
 		//TODO #navbar shadow-bottom bigger when scrolling
 
 		bridgeToLine(`${welcomeTextId} span`, scroll / 10);
@@ -59,11 +57,11 @@ function isTouchDevice()
 {
 	if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
 	{
-		functions.addClass('body', 'touch');
+		addClass('body', 'touch');
 	}
 	else
 	{
-		functions.addClass('body', 'click');
+		addClass('body', 'click');
 	}
 }
 
@@ -77,21 +75,21 @@ function onloadAndOnresizeFunctions()
 
 function photoOfMePosition()
 {
-	functions.removeClass(photoOfMeId, 'center');
-	functions.removeClass(photoOfMeId, 'left');
-	functions.removeClass(photoOfMeId, 'right');
+	removeClass(photoOfMeId, 'center');
+	removeClass(photoOfMeId, 'left');
+	removeClass(photoOfMeId, 'right');
 
 	if (welcomeTextPositionIsLeft === 'center')
 	{
-		functions.addClass(photoOfMeId, 'center');
+		addClass(photoOfMeId, 'center');
 	}
 	else if (welcomeTextPositionIsLeft)
 	{
-		functions.addClass(photoOfMeId, 'right');
+		addClass(photoOfMeId, 'right');
 	}
 	else
 	{
-		functions.addClass(photoOfMeId, 'left');
+		addClass(photoOfMeId, 'left');
 	}
 }
 
@@ -100,11 +98,11 @@ function welcomeTextPosition(callback)
 {
     if (windowWidth >= 800)
     {
-        welcomeTextPositionIsLeft = functions.randomNumber(1) === 1;
+        welcomeTextPositionIsLeft = randomNumber(1) === 1;
 
         if (welcomeTextPositionIsLeft) {
             const max = 20,
-                random = functions.randomNumber(max);
+                random = randomNumber(max);
 
             welcomeTextStartRotate = -((max - random) * 1.5 + 30);
             welcomeTextMaxRotate = 60;
@@ -127,7 +125,7 @@ function welcomeTextPosition(callback)
                 min = 56;
             }
 
-            const random = functions.randomNumber(max, min);
+            const random = randomNumber(max, min);
 
             welcomeTextStartRotate = -((max - random) * 1.5);
             welcomeTextMaxRotate = 30;
@@ -168,7 +166,7 @@ function welcomeTextPosition(callback)
 
 function bridgeToLine(selector, deg)
 {
-	if (functions.checkSelector(selector))
+	if (checkSelector(selector))
 	{
 		for (let index in document.querySelectorAll(selector))
 		{
@@ -195,7 +193,7 @@ function bridgeToLine(selector, deg)
 
 function setElementRotate(selector, degree)
 {
-	functions.checkSelector(selector, () =>
+	checkSelector(selector, () =>
 	{
 	    for(let value of ['transform', 'webkitTransform', 'oTransform', 'msTransform', 'mozTransform'])
         {
@@ -217,7 +215,7 @@ function getElementStyleValue(style)
 
 function setElementLeft(selector, value, unit = 'px')
 {
-	functions.checkSelector(selector, () =>
+	checkSelector(selector, () =>
 	{
 		document.querySelector(selector).style.left = `${value}${unit}`;
 	})

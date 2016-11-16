@@ -1,11 +1,5 @@
 'use strict';
 
-var _functions = require('./functions');
-
-var _functions2 = _interopRequireDefault(_functions);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 window.onload = function () {
 	inBirmingham();
 	setInterval(inBirmingham, 60000);
@@ -31,15 +25,15 @@ document.querySelector('body').onresize = function () {
 };
 
 document.querySelector('#answer').onclick = function () {
-	_functions2.default.smoothScroll('#iam');
+	smoothScroll('#iam');
 };
 
 window.onscroll = function () {
-	var scroll = _functions2.default.scrollTop();
+	var scroll = scrollTop();
 
 	if (scroll < 500) {
-		_functions2.default.setElementOpacity('#navbar ' + rastaTextClass, scroll / 200);
-		_functions2.default.setElementOpacity('#welcome ' + rastaTextClass, 1 - scroll / 200);
+		setElementOpacity('#navbar ' + rastaTextClass, scroll / 200);
+		setElementOpacity('#welcome ' + rastaTextClass, 1 - scroll / 200);
 		//TODO #navbar shadow-bottom bigger when scrolling
 
 		bridgeToLine(welcomeTextId + ' span', scroll / 10);
@@ -55,9 +49,9 @@ window.onscroll = function () {
 
 function isTouchDevice() {
 	if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-		_functions2.default.addClass('body', 'touch');
+		addClass('body', 'touch');
 	} else {
-		_functions2.default.addClass('body', 'click');
+		addClass('body', 'click');
 	}
 }
 
@@ -68,26 +62,26 @@ function onloadAndOnresizeFunctions() {
 }
 
 function photoOfMePosition() {
-	_functions2.default.removeClass(photoOfMeId, 'center');
-	_functions2.default.removeClass(photoOfMeId, 'left');
-	_functions2.default.removeClass(photoOfMeId, 'right');
+	removeClass(photoOfMeId, 'center');
+	removeClass(photoOfMeId, 'left');
+	removeClass(photoOfMeId, 'right');
 
 	if (welcomeTextPositionIsLeft === 'center') {
-		_functions2.default.addClass(photoOfMeId, 'center');
+		addClass(photoOfMeId, 'center');
 	} else if (welcomeTextPositionIsLeft) {
-		_functions2.default.addClass(photoOfMeId, 'right');
+		addClass(photoOfMeId, 'right');
 	} else {
-		_functions2.default.addClass(photoOfMeId, 'left');
+		addClass(photoOfMeId, 'left');
 	}
 }
 
 function welcomeTextPosition(callback) {
 	if (windowWidth >= 800) {
-		welcomeTextPositionIsLeft = _functions2.default.randomNumber(1) === 1;
+		welcomeTextPositionIsLeft = randomNumber(1) === 1;
 
 		if (welcomeTextPositionIsLeft) {
 			var max = 20,
-			    random = _functions2.default.randomNumber(max);
+			    random = randomNumber(max);
 
 			welcomeTextStartRotate = -((max - random) * 1.5 + 30);
 			welcomeTextMaxRotate = 60;
@@ -106,7 +100,7 @@ function welcomeTextPosition(callback) {
 				min = 56;
 			}
 
-			var _random = _functions2.default.randomNumber(_max, min);
+			var _random = randomNumber(_max, min);
 
 			welcomeTextStartRotate = -((_max - _random) * 1.5);
 			welcomeTextMaxRotate = 30;
@@ -139,7 +133,7 @@ function welcomeTextPosition(callback) {
 }
 
 function bridgeToLine(selector, deg) {
-	if (_functions2.default.checkSelector(selector)) {
+	if (checkSelector(selector)) {
 		for (var index in document.querySelectorAll(selector)) {
 			if (!isNaN(index)) {
 				var minRotate = 0,
@@ -162,7 +156,7 @@ function bridgeToLine(selector, deg) {
 }
 
 function setElementRotate(selector, degree) {
-	_functions2.default.checkSelector(selector, function () {
+	checkSelector(selector, function () {
 		var _arr = ['transform', 'webkitTransform', 'oTransform', 'msTransform', 'mozTransform'];
 
 		for (var _i = 0; _i < _arr.length; _i++) {
@@ -185,7 +179,7 @@ function getElementStyleValue(style) {
 function setElementLeft(selector, value) {
 	var unit = arguments.length <= 2 || arguments[2] === undefined ? 'px' : arguments[2];
 
-	_functions2.default.checkSelector(selector, function () {
+	checkSelector(selector, function () {
 		document.querySelector(selector).style.left = '' + value + unit;
 	});
 }
