@@ -1,19 +1,6 @@
-#new {
-  opacity: 0;
-  -webkit-transition: 0.2s ease;
-  transition: 0.2s ease; }
-
-#new-open {
-  display: none;
-  cursor: pointer; }
-  #new-open:checked ~ #new {
-    opacity: 1;
-    -webkit-transition: 0.2s ease;
-    transition: 0.2s ease; }
-
-input {
+input, textarea, select {
   border: 1px solid black; }
-  input.error {
+  input.error, textarea.error, select.error {
     -webkit-box-shadow: 0 3px 8px #c80000;
             box-shadow: 0 3px 8px #c80000;
     border: 1px solid #c80000; }

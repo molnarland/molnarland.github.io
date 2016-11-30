@@ -1,3 +1,47 @@
-
-<!--Created by molnarland on 2016.10.27..
--->
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="../style/admin-labels.css" type="text/css" rel="stylesheet">
+  </head>
+  <body>
+    <div id="wrapper"></div>
+    <hr>
+    <div id="new">
+      <div>
+        <label for="created">Created:</label>
+        <input type="text" id="created">
+      </div>
+      <div>
+        <label for="labels">Labels:</label>
+        <select multiple="true" id="labels"></select>
+      </div>
+      <div>
+        <label for="content-hu">Hungarian content:</label>
+        <textarea id="content-hu"></textarea>
+      </div>
+      <div>
+        <label for="content-en">English content:</label>
+        <textarea id="content-en"></textarea>
+      </div>
+      <div>
+        <label for="title-hu">Hungarian title:</label>
+        <input type="text" id="title-hu">
+      </div>
+      <div>
+        <label for="title-en">English title</label>
+        <input type="text" id="title-en">
+      </div>
+      <div>
+        <label for="url-hu">URL hu:</label>
+        <input type="text" id="url-hu">
+      </div>
+      <div>
+        <label for="url-en">URL en:</label>
+        <input type="text" id="url-en">
+      </div>
+      <button id="new-post">Add post</button>
+    </div>
+    <button id="save-change">Save change</button>
+    <script src="../dist/main.js"></script>
+  </body>
+</html>

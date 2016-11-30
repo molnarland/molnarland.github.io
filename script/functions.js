@@ -42,7 +42,7 @@ function checkSelector(selector, next) {
     }
 
     if (typeof next === 'function') {
-        return next();
+        return next(document.querySelector(selector));
     }
 
     return true;

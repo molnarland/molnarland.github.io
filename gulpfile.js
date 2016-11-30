@@ -34,7 +34,7 @@ gulp.task('pug', function build_html (done) {
 	gulp.src(paths.views, base)
 		.pipe(pug2({
 			pretty: true,
-			cache: true
+			cache: false
 		}))
 		.pipe(gulp.dest(basePath));
 
@@ -83,8 +83,6 @@ gulp.task('server', ['pug', 'sass', 'coffee', 'blog-js', 'landing-js'], function
 		server: './',
 		open: false
 	});
-
-	watch();
 });
 
 function watch () {

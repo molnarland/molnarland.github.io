@@ -306,26 +306,77 @@
 	 * @param {string|number|boolean} value
 	 */
 	function setElementValue(selector, value) {
-	    var qs = document.querySelector.bind(document);
+	    var qs = document.querySelector.bind(document),
+	        node = qs(selector);
 	
-	    if (qs(selector).nodeName == 'INPUT') {
-	        qs(selector).value = value;
-	    } else {
-	        qs(selector).innerHTML = value;
+	    switch (node.nodeName.toLowerCase()) {
+	        case 'input':
+	        case 'textarea':
+	            node.value = value;
+	            break;
+	
+	        case 'select':
+	            break;
+	
+	        default:
+	            return node.innerHTML;
+	            break;
 	    }
 	}
 	
 	/**
-	 * @param {string} selector
-	 * @return {string}
+	 * @param {string|HTMLElement} selectorOrNode
+	 * @return {string|string[]}
 	 */
-	function getElementValue(selector) {
-	    var qs = document.querySelector.bind(document);
+	function getElementValue(selectorOrNode) {
+	    var node = void 0;
 	
-	    if (qs(selector).nodeName == 'INPUT') {
-	        return qs(selector).value;
+	    if (isHtmlElement(selectorOrNode)) {
+	        node = selectorOrNode;
 	    } else {
-	        return qs(selector).innerHTML;
+	        node = document.querySelector(selectorOrNode);
+	    }
+	
+	    switch (getNodeName(selectorOrNode)) {
+	        case 'input':
+	        case 'textarea':
+	            return node.value;
+	            break;
+	
+	        case 'select':
+	            var values = [];
+	
+	            var _iteratorNormalCompletion3 = true;
+	            var _didIteratorError3 = false;
+	            var _iteratorError3 = undefined;
+	
+	            try {
+	                for (var _iterator3 = node.selectedOptions[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+	                    var selectedOption = _step3.value;
+	
+	                    values.push(selectedOption.value);
+	                }
+	            } catch (err) {
+	                _didIteratorError3 = true;
+	                _iteratorError3 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
+	                        _iterator3.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError3) {
+	                        throw _iteratorError3;
+	                    }
+	                }
+	            }
+	
+	            return values.length > 0 ? values : '';
+	            break;
+	
+	        default:
+	            return node.innerHTML;
+	            break;
 	    }
 	}
 	
@@ -335,15 +386,109 @@
 	    }
 	}
 	
-	//Returns true if it is a DOM node
+	/**
+	 * @description Returns true if it is a DOM node
+	 * @param object
+	 * @return {boolean}
+	 */
 	function isNode(object) {
 	    return (typeof Node === 'undefined' ? 'undefined' : _typeof(Node)) === "object" ? object instanceof Node : object && (typeof object === 'undefined' ? 'undefined' : _typeof(object)) === "object" && typeof object.nodeType === "number" && typeof object.nodeName === "string";
 	}
 	
-	//Returns true if it is a DOM element
+	/**
+	 * @description Returns true if it is a DOM element
+	 * @param object
+	 * @return {boolean}
+	 */
 	function isHtmlElement(object) {
 	    return (typeof HTMLElement === 'undefined' ? 'undefined' : _typeof(HTMLElement)) === "object" ? object instanceof HTMLElement : //DOM2
 	    object && (typeof object === 'undefined' ? 'undefined' : _typeof(object)) === "object" && object !== null && object.nodeType === 1 && typeof object.nodeName === "string";
+	}
+	
+	/**
+	 * @param {string} selector
+	 * @param {boolean} selected
+	 * @return {boolean}
+	 */
+	function changeAllOptionInSelect(selector, selected) {
+	    if (getNodeName(selector) === 'select') {
+	        var node = document.querySelector(selector);
+	        var _iteratorNormalCompletion4 = true;
+	        var _didIteratorError4 = false;
+	        var _iteratorError4 = undefined;
+	
+	        try {
+	            for (var _iterator4 = node[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+	                var option = _step4.value;
+	
+	                option.selected = selected;
+	            }
+	        } catch (err) {
+	            _didIteratorError4 = true;
+	            _iteratorError4 = err;
+	        } finally {
+	            try {
+	                if (!_iteratorNormalCompletion4 && _iterator4.return) {
+	                    _iterator4.return();
+	                }
+	            } finally {
+	                if (_didIteratorError4) {
+	                    throw _iteratorError4;
+	                }
+	            }
+	        }
+	
+	        return true;
+	    }
+	
+	    return false;
+	}
+	
+	/**
+	 * @param {string|HTMLElement} selectorOrNode
+	 * @return {string}
+	 */
+	function getNodeName(selectorOrNode) {
+	    if (isHtmlElement(selectorOrNode)) {
+	        return selectorOrNode.nodeName.toLowerCase();
+	    } else {
+	        return document.querySelector(selectorOrNode).nodeName.toLowerCase();
+	    }
+	}
+	
+	/**
+	 * @param {Array} notNumberArray
+	 * @return {Array}
+	 */
+	function arrayElementsConvertToNumber(notNumberArray) {
+	    var numberArray = [];
+	    var _iteratorNormalCompletion5 = true;
+	    var _didIteratorError5 = false;
+	    var _iteratorError5 = undefined;
+	
+	    try {
+	        for (var _iterator5 = notNumberArray[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+	            var notNumberElem = _step5.value;
+	
+	            var numberElem = Number(notNumberElem);
+	            numberArray.push(numberElem);
+	        }
+	    } catch (err) {
+	        _didIteratorError5 = true;
+	        _iteratorError5 = err;
+	    } finally {
+	        try {
+	            if (!_iteratorNormalCompletion5 && _iterator5.return) {
+	                _iterator5.return();
+	            }
+	        } finally {
+	            if (_didIteratorError5) {
+	                throw _iteratorError5;
+	            }
+	        }
+	    }
+	
+	    return numberArray;
 	}
 	
 	module.exports = {
@@ -361,7 +506,9 @@
 	    setElementValue: setElementValue,
 	    ifExistCallbackICall: ifExistCallbackICall,
 	    isNode: isNode,
-	    isHtmlElement: isHtmlElement
+	    isHtmlElement: isHtmlElement,
+	    changeAllOptionInSelect: changeAllOptionInSelect,
+	    arrayElementsConvertToNumber: arrayElementsConvertToNumber
 	};
 
 /***/ },
@@ -412,7 +559,7 @@
 /* 3 */
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -423,15 +570,21 @@
 	var LanguageModel =
 	/**
 	 * @param {{id: number, hu: string, en: string}} attributes
+	 * @param {function} callback
 	 */
 	function LanguageModel() {
 	    var attributes = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	    var callback = arguments[1];
 	
 	    _classCallCheck(this, LanguageModel);
 	
 	    this.id = attributes.id || null;
 	    this.hu = attributes.hu || null;
 	    this.en = attributes.en || null;
+	
+	    if (typeof callback === 'function') {
+	        callback();
+	    }
 	};
 	
 	exports.default = LanguageModel;
@@ -1368,7 +1521,7 @@
 	                    var currentLabel = currentLabels[index];
 	                    var originalLabelInfos = {};
 	
-	                    getLabelInfosFromNodeAndChangeNodeHtml(document.querySelector(that.contentElement).childNodes[index], function (attr) {
+	                    getLabelInfosFromNodeAndChangeNodeHtmlToInputThenToText(document.querySelector(that.contentElement).childNodes[index], function (attr) {
 	                        originalLabelInfos[attr.elem] = attr.node.dataset.original;
 	                    });
 	
@@ -1450,21 +1603,10 @@
 	            }
 	
 	            function labelHtmlTemplate(id, hu, en) {
-	                return '<section id="label-' + id + '" class="label" style="border:10px double black">\n                                <p data-original="' + id + '" class="id">ID: <var>' + id + '</var></p>\n                                <p data-original="' + hu + '" class="hu">Hungarian: <var>' + hu + '</var></p>\n                                <p data-original="' + en + '" class="en">English: <var>' + en + '</var></p>\n                                <button class="update" data-clicked="0">Update</button>\n                                <button class="delete">Delete</button>\n                            </section>';
+	                return '<section id="label-' + id + '" class="label" style="border:10px double black">\n                        <p data-original="' + id + '" class="id">ID: <var>' + id + '</var></p>\n                        <p data-original="' + hu + '" class="hu">Hungarian: <var>' + hu + '</var></p>\n                        <p data-original="' + en + '" class="en">English: <var>' + en + '</var></p>\n                        <button class="update" data-clicked="0">Update</button>\n                        <button class="delete">Delete</button>\n                    </section>';
 	            }
 	
-	            function getDataFromPElement(p) {
-	                var varTag = p.childNodes[1],
-	                    child = varTag.childNodes[0];
-	
-	                if (child.nodeName === 'INPUT') {
-	                    return child.value;
-	                } else {
-	                    return varTag.innerHTML;
-	                }
-	            }
-	
-	            function getLabelInfosFromNodeAndChangeNodeHtml(labelSection, callback) {
+	            function getLabelInfosFromNodeAndChangeNodeHtmlToInputThenToText(labelSection, callback) {
 	                var result = {};
 	                var callCallback = that.helpers.ifExistCallbackICall;
 	
@@ -1478,15 +1620,15 @@
 	
 	                        switch (child.className) {
 	                            case 'id':
-	                                result.id = getDataFromPElement(child);
+	                                result.id = that.getDataFromPElement(child);
 	                                callCallback(callback, { elem: 'id', node: child, data: result.id });
 	                                break;
 	                            case 'hu':
-	                                result.hu = getDataFromPElement(child);
+	                                result.hu = that.getDataFromPElement(child);
 	                                callCallback(callback, { elem: 'hu', node: child, data: result.hu });
 	                                break;
 	                            case 'en':
-	                                result.en = getDataFromPElement(child);
+	                                result.en = that.getDataFromPElement(child);
 	                                callCallback(callback, { elem: 'en', node: child, data: result.en });
 	                                break;
 	                            default:
@@ -1512,105 +1654,876 @@
 	            }
 	
 	            function searchLabel(datas, callback) {
-	                var labelInfos = that.helpers.isHtmlElement(datas) ? getLabelInfosFromNodeAndChangeNodeHtml(datas) : datas;
-	
-	                if (labelInfos.id != 'null') //these labels still be
-	                    {
-	                        var arrayIndex = currentLabels.indexOf(currentLabels.find(function (value) {
-	                            return value.id == labelInfos.id && value.content.hu == labelInfos.hu && value.content.en == labelInfos.en;
-	                        }));
-	
-	                        if (arrayIndex > -1) {
-	                            return callback(currentLabels, arrayIndex, true);
-	                        }
-	                    } else //these labels maybe will be, other objects
-	                    {
-	                        var _arrayIndex = newLabels.indexOf(newLabels.find(function (value) {
-	                            return value.hu == labelInfos.hu && value.en == labelInfos.en;
-	                        }));
-	
-	                        if (_arrayIndex > -1) {
-	                            return callback(newLabels, _arrayIndex, false);
-	                        }
-	                    }
-	
-	                return callback(false, false, false);
+	                that.searchInfos(currentLabels, newLabels, datas, getLabelInfosFromNodeAndChangeNodeHtmlToInputThenToText, callback);
 	            }
 	
 	            function addAllDeleteEvent() {
-	                Array.from(document.querySelectorAll('.label .delete')).forEach(function (button) {
-	                    button.addEventListener('click', function (event) {
-	                        var section = event.target.parentNode;
+	                that.addEventToAllElement('label', 'delete', 'click', function (attr) {
+	                    var section = attr.section,
+	                        button = attr.button;
 	
-	                        searchLabel(section, function (labelArray, index) {
-	                            labelArray.splice(index, 1);
-	                        });
-	
-	                        section.parentNode.removeChild(section);
+	                    searchLabel(section, function (labelArray, index) {
+	                        labelArray.splice(index, 1);
 	                    });
+	
+	                    section.parentNode.removeChild(section);
 	                });
 	            }
 	
 	            function addAllUpdateEvent() {
-	                Array.from(document.querySelectorAll('.label .update')).forEach(function (button) {
-	                    button.addEventListener('click', function (event) {
-	                        var section = event.target.parentNode;
+	                that.addEventToAllElement('label', 'update', 'click', function (attr) {
+	                    var section = attr.section,
+	                        button = attr.button;
 	
-	                        if (button.dataset.clicked == '0') {
-	                            button.dataset.clicked = '1';
-	                            button.innerHTML = 'Save';
+	                    if (button.dataset.clicked == '0') {
+	                        button.dataset.clicked = '1';
+	                        button.innerHTML = 'Save';
 	
-	                            /*let labelInfos = */getLabelInfosFromNodeAndChangeNodeHtml(section, function (args) {
+	                        /*let labelInfos = */getLabelInfosFromNodeAndChangeNodeHtmlToInputThenToText(section, function (args) {
+	                            var elem = args.elem,
+	                                node = args.node,
+	                                data = args.data;
+	
+	                            node.dataset.oldValue = data;
+	
+	                            node.childNodes[1].innerHTML = '<input type="text" value="' + data + '">';
+	                        });
+	                    } else if (button.dataset.clicked == '1') {
+	                        (function () {
+	                            button.dataset.clicked = '0';
+	                            button.innerHTML = 'Update';
+	
+	                            var oldLabels = {};
+	
+	                            var labelInfos = getLabelInfosFromNodeAndChangeNodeHtmlToInputThenToText(section, function (args) {
 	                                var elem = args.elem,
-	                                    node = args.node,
-	                                    data = args.data;
+	                                    node = args.node /*,
+	                                                     data = args.data*/;
 	
-	                                node.dataset.oldValue = data;
+	                                oldLabels[elem] = node.dataset.oldValue;
+	                                delete node.dataset.oldValue;
 	
-	                                node.childNodes[1].innerHTML = '<input type="text" value="' + data + '">';
+	                                node.childNodes[1].innerHTML = args.data;
 	                            });
-	                        } else if (button.dataset.clicked == '1') {
-	                            (function () {
-	                                button.dataset.clicked = '0';
-	                                button.innerHTML = 'Update';
 	
-	                                var oldLabels = {};
-	
-	                                var labelInfos = getLabelInfosFromNodeAndChangeNodeHtml(section, function (args) {
-	                                    var elem = args.elem,
-	                                        node = args.node /*,
-	                                                         data = args.data*/;
-	
-	                                    oldLabels[elem] = node.dataset.oldValue;
-	                                    delete node.dataset.oldValue;
-	
-	                                    node.childNodes[1].innerHTML = args.data;
-	                                });
-	
-	                                searchLabel(oldLabels, function (labelArray, index, isCurrent) {
-	                                    if (labelArray) {
-	                                        if (isCurrent) {
-	                                            labelArray[index].id = labelInfos.id;
-	                                            labelArray[index].content.hu = labelInfos.hu;
-	                                            labelArray[index].content.en = labelInfos.en;
-	                                        } else {
-	                                            labelArray[index].id = labelInfos.id;
-	                                            labelArray[index].hu = labelInfos.hu;
-	                                            labelArray[index].en = labelInfos.en;
-	                                        }
+	                            searchLabel(oldLabels, function (labelArray, index, isCurrent) {
+	                                if (labelArray) {
+	                                    if (isCurrent) {
+	                                        labelArray[index].id = labelInfos.id;
+	                                        labelArray[index].content.hu = labelInfos.hu;
+	                                        labelArray[index].content.en = labelInfos.en;
+	                                    } else {
+	                                        labelArray[index].id = labelInfos.id;
+	                                        labelArray[index].hu = labelInfos.hu;
+	                                        labelArray[index].en = labelInfos.en;
 	                                    }
-	
-	                                    console.log(currentLabels);
-	                                });
-	                            })();
-	                        }
-	                    });
+	                                }
+	                            });
+	                        })();
+	                    }
 	                });
 	            }
 	        }
 	    }, {
 	        key: 'posts',
-	        value: function posts() {}
+	        value: function posts() {
+	            var _this2 = this;
+	
+	            var that = this,
+	                labelSeparator = ', ',
+	                createdSelector = '#created',
+	                labelsSelector = '#labels',
+	                contentHuSelector = '#content-hu',
+	                contentEnSelector = '#content-en',
+	                titleHuSelector = '#title-hu',
+	                titleEnSelector = '#title-en',
+	                urlHuSelector = '#url-hu',
+	                urlEnSelector = '#url-en';
+	
+	            var currentLabels = [],
+	                currentPosts = [],
+	                newPosts = [],
+	                languages = [];
+	
+	            this.dc.select('labels', function (result) {
+	                currentLabels = result;
+	
+	                _this2.dc.select('posts', function (result) {
+	                    currentPosts = result;
+	                }, { once: true }, function () {
+	
+	                    _this2.dc.select('languages', function (result) {
+	                        languages = result;
+	                    }, { once: true }, function () {
+	
+	                        listingPosts();
+	
+	                        document.getElementById('new-post').addEventListener('click', newPostClick);
+	
+	                        document.getElementById('save-change').addEventListener('click', saveChangeClick);
+	                    });
+	                });
+	            }, { once: true }, function () {
+	                setTimeout(function () {
+	                    var date = new Date();
+	                    document.querySelector('#created').value = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+	
+	                    var _iteratorNormalCompletion4 = true;
+	                    var _didIteratorError4 = false;
+	                    var _iteratorError4 = undefined;
+	
+	                    try {
+	                        for (var _iterator4 = currentLabels[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+	                            var label = _step4.value;
+	
+	                            var option = document.createElement('option');
+	                            option.setAttribute('value', label.id);
+	                            option.innerHTML = label.content.hu + ' / ' + label.content.en;
+	
+	                            document.querySelector('#labels').appendChild(option);
+	                        }
+	                    } catch (err) {
+	                        _didIteratorError4 = true;
+	                        _iteratorError4 = err;
+	                    } finally {
+	                        try {
+	                            if (!_iteratorNormalCompletion4 && _iterator4.return) {
+	                                _iterator4.return();
+	                            }
+	                        } finally {
+	                            if (_didIteratorError4) {
+	                                throw _iteratorError4;
+	                            }
+	                        }
+	                    }
+	                }, 100);
+	            });
+	
+	            function listingPosts() {
+	                var html = '';
+	
+	                var _iteratorNormalCompletion5 = true;
+	                var _didIteratorError5 = false;
+	                var _iteratorError5 = undefined;
+	
+	                try {
+	                    for (var _iterator5 = currentPosts[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+	                        var currentPost = _step5.value;
+	
+	                        if (currentPost.content) {
+	                            var labelsHu = [],
+	                                labelsEn = [];
+	
+	                            var _iteratorNormalCompletion6 = true;
+	                            var _didIteratorError6 = false;
+	                            var _iteratorError6 = undefined;
+	
+	                            try {
+	                                for (var _iterator6 = currentPost.labels[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+	                                    var label = _step6.value;
+	
+	                                    labelsHu.push(label.content.hu);
+	                                    labelsEn.push(label.content.en);
+	                                }
+	                            } catch (err) {
+	                                _didIteratorError6 = true;
+	                                _iteratorError6 = err;
+	                            } finally {
+	                                try {
+	                                    if (!_iteratorNormalCompletion6 && _iterator6.return) {
+	                                        _iterator6.return();
+	                                    }
+	                                } finally {
+	                                    if (_didIteratorError6) {
+	                                        throw _iteratorError6;
+	                                    }
+	                                }
+	                            }
+	
+	                            html += postHtmlTemplate(currentPost.id, currentPost.created, labelsHu, labelsEn, currentPost.content.hu, currentPost.content.en, currentPost.title.hu, currentPost.title.en, currentPost.url.hu, currentPost.url.en);
+	                        }
+	                    }
+	                } catch (err) {
+	                    _didIteratorError5 = true;
+	                    _iteratorError5 = err;
+	                } finally {
+	                    try {
+	                        if (!_iteratorNormalCompletion5 && _iterator5.return) {
+	                            _iterator5.return();
+	                        }
+	                    } finally {
+	                        if (_didIteratorError5) {
+	                            throw _iteratorError5;
+	                        }
+	                    }
+	                }
+	
+	                document.querySelector(that.contentElement).innerHTML = html;
+	
+	                addAllDeleteEvent();
+	                addAllUpdateEvent();
+	            }
+	
+	            /**
+	             * @param {number|null} id
+	             * @param {string} created
+	             * @param {string[]} labelsHu
+	             * @param {string[]} labelsEn
+	             * @param {string} contentHu
+	             * @param {string} contentEn
+	             * @param {string} titleHu
+	             * @param {string} titleEn
+	             * @param {string} urlHu
+	             * @param {string} urlEn
+	             * @return {string}
+	             */
+	            function postHtmlTemplate(id, created, labelsHu, labelsEn, contentHu, contentEn, titleHu, titleEn, urlHu, urlEn) {
+	                var labelHuString = labelsHu.join(labelSeparator),
+	                    labelEnString = labelsEn.join(labelSeparator);
+	
+	                return '<section id="post-' + id + '" class="post" style="border: 10px dotted saddlebrown">\n                        <p data-original="' + id + '" class="id">ID: <var>' + id + '</var></p>\n                        <p data-original="' + created + '" class="created">Created: <var>' + created + '</var></p>\n                        <p data-original="' + labelHuString + '" class="label-hu">Labels in hungarian: <var>' + labelHuString + '</var></p>\n                        <p data-original="' + labelEnString + '" class="label-en">Labels in english: <var>' + labelEnString + '</var></p>\n                        <p data-original="' + contentHu + '" class="content-hu">Content in hungarian: <var>' + contentHu + '</var></p>\n                        <p data-original="' + contentEn + '" class="content-en">Content in english: <var>' + contentEn + '</var></p>\n                        <p data-original="' + titleHu + '" class="title-hu">Title in hungarian: <var>' + titleHu + '</var></p>\n                        <p data-original="' + titleEn + '" class="title-en">Title in english: <var>' + titleEn + '</var></p>\n                        <p data-original="' + urlHu + '" class="url-hu">Url in hungarian: <var>' + urlHu + '</var></p>\n                        <p data-original="' + urlEn + '" class="url-en">Url in english: <var>' + urlEn + '</var></p>\n                        <button class="update" data-clicked="0">Update</button>\n                        <button class="delete">Delete</button>\n                    </section>';
+	            }
+	
+	            function newPostClick() {
+	                var created = that.helpers.getElementValue(createdSelector),
+	                    labels = that.helpers.getElementValue(labelsSelector),
+	                    contentHu = that.helpers.getElementValue(contentHuSelector),
+	                    contentEn = that.helpers.getElementValue(contentEnSelector),
+	                    titleHu = that.helpers.getElementValue(titleHuSelector),
+	                    titleEn = that.helpers.getElementValue(titleEnSelector),
+	                    urlHu = that.helpers.getElementValue(urlHuSelector),
+	                    urlEn = that.helpers.getElementValue(urlEnSelector),
+	                    valuesAndSelectors = [{ value: created, selector: createdSelector }, { value: labels, selector: labelsSelector }, { value: contentHu, selector: contentHuSelector }, { value: contentEn, selector: contentEnSelector }, { value: titleHu, selector: titleHuSelector }, { value: titleEn, selector: titleEnSelector }, { value: urlHu, selector: urlHuSelector }, { value: urlEn, selector: urlEnSelector }],
+	                    errorClass = 'error';
+	
+	                //true is error, false isn't error
+	                var existError = false;
+	                var _iteratorNormalCompletion7 = true;
+	                var _didIteratorError7 = false;
+	                var _iteratorError7 = undefined;
+	
+	                try {
+	                    for (var _iterator7 = valuesAndSelectors[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+	                        var _valueAndSelector = _step7.value;
+	
+	                        var value = _valueAndSelector.value,
+	                            _selector = _valueAndSelector.selector;
+	
+	                        if (value) {
+	                            that.functions.removeClass(_selector, errorClass);
+	                        } else {
+	                            that.functions.addClass(_selector, errorClass);
+	                            existError = true;
+	                        }
+	                    }
+	                } catch (err) {
+	                    _didIteratorError7 = true;
+	                    _iteratorError7 = err;
+	                } finally {
+	                    try {
+	                        if (!_iteratorNormalCompletion7 && _iterator7.return) {
+	                            _iterator7.return();
+	                        }
+	                    } finally {
+	                        if (_didIteratorError7) {
+	                            throw _iteratorError7;
+	                        }
+	                    }
+	                }
+	
+	                if (!existError) {
+	                    newPosts.push({
+	                        created: created,
+	                        labels: labels,
+	                        content: { hu: contentHu, en: contentEn },
+	                        title: { hu: titleHu, en: titleEn },
+	                        url: { hu: urlHu, en: urlEn }
+	                    });
+	
+	                    that.functions.checkSelector(that.contentElement, function (element) {
+	                        var fullLabelsHu = [],
+	                            fullLabelsEn = [];
+	
+	                        var _iteratorNormalCompletion8 = true;
+	                        var _didIteratorError8 = false;
+	                        var _iteratorError8 = undefined;
+	
+	                        try {
+	                            var _loop3 = function _loop3() {
+	                                var oneLabel = _step8.value;
+	
+	                                var foundLabel = currentLabels.find(function (label) {
+	                                    return label.id == oneLabel;
+	                                });
+	
+	                                fullLabelsHu.push(foundLabel.content.hu);
+	                                fullLabelsEn.push(foundLabel.content.en);
+	                            };
+	
+	                            for (var _iterator8 = labels[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+	                                _loop3();
+	                            }
+	                        } catch (err) {
+	                            _didIteratorError8 = true;
+	                            _iteratorError8 = err;
+	                        } finally {
+	                            try {
+	                                if (!_iteratorNormalCompletion8 && _iterator8.return) {
+	                                    _iterator8.return();
+	                                }
+	                            } finally {
+	                                if (_didIteratorError8) {
+	                                    throw _iteratorError8;
+	                                }
+	                            }
+	                        }
+	
+	                        element.innerHTML += postHtmlTemplate(null, created, fullLabelsHu, fullLabelsEn, contentHu, contentEn, titleHu, titleEn, urlHu, urlEn);
+	                    });
+	
+	                    var _iteratorNormalCompletion9 = true;
+	                    var _didIteratorError9 = false;
+	                    var _iteratorError9 = undefined;
+	
+	                    try {
+	                        for (var _iterator9 = valuesAndSelectors[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+	                            var valueAndSelector = _step9.value;
+	
+	                            var selector = valueAndSelector.selector;
+	
+	                            if (selector != createdSelector && selector != labelsSelector) {
+	                                that.helpers.setElementValue(selector, '');
+	                            } else if (selector == labelsSelector) {
+	                                that.helpers.changeAllOptionInSelect(selector, false);
+	                            }
+	                        }
+	                    } catch (err) {
+	                        _didIteratorError9 = true;
+	                        _iteratorError9 = err;
+	                    } finally {
+	                        try {
+	                            if (!_iteratorNormalCompletion9 && _iterator9.return) {
+	                                _iterator9.return();
+	                            }
+	                        } finally {
+	                            if (_didIteratorError9) {
+	                                throw _iteratorError9;
+	                            }
+	                        }
+	                    }
+	                }
+	
+	                addAllDeleteEvent();
+	                addAllUpdateEvent();
+	            }
+	
+	            function saveChangeClick() {
+	                var endPosts = [];
+	
+	                var _loop4 = function _loop4(index) {
+	                    var currentPost = currentPosts[index],
+	                        originalPostInfos = {};
+	
+	                    getPostInfosFromNodeAndChangeNodeHtmlToInputThenToText(document.querySelector(that.contentElement).childNodes[index], function (attr) {
+	                        originalPostInfos[attr.elem] = attr.node.dataset.original;
+	                    });
+	
+	                    var contentLanguageIndex = languages.indexOf(languages.find(function (language) {
+	                        return String(language.hu) == originalPostInfos.contentHu && String(language.en) == originalPostInfos.contentEn;
+	                    })),
+	                        titleLanguageIndex = languages.indexOf(languages.find(function (language) {
+	                        return String(language.hu) == originalPostInfos.titleHu && String(language.en) == originalPostInfos.titleEn;
+	                    })),
+	                        urlLanguageIndex = languages.indexOf(languages.find(function (language) {
+	                        return String(language.hu) == originalPostInfos.urlHu && String(language.en) == originalPostInfos.urlEn;
+	                    }));
+	
+	                    languages[contentLanguageIndex].hu = currentPost.content.hu;
+	                    languages[contentLanguageIndex].en = currentPost.content.en;
+	                    languages[titleLanguageIndex].hu = currentPost.title.hu;
+	                    languages[titleLanguageIndex].en = currentPost.title.en;
+	                    languages[urlLanguageIndex].hu = currentPost.url.hu;
+	                    languages[urlLanguageIndex].en = currentPost.url.en;
+	
+	                    endPosts.push({
+	                        id: currentPost.id,
+	                        created: currentPost.created,
+	                        labelIds: currentPost.labelIds,
+	                        contentId: currentPost.contentId,
+	                        titleId: currentPost.titleId,
+	                        urlId: currentPost.urlId
+	                    });
+	                };
+	
+	                for (var index in currentPosts) {
+	                    _loop4(index);
+	                }
+	
+	                var _iteratorNormalCompletion10 = true;
+	                var _didIteratorError10 = false;
+	                var _iteratorError10 = undefined;
+	
+	                try {
+	                    var _loop5 = function _loop5() {
+	                        var newPost = _step10.value;
+	
+	                        var existPost = currentPosts.find(function (post) {
+	                            return post.content.en == newPost.en && post.content.hu == newPosts.hu;
+	                        });
+	
+	                        if (!existPost) {
+	                            endPosts.push({
+	                                id: endPosts.length + 1,
+	                                created: newPost.created,
+	                                labelIds: that.helpers.arrayElementsConvertToNumber(newPost.labels),
+	                                contentId: addTextToLanguageAndReturnId(newPost, 'content'),
+	                                titleId: addTextToLanguageAndReturnId(newPost, 'title'),
+	                                urlId: addTextToLanguageAndReturnId(newPost, 'url')
+	                            });
+	                        }
+	                    };
+	
+	                    for (var _iterator10 = newPosts[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+	                        _loop5();
+	                    }
+	                } catch (err) {
+	                    _didIteratorError10 = true;
+	                    _iteratorError10 = err;
+	                } finally {
+	                    try {
+	                        if (!_iteratorNormalCompletion10 && _iterator10.return) {
+	                            _iterator10.return();
+	                        }
+	                    } finally {
+	                        if (_didIteratorError10) {
+	                            throw _iteratorError10;
+	                        }
+	                    }
+	                }
+	
+	                that.dc.saveJSON(languages, 'languages');
+	                that.dc.saveJSON(endPosts, 'posts');
+	            }
+	
+	            /**
+	             * @param {object} post
+	             * @param {string} which Content, title or url
+	             * @return {number}
+	             */
+	            function addTextToLanguageAndReturnId(post, which) {
+	                var existLanguage = languages.find(function (lang) {
+	                    return lang.en == post[which].en && lang.hu && post[which].hu;
+	                });
+	
+	                if (existLanguage) {
+	                    return existLanguage.id;
+	                } else {
+	                    var id = languages.length + 1;
+	
+	                    languages.push({
+	                        id: id,
+	                        hu: post[which].hu,
+	                        en: post[which].en
+	                    });
+	
+	                    return Number(id);
+	                }
+	            }
+	
+	            function getPostInfosFromNodeAndChangeNodeHtmlToInputThenToText(postSection, callback) {
+	                var result = {
+	                    // labels: {},
+	                    content: {},
+	                    title: {},
+	                    url: {}
+	                },
+	                    callCallback = that.helpers.ifExistCallbackICall,
+	                    getData = that.getDataFromPElement;
+	
+	                var _iteratorNormalCompletion11 = true;
+	                var _didIteratorError11 = false;
+	                var _iteratorError11 = undefined;
+	
+	                try {
+	                    for (var _iterator11 = postSection.childNodes[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+	                        var child = _step11.value;
+	
+	                        var className = child.className;
+	
+	                        //let callbackArguments = {elem: className, node: child};
+	
+	                        if (className && child.nodeName !== 'BUTTON') {
+	                            console.log(child);
+	                            var data = getData(child);
+	
+	                            var classNamePieces = className.split('-');
+	                            switch (classNamePieces.length) {
+	                                case 1:
+	                                    result[classNamePieces[0]] = data;
+	                                    break;
+	                                case 2:
+	                                    result[classNamePieces[0]] = {};
+	                                    result[classNamePieces[0]][classNamePieces[1]] = data;
+	                                    break;
+	                                default:
+	                                    break;
+	                            }
+	
+	                            callCallback(callback, { elem: className, node: child, data: data });
+	                        }
+	
+	                        /*switch (className)
+	                        {
+	                            case 'id':
+	                                result.id = getData(child);
+	                                callbackArguments.data = result.id;
+	                                callCallback(callback, callbackArguments);
+	                                break;
+	                            case 'created':
+	                                result.created = getData(child);
+	                                callbackArguments.data = result.created;
+	                                callCallback(callback, callbackArguments);
+	                                break;
+	                            case 'label-hu':
+	                            case 'label-en':
+	                                callbackArguments.data = getData(child);
+	                                callCallback(callback, callbackArguments);
+	                                break;
+	                            case 'content-hu':
+	                                result.content.hu = getData(child);
+	                                callCallback(callback, {elem: className, node: child, data: result.content.hu});
+	                                break;
+	                            case 'content-en':
+	                                result.content.en = getData(child);
+	                                callCallback(callback, {elem: className, node: child, data: result.content.en});
+	                                break;
+	                            case 'title-hu':
+	                                result.title.hu = getData(child);
+	                                callCallback(callback, {elem: className, node: child, data: result.title.hu});
+	                                break;
+	                            case 'title-en':
+	                                result.title.en = getData(child);
+	                                callCallback(callback, {elem: className, node: child, data: result.title.en});
+	                                break;
+	                            case 'url-hu':
+	                                result.url.hu = getData(child);
+	                                callCallback(callback, {elem: className, node: child, data: result.url.hu});
+	                                break;
+	                            case 'url-en':
+	                                result.url.en = getData(child);
+	                                callCallback(callback, {elem: className, node: child, data: result.url.en});
+	                                break;
+	                        }*/
+	                    }
+	                } catch (err) {
+	                    _didIteratorError11 = true;
+	                    _iteratorError11 = err;
+	                } finally {
+	                    try {
+	                        if (!_iteratorNormalCompletion11 && _iterator11.return) {
+	                            _iterator11.return();
+	                        }
+	                    } finally {
+	                        if (_didIteratorError11) {
+	                            throw _iteratorError11;
+	                        }
+	                    }
+	                }
+	
+	                return result;
+	            }
+	
+	            function addAllDeleteEvent() {
+	                that.addEventToAllElement('post', 'delete', 'click', function (attr) {
+	                    var section = attr.section,
+	                        button = attr.button;
+	
+	                    that.searchInfos(currentPosts, newPosts, section, getPostInfosFromNodeAndChangeNodeHtmlToInputThenToText, function (postArray, index) {
+	                        postArray.splice(index, 1);
+	                    }, true);
+	
+	                    section.parentNode.removeChild(section);
+	                });
+	            }
+	
+	            function addAllUpdateEvent() {
+	                that.addEventToAllElement('post', 'update', 'click', function (attr) {
+	                    var section = attr.section,
+	                        button = attr.button;
+	
+	                    if (button.dataset.clicked == '0') {
+	                        button.dataset.clicked = '1';
+	                        button.innerHTML = 'Save';
+	
+	                        getPostInfosFromNodeAndChangeNodeHtmlToInputThenToText(section, function (args) {
+	                            var elem = args.elem,
+	                                node = args.node,
+	                                data = args.data;
+	
+	                            node.dataset.oldValue = data;
+	
+	                            var child = node.childNodes[1];
+	
+	                            switch (elem) {
+	                                case 'content-hu':
+	                                case 'content-en':
+	                                    child.innerHTML = '<textarea>' + data + '</textarea>';
+	                                    break;
+	                                case 'label-hu':
+	                                    var html = '<select multiple>';
+	                                    var _iteratorNormalCompletion12 = true;
+	                                    var _didIteratorError12 = false;
+	                                    var _iteratorError12 = undefined;
+	
+	                                    try {
+	                                        for (var _iterator12 = currentLabels[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+	                                            var label = _step12.value;
+	
+	                                            html += '<option value="' + label.id + '" ' + (label.content.hu == data ? "selected" : "") + '>\n                                            ' + label.content.hu + ' / ' + label.content.en + '\n                                        </option>';
+	                                        }
+	                                    } catch (err) {
+	                                        _didIteratorError12 = true;
+	                                        _iteratorError12 = err;
+	                                    } finally {
+	                                        try {
+	                                            if (!_iteratorNormalCompletion12 && _iterator12.return) {
+	                                                _iterator12.return();
+	                                            }
+	                                        } finally {
+	                                            if (_didIteratorError12) {
+	                                                throw _iteratorError12;
+	                                            }
+	                                        }
+	                                    }
+	
+	                                    child.innerHTML = html + '</select>';
+	                                    break;
+	                                case 'label-en':
+	                                    child.innerHTML = ' ';
+	                                    break;
+	                                default:
+	                                    child.innerHTML = '<input type="text" value="' + data + '">';
+	                                    break;
+	                            }
+	                        });
+	                    } else {
+	                        (function () {
+	                            button.dataset.clicked = '0';
+	                            button.innerHTML = 'Update';
+	
+	                            var oldPostDatas = {},
+	                                labelsHu = [],
+	                                labelsEn = [];
+	
+	                            var postInfos = getPostInfosFromNodeAndChangeNodeHtmlToInputThenToText(section, function (args) {
+	                                var elem = args.elem,
+	                                    node = args.node,
+	                                    data = args.data;
+	
+	                                oldPostDatas[elem] = node.dataset.oldValue;
+	                                delete node.dataset.oldValue;
+	
+	                                switch (elem) {
+	                                    case 'label-hu':
+	                                        var _loop6 = function _loop6(index) {
+	                                            var foundLabel = currentLabels.find(function (label) {
+	                                                return label.id == data[index];
+	                                            });
+	
+	                                            labelsHu.push(foundLabel.content.hu);
+	                                            labelsEn.push(foundLabel.content.en);
+	                                        };
+	
+	                                        for (var index in data) {
+	                                            _loop6(index);
+	                                        }
+	                                        //TODO nem változik vissza a select
+	                                        console.log(node.childNodes[1].innerHTML, labelsHu.join(', '), data);
+	                                        node.childNodes[1].innerHtml = labelsHu.join(', ');
+	                                        break;
+	                                    case 'label-en':
+	                                        node.childNodes[1].innerHTML = labelsEn.join(', ');
+	                                        break;
+	                                    default:
+	                                        node.childNodes[1].innerHTML = data;
+	                                        break;
+	                                }
+	                            });
+	
+	                            that.searchInfos(currentPosts, newPosts, oldPostDatas, getPostInfosFromNodeAndChangeNodeHtmlToInputThenToText, function (postArray, index, isCurrent) {
+	                                if (postArray) {
+	                                    postArray[index].id = postInfos.id;
+	                                    postArray[index].created = postInfos.created;
+	                                    postArray[index].title.hu = postInfos['title-hu'];
+	                                    postArray[index].title.en = postInfos['title-en'];
+	                                    postArray[index].content.hu = postInfos['content-hu'];
+	                                    postArray[index].content.en = postInfos['content-en'];
+	                                    postArray[index].url.hu = postInfos['url-hu'];
+	                                    postArray[index].url.en = postInfos['url-en'];
+	                                }
+	                            }, true);
+	                        })();
+	                    }
+	                });
+	            }
+	
+	            /*function addAllUpdateEvent()
+	            {
+	                that.addEventToAllElement('label', 'update', 'click', (attr) =>
+	                {
+	                    let section = attr.section,
+	                        button = attr.button;
+	                      if (button.dataset.clicked == '0')
+	                    {
+	                        button.dataset.clicked = '1';
+	                        button.innerHTML = 'Save';
+	                         /!*let labelInfos = *!/getLabelInfosFromNodeAndChangeNodeHtmlToInputThenToText(section, (args) =>
+	                        {
+	                            let elem = args.elem,
+	                                node = args.node,
+	                                data = args.data;
+	                             node.dataset.oldValue = data;
+	                             node.childNodes[1].innerHTML = `<input type="text" value="${data}">`;
+	                        });
+	                    }*/
+	            /*
+	            else if(button.dataset.clicked == '1')
+	            {
+	                button.dataset.clicked = '0';
+	                button.innerHTML = 'Update';
+	                 let oldLabels = {};
+	                 let labelInfos = getLabelInfosFromNodeAndChangeNodeHtmlToInputThenToText(section, (args) =>
+	                {
+	                    let elem = args.elem,
+	                        node = args.node/!*,
+	                         data = args.data*!/;
+	                     oldLabels[elem] = node.dataset.oldValue;
+	                    delete node.dataset.oldValue;
+	                     node.childNodes[1].innerHTML = args.data;
+	                });
+	                 */
+	            /*
+	            searchLabel(oldLabels, (labelArray, index, isCurrent) =>
+	            {
+	                if (labelArray)
+	                {
+	                    if (isCurrent)
+	                    {
+	                        labelArray[index].id = labelInfos.id;
+	                        labelArray[index].content.hu = labelInfos.hu;
+	                        labelArray[index].content.en = labelInfos.en;
+	                    }
+	                    else
+	                    {
+	                        labelArray[index].id = labelInfos.id;
+	                        labelArray[index].hu = labelInfos.hu;
+	                        labelArray[index].en = labelInfos.en;
+	                    }
+	                }
+	            });
+	            }
+	            });
+	            }*/
+	        }
+	
+	        /**
+	         * @param {string} sectionClass
+	         * @param {string} buttonClass
+	         * @param {string} eventName
+	         * @param {function({section: HTMLElement, button: HTMLElement})} callback
+	         */
+	
+	    }, {
+	        key: 'addEventToAllElement',
+	        value: function addEventToAllElement(sectionClass, buttonClass, eventName, callback) {
+	            Array.from(document.querySelectorAll('.' + sectionClass + ' .' + buttonClass)).forEach(function (element) {
+	                element.addEventListener(eventName, function (event) {
+	                    var section = event.target.parentNode;
+	
+	                    __webpack_require__(1).ifExistCallbackICall(callback, { section: section, button: element });
+	                });
+	            });
+	        }
+	
+	        /**
+	         * @param {HTMLElement} p
+	         * @return {string|string[]}
+	         */
+	
+	    }, {
+	        key: 'getDataFromPElement',
+	        value: function getDataFromPElement(p) {
+	            var varTag = p.childNodes[1],
+	                child = varTag.childNodes[0];
+	
+	            if (child.nodeName === '#text') {
+	                return varTag.innerHTML;
+	            } else {
+	                return __webpack_require__(1).getElementValue(child);
+	            }
+	        }
+	
+	        /**
+	         * @param {*[]} currents
+	         * @param {*[]} news
+	         * @param {object|HTMLElement} datas
+	         * @param {function} getInfosFunction
+	         * @param {function} callback
+	         * @param {boolean} isPost
+	         * @return {function(object|boolean, number|boolean, boolean)}
+	         */
+	
+	    }, {
+	        key: 'searchInfos',
+	        value: function searchInfos(currents, news, datas, getInfosFunction, callback) {
+	            var isPost = arguments.length <= 5 || arguments[5] === undefined ? false : arguments[5];
+	
+	            var infos = __webpack_require__(1).isHtmlElement(datas) ? getInfosFunction(datas) : datas;
+	
+	            if (infos.id != 'null') //these labels still be
+	                {
+	                    var arrayIndex = isPost ? this.searchIndex(currents, //post
+	                    function (value) {
+	                        return value.id == infos.id && String(value.content.hu) == infos['content-hu'] && String(value.content.en) == infos['content-en'];
+	                    }) : this.searchIndex(currents, //label
+	                    function (value) {
+	                        return value.id == infos.id && String(value.content.hu) == infos.hu && String(value.content.en) == infos.en;
+	                    });
+	
+	                    if (arrayIndex > -1) {
+	                        return callback(currents, arrayIndex, true);
+	                    }
+	                } else //these labels maybe will be, other objects
+	                {
+	                    var _arrayIndex = isPost ? this.searchIndex(news, //post
+	                    function (value) {
+	                        return String(value.content.hu) == infos['content-hu'] && String(value.content.en) == infos['content-en'];
+	                    }) : this.searchIndex(news, //label
+	                    function (value) {
+	                        return String(value.hu) == infos.hu && String(value.en) == infos.en;
+	                    });
+	
+	                    if (_arrayIndex > -1) {
+	                        return callback(news, _arrayIndex, false);
+	                    }
+	                }
+	
+	            return callback(false, false, false);
+	        }
+	
+	        /**
+	         * @param {*[]} array
+	         * @param {function} callback
+	         * @return {number}
+	         */
+	
+	    }, {
+	        key: 'searchIndex',
+	        value: function searchIndex(array, callback) {
+	            return array.indexOf(array.find(function (elem) {
+	                return callback(elem);
+	            }));
+	        }
 	    }]);
 	
 	    return AdminController;
@@ -1666,7 +2579,7 @@
 	    }
 	
 	    if (typeof next === 'function') {
-	        return next();
+	        return next(document.querySelector(selector));
 	    }
 	
 	    return true;

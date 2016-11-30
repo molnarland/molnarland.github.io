@@ -249,35 +249,70 @@ function timeOutRestart(milliseconds = 3000)
  */
 function setElementValue(selector, value)
 {
-    const qs = document.querySelector.bind(document);
+    const qs = document.querySelector.bind(document),
+        node = qs(selector);
 
-    if (qs(selector).nodeName == 'INPUT')
+    switch (node.nodeName.toLowerCase())
     {
-        qs(selector).value = value;
-    }
-    else
-    {
-        qs(selector).innerHTML = value;
+        case 'input':
+        case 'textarea':
+            node.value = value;
+            break;
+
+
+        case 'select':
+            break;
+
+
+        default:
+            return node.innerHTML;
+            break;
     }
 }
 
 /**
- * @param {string} selector
- * @return {string}
+ * @param {string|HTMLElement} selectorOrNode
+ * @return {string|string[]}
  */
-function getElementValue(selector)
+function getElementValue(selectorOrNode)
 {
-    const qs = document.querySelector.bind(document);
+    let node;
 
-    if (qs(selector).nodeName == 'INPUT')
+    if (isHtmlElement(selectorOrNode))
     {
-        return qs(selector).value;
+        node = selectorOrNode;
     }
     else
     {
-        return qs(selector).innerHTML;
+        node = document.querySelector(selectorOrNode);
+    }
+
+    switch (getNodeName(selectorOrNode))
+    {
+        case 'input':
+        case 'textarea':
+            return node.value;
+            break;
+
+
+        case 'select':
+            let values = [];
+
+            for(let selectedOption of node.selectedOptions)
+            {
+                values.push(selectedOption.value);
+            }
+
+            return (values.length > 0) ? values : '';
+            break;
+
+
+        default:
+            return node.innerHTML;
+            break;
     }
 }
+
 
 function ifExistCallbackICall(callback, args)
 {
@@ -287,7 +322,11 @@ function ifExistCallbackICall(callback, args)
     }
 }
 
-//Returns true if it is a DOM node
+/**
+ * @description Returns true if it is a DOM node
+ * @param object
+ * @return {boolean}
+ */
 function isNode(object)
 {
     return (
@@ -296,7 +335,11 @@ function isNode(object)
     );
 }
 
-//Returns true if it is a DOM element
+/**
+ * @description Returns true if it is a DOM element
+ * @param object
+ * @return {boolean}
+ */
 function isHtmlElement(object)
 {
     return (
@@ -305,6 +348,58 @@ function isHtmlElement(object)
     );
 }
 
+/**
+ * @param {string} selector
+ * @param {boolean} selected
+ * @return {boolean}
+ */
+function changeAllOptionInSelect(selector, selected)
+{
+    if (getNodeName(selector) === 'select')
+    {
+        let node = document.querySelector(selector);
+        for(let option of node)
+        {
+            option.selected = selected;
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * @param {string|HTMLElement} selectorOrNode
+ * @return {string}
+ */
+function getNodeName(selectorOrNode)
+{
+    if (isHtmlElement(selectorOrNode))
+    {
+        return selectorOrNode.nodeName.toLowerCase();
+    }
+    else
+    {
+        return document.querySelector(selectorOrNode).nodeName.toLowerCase();
+    }
+}
+
+/**
+ * @param {Array} notNumberArray
+ * @return {Array}
+ */
+function arrayElementsConvertToNumber(notNumberArray)
+{
+    let numberArray = [];
+    for (let notNumberElem of notNumberArray)
+    {
+        const numberElem = Number(notNumberElem);
+        numberArray.push(numberElem);
+    }
+
+    return numberArray;
+}
 
 module.exports = {
     start: start,
@@ -321,5 +416,7 @@ module.exports = {
     setElementValue: setElementValue,
     ifExistCallbackICall: ifExistCallbackICall,
     isNode: isNode,
-    isHtmlElement: isHtmlElement
+    isHtmlElement: isHtmlElement,
+    changeAllOptionInSelect: changeAllOptionInSelect,
+    arrayElementsConvertToNumber: arrayElementsConvertToNumber
 };

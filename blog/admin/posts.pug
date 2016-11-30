@@ -1,3 +1,40 @@
-//
-   Created by molnarland on 2016.10.27..
+doctype html
+html
+    head
+        link(href="../style/admin-labels.css" type="text/css" rel="stylesheet")
+    body
+        #wrapper
 
+        hr
+
+        #new
+            div
+                label(for="created") Created:
+                input(type="text" id="created")
+            div
+                label(for="labels") Labels:
+                select(multiple="true" id="labels")
+            div
+                label(for="content-hu") Hungarian content:
+                textarea(id="content-hu")
+            div
+                label(for="content-en") English content:
+                textarea(id="content-en")
+            div
+                label(for="title-hu") Hungarian title:
+                input(type="text" id="title-hu")
+            div
+                label(for="title-en") English title
+                input(type="text" id="title-en")
+            div
+                label(for="url-hu") URL hu:
+                input(type="text" id="url-hu")
+            div
+                label(for="url-en") URL en:
+                input(type="text" id="url-en")
+
+            button#new-post Add post
+
+        button#save-change Save change
+
+        script(src="../dist/main.js")
