@@ -670,11 +670,8 @@ export default class AdminController
             {
                 const className = child.className;
 
-                //let callbackArguments = {elem: className, node: child};
-
                 if (className && child.nodeName !== 'BUTTON')
                 {
-                    console.log(child);
                     let data = getData(child);
 
                     let classNamePieces = className.split('-');
@@ -684,7 +681,10 @@ export default class AdminController
                             result[classNamePieces[0]] = data;
                             break;
                         case 2:
-                            result[classNamePieces[0]] = {};
+                            if (!result[classNamePieces[0]])
+                            {
+                                result[classNamePieces[0]] = {};
+                            }
                             result[classNamePieces[0]][classNamePieces[1]] = data;
                             break;
                         default:
@@ -755,6 +755,7 @@ export default class AdminController
                     getPostInfosFromNodeAndChangeNodeHtmlToInputThenToText,
                     (postArray, index) =>
                     {
+                        console.log(postArray);
                         postArray.splice(index, 1);
                     },
                     true
@@ -840,9 +841,8 @@ export default class AdminController
                                     labelsHu.push(foundLabel.content.hu);
                                     labelsEn.push(foundLabel.content.en);
                                 }
-                                //TODO nem változik vissza a select
-                                console.log(node.childNodes[1].innerHTML, labelsHu.join(', '), data);
-                                node.childNodes[1].innerHtml = labelsHu.join(', ');
+                                node.childNodes[1].childNodes[0].remove();
+                                node.childNodes[1].innerHTML = labelsHu.join(', ');
                                 break;
                             case 'label-en':
                                 node.childNodes[1].innerHTML = labelsEn.join(', ');
@@ -857,9 +857,9 @@ export default class AdminController
                     that.searchInfos(
                         currentPosts,
                         newPosts,
-                        oldPostDatas,
+                        postInfos,
                         getPostInfosFromNodeAndChangeNodeHtmlToInputThenToText,
-                        (postArray, index, isCurrent) =>
+                        (postArray, index/*, isCurrent*/) =>
                         {
                             if (postArray)
                             {
@@ -879,73 +879,6 @@ export default class AdminController
             });
         }
 
-        /*function addAllUpdateEvent()
-        {
-            that.addEventToAllElement('label', 'update', 'click', (attr) =>
-            {
-                let section = attr.section,
-                    button = attr.button;
-
-
-                if (button.dataset.clicked == '0')
-                {
-                    button.dataset.clicked = '1';
-                    button.innerHTML = 'Save';
-
-                    /!*let labelInfos = *!/getLabelInfosFromNodeAndChangeNodeHtmlToInputThenToText(section, (args) =>
-                    {
-                        let elem = args.elem,
-                            node = args.node,
-                            data = args.data;
-
-                        node.dataset.oldValue = data;
-
-                        node.childNodes[1].innerHTML = `<input type="text" value="${data}">`;
-                    });
-                }*/
-                /*
-                else if(button.dataset.clicked == '1')
-                {
-                    button.dataset.clicked = '0';
-                    button.innerHTML = 'Update';
-
-                    let oldLabels = {};
-
-                    let labelInfos = getLabelInfosFromNodeAndChangeNodeHtmlToInputThenToText(section, (args) =>
-                    {
-                        let elem = args.elem,
-                            node = args.node/!*,
-                             data = args.data*!/;
-
-                        oldLabels[elem] = node.dataset.oldValue;
-                        delete node.dataset.oldValue;
-
-                        node.childNodes[1].innerHTML = args.data;
-                    });
-
-                    */
-                    /*
-                    searchLabel(oldLabels, (labelArray, index, isCurrent) =>
-                    {
-                        if (labelArray)
-                        {
-                            if (isCurrent)
-                            {
-                                labelArray[index].id = labelInfos.id;
-                                labelArray[index].content.hu = labelInfos.hu;
-                                labelArray[index].content.en = labelInfos.en;
-                            }
-                            else
-                            {
-                                labelArray[index].id = labelInfos.id;
-                                labelArray[index].hu = labelInfos.hu;
-                                labelArray[index].en = labelInfos.en;
-                            }
-                        }
-                    });
-                }
-            });
-        }*/
     }
 
     /**
@@ -1008,8 +941,8 @@ export default class AdminController
                 ? this.searchIndex(currents, //post
                     (value) =>
                         value.id == infos.id
-                        && String(value.content.hu) == infos['content-hu']
-                        && String(value.content.en) == infos['content-en']
+                        && String(value.content.hu) == infos.content.hu
+                        && String(value.content.en) == infos.content.en
                 )
                 : this.searchIndex(currents, //label
                     (value) =>

@@ -2150,10 +2150,7 @@
 	
 	                        var className = child.className;
 	
-	                        //let callbackArguments = {elem: className, node: child};
-	
 	                        if (className && child.nodeName !== 'BUTTON') {
-	                            console.log(child);
 	                            var data = getData(child);
 	
 	                            var classNamePieces = className.split('-');
@@ -2162,7 +2159,9 @@
 	                                    result[classNamePieces[0]] = data;
 	                                    break;
 	                                case 2:
-	                                    result[classNamePieces[0]] = {};
+	                                    if (!result[classNamePieces[0]]) {
+	                                        result[classNamePieces[0]] = {};
+	                                    }
 	                                    result[classNamePieces[0]][classNamePieces[1]] = data;
 	                                    break;
 	                                default:
@@ -2239,6 +2238,7 @@
 	                        button = attr.button;
 	
 	                    that.searchInfos(currentPosts, newPosts, section, getPostInfosFromNodeAndChangeNodeHtmlToInputThenToText, function (postArray, index) {
+	                        console.log(postArray);
 	                        postArray.splice(index, 1);
 	                    }, true);
 	
@@ -2337,9 +2337,8 @@
 	                                        for (var index in data) {
 	                                            _loop6(index);
 	                                        }
-	                                        //TODO nem változik vissza a select
-	                                        console.log(node.childNodes[1].innerHTML, labelsHu.join(', '), data);
-	                                        node.childNodes[1].innerHtml = labelsHu.join(', ');
+	                                        node.childNodes[1].childNodes[0].remove();
+	                                        node.childNodes[1].innerHTML = labelsHu.join(', ');
 	                                        break;
 	                                    case 'label-en':
 	                                        node.childNodes[1].innerHTML = labelsEn.join(', ');
@@ -2350,7 +2349,7 @@
 	                                }
 	                            });
 	
-	                            that.searchInfos(currentPosts, newPosts, oldPostDatas, getPostInfosFromNodeAndChangeNodeHtmlToInputThenToText, function (postArray, index, isCurrent) {
+	                            that.searchInfos(currentPosts, newPosts, postInfos, getPostInfosFromNodeAndChangeNodeHtmlToInputThenToText, function (postArray, index /*, isCurrent*/) {
 	                                if (postArray) {
 	                                    postArray[index].id = postInfos.id;
 	                                    postArray[index].created = postInfos.created;
@@ -2366,64 +2365,6 @@
 	                    }
 	                });
 	            }
-	
-	            /*function addAllUpdateEvent()
-	            {
-	                that.addEventToAllElement('label', 'update', 'click', (attr) =>
-	                {
-	                    let section = attr.section,
-	                        button = attr.button;
-	                      if (button.dataset.clicked == '0')
-	                    {
-	                        button.dataset.clicked = '1';
-	                        button.innerHTML = 'Save';
-	                         /!*let labelInfos = *!/getLabelInfosFromNodeAndChangeNodeHtmlToInputThenToText(section, (args) =>
-	                        {
-	                            let elem = args.elem,
-	                                node = args.node,
-	                                data = args.data;
-	                             node.dataset.oldValue = data;
-	                             node.childNodes[1].innerHTML = `<input type="text" value="${data}">`;
-	                        });
-	                    }*/
-	            /*
-	            else if(button.dataset.clicked == '1')
-	            {
-	                button.dataset.clicked = '0';
-	                button.innerHTML = 'Update';
-	                 let oldLabels = {};
-	                 let labelInfos = getLabelInfosFromNodeAndChangeNodeHtmlToInputThenToText(section, (args) =>
-	                {
-	                    let elem = args.elem,
-	                        node = args.node/!*,
-	                         data = args.data*!/;
-	                     oldLabels[elem] = node.dataset.oldValue;
-	                    delete node.dataset.oldValue;
-	                     node.childNodes[1].innerHTML = args.data;
-	                });
-	                 */
-	            /*
-	            searchLabel(oldLabels, (labelArray, index, isCurrent) =>
-	            {
-	                if (labelArray)
-	                {
-	                    if (isCurrent)
-	                    {
-	                        labelArray[index].id = labelInfos.id;
-	                        labelArray[index].content.hu = labelInfos.hu;
-	                        labelArray[index].content.en = labelInfos.en;
-	                    }
-	                    else
-	                    {
-	                        labelArray[index].id = labelInfos.id;
-	                        labelArray[index].hu = labelInfos.hu;
-	                        labelArray[index].en = labelInfos.en;
-	                    }
-	                }
-	            });
-	            }
-	            });
-	            }*/
 	        }
 	
 	        /**
@@ -2484,7 +2425,7 @@
 	                {
 	                    var arrayIndex = isPost ? this.searchIndex(currents, //post
 	                    function (value) {
-	                        return value.id == infos.id && String(value.content.hu) == infos['content-hu'] && String(value.content.en) == infos['content-en'];
+	                        return value.id == infos.id && String(value.content.hu) == infos.content.hu && String(value.content.en) == infos.content.en;
 	                    }) : this.searchIndex(currents, //label
 	                    function (value) {
 	                        return value.id == infos.id && String(value.content.hu) == infos.hu && String(value.content.en) == infos.en;
