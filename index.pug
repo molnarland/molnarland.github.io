@@ -1,5 +1,7 @@
 include _mixins.pug
 
+-telNo = "07436379120";
+
 doctype html
 html(lang="en")
     head
@@ -30,7 +32,7 @@ html(lang="en")
                 +contact("http://twitter.com/molnarland", "twitter")
                 +contact("mailto:rrmolnar@gmail.com", "email")(label="rrmolnar@gmail.com")
                 +contact("http://github.com/molnarland", "github")
-                +contact("tel:07436716743", "phone")(label="07436716743")
+                +contact("tel:"+telNo, "phone")(label=telNo)
                 +contact("http://linkedin.com/in/molnarland", "linkedin")
 
             +rasta-text("molnarland", "h1")(class="hide")
@@ -103,9 +105,9 @@ html(lang="en")
                 a(href="mailto:rrmolnar@gmail.com").action
                     h5.tool Email
                     p.info rrmolnar@gmail.com
-                a(href="tel:07436716743").action
+                a(href="tel:"+telNo).action
                     h5.tool Phone
-                    p.info 07436716743
+                    p.info=telNo
         //#contact-now
 
         footer
