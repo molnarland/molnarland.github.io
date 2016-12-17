@@ -1,0 +1,17 @@
+doctype html
+html
+    head
+        -codeMirrorDir = '../libs/codemirror/';
+        script(src=codeMirrorDir + "lib/codemirror.js")
+        script(src=codeMirrorDir + "addon/edit/closebrackets.js")
+        script(src=codeMirrorDir + "addon/edit/matchbrackets.js")
+        script(src=codeMirrorDir + "keymap/sublime.js")
+        link(rel="stylesheet" href=codeMirrorDir + "lib/codemirror.css")
+        link(rel="stylesheet" href=codeMirrorDir + "theme/monokai.css")
+        script(src=codeMirrorDir + "mode/javascript/javascript.js")
+    body
+        textarea#in
+        button#save Save
+        #out
+
+        script(src="JsonToHtml.js")

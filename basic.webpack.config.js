@@ -1,7 +1,8 @@
 module.exports = {
-    entry: "./blog/src/index.js",
+    entry: {},
     output: {
-        filename: 'main.js'
+        path: __dirname + '/dist',
+        filename: '[name].js'
     },
     module: {
         loaders: [

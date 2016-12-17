@@ -984,21 +984,14 @@
 	            xobj.send(null);
 	        }
 	    }, {
-	        key: 'saveJSON',
-	        value: function saveJSON(datas, filename) {
-	            datas = '{"' + filename + '": ' + JSON.stringify(datas) + '}';
+	        key: 'getModelByFrom',
 	
-	            __webpack_require__(7).saveAs(new Blob([datas], { type: 'application/json;charset=utf8' }), filename + '.json');
-	        }
 	
 	        /**
 	         *
 	         * @param {string} from
 	         * @return {*}
 	         */
-	
-	    }, {
-	        key: 'getModelByFrom',
 	        value: function getModelByFrom(from) {
 	            switch (from) {
 	                case 'languages':
@@ -1041,6 +1034,13 @@
 	                    return false;
 	                    break;
 	            }
+	        }
+	    }], [{
+	        key: 'saveJSON',
+	        value: function saveJSON(datas, filename) {
+	            datas = '{"' + filename + '": ' + JSON.stringify(datas) + '}';
+	
+	            __webpack_require__(7).saveAs(new Blob([datas], { type: 'application/json;charset=utf8' }), filename + '.json');
 	        }
 	    }]);
 	
@@ -1598,8 +1598,8 @@
 	                    }
 	                }
 	
-	                that.dc.saveJSON(languages, 'languages');
-	                that.dc.saveJSON(endLabels, 'labels');
+	                _imports.DatabaseController.saveJSON(languages, 'languages');
+	                _imports.DatabaseController.saveJSON(endLabels, 'labels');
 	            }
 	
 	            function labelHtmlTemplate(id, hu, en) {
@@ -2101,8 +2101,8 @@
 	                    }
 	                }
 	
-	                that.dc.saveJSON(languages, 'languages');
-	                that.dc.saveJSON(endPosts, 'posts');
+	                _imports.DatabaseController.saveJSON(languages, 'languages');
+	                _imports.DatabaseController.saveJSON(endPosts, 'posts');
 	            }
 	
 	            /**

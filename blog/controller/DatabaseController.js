@@ -159,7 +159,7 @@ export default class DatabaseController
     }
 
 
-    saveJSON (datas, filename)
+    static saveJSON (datas, filename)
     {
         datas = `{"${filename}": ${JSON.stringify(datas)}}`;
 

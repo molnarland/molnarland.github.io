@@ -189,8 +189,8 @@ export default class AdminController
             }
 
 
-            that.dc.saveJSON(languages, 'languages');
-            that.dc.saveJSON(endLabels, 'labels');
+            DatabaseController.saveJSON(languages, 'languages');
+            DatabaseController.saveJSON(endLabels, 'labels');
         }
 
         function labelHtmlTemplate(id, hu, en)
@@ -621,8 +621,8 @@ export default class AdminController
             }
 
 
-            that.dc.saveJSON(languages, 'languages');
-            that.dc.saveJSON(endPosts, 'posts');
+            DatabaseController.saveJSON(languages, 'languages');
+            DatabaseController.saveJSON(endPosts, 'posts');
         }
 
         /**
