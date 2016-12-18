@@ -1,4 +1,6 @@
 import {DatabaseController} from '../src/imports';
+import JsonToHtml from '../../json2html/es6/JsonToHtml';
+import Editor from '../../json2html/es6/Editor';
 
 export default class AdminController
 {
@@ -338,7 +340,12 @@ export default class AdminController
             titleHuSelector = '#title-hu',
             titleEnSelector = '#title-en',
             urlHuSelector = '#url-hu',
-            urlEnSelector = '#url-en';
+            urlEnSelector = '#url-en',
+            contentHuOutputSelector = '#content-hu-output',
+            contentEnOutputSelector = '#content-en-output';
+
+        const huEditor = initEditor(contentHuSelector, contentHuOutputSelector);
+        const enEditor = initEditor(contentEnSelector, contentEnOutputSelector);
 
         let currentLabels = [],
             currentPosts = [],
@@ -385,12 +392,24 @@ export default class AdminController
                     option.setAttribute('value', label.id);
                     option.innerHTML = `${label.content.hu} / ${label.content.en}`;
 
-
                     document.querySelector('#labels').appendChild(option);
                 }
             }, 100);
         });
 
+        /**
+         * @param {string} inner
+         * @param {string} outer
+         * @return {Editor}
+         */
+        function initEditor(inner, outer)
+        {
+            return new Editor({
+                idOfEditor: inner.substring(1),
+                idOfSaveButton: false,
+                idOfOutput: outer.substring(1)
+            });
+        }
 
         function listingPosts()
         {
@@ -470,8 +489,8 @@ export default class AdminController
         {
             const created = that.helpers.getElementValue(createdSelector),
                 labels = that.helpers.getElementValue(labelsSelector),
-                contentHu = that.helpers.getElementValue(contentHuSelector),
-                contentEn = that.helpers.getElementValue(contentEnSelector),
+                contentHu = that.helpers.getElementValue(contentHuSelector, huEditor),
+                contentEn = that.helpers.getElementValue(contentEnSelector, enEditor),
                 titleHu = that.helpers.getElementValue(titleHuSelector),
                 titleEn = that.helpers.getElementValue(titleEnSelector),
                 urlHu = that.helpers.getElementValue(urlHuSelector),
@@ -573,15 +592,16 @@ export default class AdminController
 
 
                 let contentLanguageIndex = languages.indexOf(languages.find(
-                        (language) => String(language.hu) == originalPostInfos.contentHu && String(language.en) == originalPostInfos.contentEn
+                        (language) => String(language.hu) == originalPostInfos['content-hu'] && String(language.en) == originalPostInfos['content-en']
                     )),
                     titleLanguageIndex = languages.indexOf(languages.find(
-                        (language) => String(language.hu) == originalPostInfos.titleHu && String(language.en) == originalPostInfos.titleEn
+                        (language) => String(language.hu) == originalPostInfos['title-hu'] && String(language.en) == originalPostInfos['title-en']
                     )),
                     urlLanguageIndex = languages.indexOf(languages.find(
-                        (language) => String(language.hu) == originalPostInfos.urlHu && String(language.en) == originalPostInfos.urlEn
+                        (language) => String(language.hu) == originalPostInfos['url-hu'] && String(language.en) == originalPostInfos['url-en']
                     ));
 
+                console.log(contentLanguageIndex, languages, originalPostInfos);
 
                 languages[contentLanguageIndex].hu = currentPost.content.hu;
                 languages[contentLanguageIndex].en = currentPost.content.en;
@@ -666,10 +686,10 @@ export default class AdminController
                 callCallback = that.helpers.ifExistCallbackICall,
                 getData = that.getDataFromPElement;
 
+
             for(let child of postSection.childNodes)
             {
                 const className = child.className;
-
                 if (className && child.nodeName !== 'BUTTON')
                 {
                     let data = getData(child);
@@ -693,49 +713,6 @@ export default class AdminController
 
                     callCallback(callback, {elem: className, node: child, data: data});
                 }
-
-                /*switch (className)
-                {
-                    case 'id':
-                        result.id = getData(child);
-                        callbackArguments.data = result.id;
-                        callCallback(callback, callbackArguments);
-                        break;
-                    case 'created':
-                        result.created = getData(child);
-                        callbackArguments.data = result.created;
-                        callCallback(callback, callbackArguments);
-                        break;
-                    case 'label-hu':
-                    case 'label-en':
-                        callbackArguments.data = getData(child);
-                        callCallback(callback, callbackArguments);
-                        break;
-                    case 'content-hu':
-                        result.content.hu = getData(child);
-                        callCallback(callback, {elem: className, node: child, data: result.content.hu});
-                        break;
-                    case 'content-en':
-                        result.content.en = getData(child);
-                        callCallback(callback, {elem: className, node: child, data: result.content.en});
-                        break;
-                    case 'title-hu':
-                        result.title.hu = getData(child);
-                        callCallback(callback, {elem: className, node: child, data: result.title.hu});
-                        break;
-                    case 'title-en':
-                        result.title.en = getData(child);
-                        callCallback(callback, {elem: className, node: child, data: result.title.en});
-                        break;
-                    case 'url-hu':
-                        result.url.hu = getData(child);
-                        callCallback(callback, {elem: className, node: child, data: result.url.hu});
-                        break;
-                    case 'url-en':
-                        result.url.en = getData(child);
-                        callCallback(callback, {elem: className, node: child, data: result.url.en});
-                        break;
-                }*/
             }
 
             return result;
@@ -908,7 +885,6 @@ export default class AdminController
     {
         const varTag = p.childNodes[1],
             child = varTag.childNodes[0];
-
 
         if (child.nodeName === '#text')
         {

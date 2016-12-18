@@ -2,7 +2,8 @@ module.exports = {
     entry: {},
     output: {
         path: __dirname + '/dist',
-        filename: '[name].js'
+        filename: '[name].js',
+        comments: false
     },
     module: {
         loaders: [

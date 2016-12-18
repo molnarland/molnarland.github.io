@@ -272,9 +272,10 @@ function setElementValue(selector, value)
 
 /**
  * @param {string|HTMLElement} selectorOrNode
+ * @param {Editor} [editorObject]
  * @return {string|string[]}
  */
-function getElementValue(selectorOrNode)
+function getElementValue(selectorOrNode, editorObject)
 {
     let node;
 
@@ -290,11 +291,11 @@ function getElementValue(selectorOrNode)
     switch (getNodeName(selectorOrNode))
     {
         case 'input':
-        case 'textarea':
             return node.value;
             break;
-
-
+        case 'textarea':
+            return editorObject.getValueOfEditor() || node.value;
+            break;
         case 'select':
             let values = [];
 
@@ -305,8 +306,6 @@ function getElementValue(selectorOrNode)
 
             return (values.length > 0) ? values : '';
             break;
-
-
         default:
             return node.innerHTML;
             break;

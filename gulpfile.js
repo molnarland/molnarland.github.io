@@ -19,7 +19,7 @@ var paths = {
 	coffee: ['./wordsoutinjs/*.coffee'],
 	blogJs: ['./blog/src/*.js', './blog/model/*.js', './blog/controller/*.js'],
 	landingJs: ['script/es6/*.js'],
-	json2HtmlJs: ['json2html/es6/*.js', './blog/controller/DatabaseController.js']
+	json2HtmlJs: ['json2html/es6/*.js']
 };
 
 var basePath = './',
@@ -71,21 +71,21 @@ gulp.task('blog-js', function (done) {
 	reloadBrowser(done);
 });
 
-gulp.task('landing-js', function (done) {
+gulp.task('landing-js'/*, function (done) {
 	gulp.src(paths.landingJs)
 		.pipe(babel()).on('error', console.error.bind(console))
 		.pipe(gulp.dest('script'));
 
 	reloadBrowser(done);
-});
+}*/);
 
-gulp.task('j2h-js', function (done) {
+gulp.task('j2h-js'/*, function (done) {
 	gulp.src(paths.json2HtmlJs)
 		.pipe(webpack(require('./json2html.webpack.config')))
 		.pipe(gulp.dest('json2html'));
 
 	reloadBrowser(done);
-});
+}*/);
 
 
 gulp.task('server', ['pug', 'sass', 'coffee', 'blog-js', 'landing-js', 'j2h-js'], function () {

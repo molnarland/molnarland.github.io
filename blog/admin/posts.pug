@@ -1,7 +1,10 @@
+include ../../libs/codemirror/_function
+
 doctype html
 html
     head
         link(href="../style/admin-labels.css" type="text/css" rel="stylesheet")
+        +codemirror('../../libs/codemirror')
     body
         #wrapper
 
@@ -17,9 +20,11 @@ html
             div
                 label(for="content-hu") Hungarian content:
                 textarea(id="content-hu")
+                #content-hu-output
             div
                 label(for="content-en") English content:
                 textarea(id="content-en")
+                #content-en-output
             div
                 label(for="title-hu") Hungarian title:
                 input(type="text" id="title-hu")

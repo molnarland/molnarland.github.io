@@ -1,0 +1,9 @@
+mixin codemirror(rootDirectory)
+    -rootDirectory += '/';
+    script(src=rootDirectory + "lib/codemirror.js")
+    script(src=rootDirectory + "addon/edit/closebrackets.js")
+    script(src=rootDirectory + "addon/edit/matchbrackets.js")
+    script(src=rootDirectory + "keymap/sublime.js")
+    link(rel="stylesheet" href=rootDirectory + "lib/codemirror.css")
+    link(rel="stylesheet" href=rootDirectory + "theme/monokai.css")
+    script(src=rootDirectory + "mode/javascript/javascript.js")

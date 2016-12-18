@@ -46,20 +46,42 @@
 
 	'use strict';
 	
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+	var _Editor = __webpack_require__(1);
+	
+	var _Editor2 = _interopRequireDefault(_Editor);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	new _Editor2.default({});
+
+/***/ },
+/* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
+	var _JsonToHtml = __webpack_require__(2);
+	
+	var _JsonToHtml2 = _interopRequireDefault(_JsonToHtml);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var JsonToHtml = function () {
+	var Editor = function () {
 	    /**
 	     * @param {string} fileName
 	     * @param {string} idOfEditor
 	     * @param {string} idOfSaveButton
 	     * @param {string} idOfOutput
 	     */
-	    function JsonToHtml(_ref) {
+	    function Editor(_ref) {
 	        var fileName = _ref.fileName;
 	        var _ref$idOfEditor = _ref.idOfEditor;
 	        var idOfEditor = _ref$idOfEditor === undefined ? 'in' : _ref$idOfEditor;
@@ -68,38 +90,22 @@
 	        var _ref$idOfOutput = _ref.idOfOutput;
 	        var idOfOutput = _ref$idOfOutput === undefined ? 'out' : _ref$idOfOutput;
 	
-	        _classCallCheck(this, JsonToHtml);
+	        _classCallCheck(this, Editor);
 	
 	        this.in = idOfEditor;
 	        this.out = idOfOutput;
 	        this.saveButton = idOfSaveButton;
+	        this.filename = fileName;
 	
-	        var outter = document.getElementById(this.out);
-	
-	        var editor = this.editorInit();
-	        editor.on('change', function (cm) {
-	            this.start(cm.getValue(), outter);
-	        }.bind(this));
-	
-	        document.getElementById(this.saveButton).addEventListener('click', function (e) {
-	            var filename = fileName || prompt('What would you like for filename?');
-	            while (!filename) {
-	                filename = prompt('Please type a filename!');
-	            }
-	
-	            JsonToHtml.saveFile(editor.doc.cm.getValue(), filename);
-	        });
+	        this.editorInit();
+	        this.addJsonParseToHtmlOnEditorChange();
+	        this.addSaveOnButtonClick();
 	    }
 	
-	    /**
-	     * @return {object}
-	     */
-	
-	
-	    _createClass(JsonToHtml, [{
+	    _createClass(Editor, [{
 	        key: 'editorInit',
 	        value: function editorInit() {
-	            return CodeMirror.fromTextArea(document.getElementById(this.in), {
+	            this.editor = CodeMirror.fromTextArea(document.getElementById(this.in), {
 	                mode: "application/json",
 	                lineNumbers: true,
 	                autoCloseBrackets: true,
@@ -111,34 +117,95 @@
 	                keyMap: 'sublime'
 	            });
 	        }
-	
-	        /**
-	         * @param {string} jsonString
-	         * @param {HTMLElement} out
-	         */
-	
 	    }, {
-	        key: 'start',
-	        value: function start(jsonString, out) {
-	            var outString = '';
+	        key: 'addJsonParseToHtmlOnEditorChange',
+	        value: function addJsonParseToHtmlOnEditorChange() {
+	            this.editor.on('change', function (cm) {
+	                new _JsonToHtml2.default(cm.getValue(), document.getElementById(this.out));
+	            }.bind(this));
+	        }
+	    }, {
+	        key: 'addSaveOnButtonClick',
+	        value: function addSaveOnButtonClick() {
+	            if (this.saveButton !== false) {
+	                document.getElementById(this.saveButton).addEventListener('click', function (e) {
+	                    var filename = this.fileName || prompt('What would you like for filename?');
+	                    while (!filename) {
+	                        filename = prompt('Please type a filename!');
+	                    }
 	
-	            try {
-	                this.object = JSON.parse(jsonString);
-	                outString = this.cycle(this.object);
-	            } catch (e) {
-	                outString = e.message;
+	                    Editor.saveFile(this.getValueOfEditor(), filename);
+	                }.bind(this));
 	            }
-	
-	            out.innerHTML = outString;
+	        }
+	    }, {
+	        key: 'getValueOfEditor',
+	        value: function getValueOfEditor() {
+	            return this.editor.doc.cm.getValue();
 	        }
 	
 	        /**
-	         * @param {object} object
-	         * @param {function} callback - optional
-	         * @return {string}
+	         * @param {string} value
+	         * @param {string} filename
 	         */
 	
-	    }, {
+	    }], [{
+	        key: 'saveFile',
+	        value: function saveFile(value, filename) {
+	            __webpack_require__(3).saveAs(new Blob([value], { type: 'application/json;charset=utf8' }), filename + '.json');
+	        }
+	    }]);
+	
+	    return Editor;
+	}();
+	
+	exports.default = Editor;
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var JsonToHtml = function () {
+	    /**
+	     * @param {string} jsonString
+	     * @param {HTMLElement} out
+	     */
+	    function JsonToHtml(jsonString, out) {
+	        _classCallCheck(this, JsonToHtml);
+	
+	        var outString = '';
+	
+	        try {
+	            this.object = JSON.parse(jsonString);
+	            outString = this.cycle(this.object);
+	        } catch (e) {
+	            outString = jsonString;
+	            console.error(e.message);
+	        }
+	
+	        out.innerHTML = outString;
+	    }
+	
+	    /**
+	     * @param {object} object
+	     * @param {function} callback - optional
+	     * @return {string}
+	     */
+	
+	
+	    _createClass(JsonToHtml, [{
 	        key: 'cycle',
 	        value: function cycle(object, callback) {
 	            var _this = this;
@@ -146,22 +213,43 @@
 	            var html = '';
 	
 	            var _loop = function _loop(index) {
-	                var tag = index,
-	                    id = _this.findFromFirstChar(object[index], '#'),
-	                    classOfElement = _this.findFromFirstChar(object[index], '.'),
-	                    style = _this.findFromFirstChar(object[index], '*'),
-	                    other = _this.findFromFirstChar(object[index], '-'),
-	                    innerText = _this.findFromNotFirstChar(object[index], ['#', '.', '*', '-']);
-	                var innerObject = object[index].find(function (elem) {
-	                    return (typeof elem === 'undefined' ? 'undefined' : _typeof(elem)) == 'object';
-	                });
+	                var tag = index;
 	
-	                if (innerObject) {
-	                    _this.cycle(innerObject, function (innerElement) {
-	                        html += _this.whichTagTypeWay(tag, id, classOfElement, style, other, innerText + innerElement);
-	                    });
+	                if (typeof object[index] === 'string') {
+	                    var innerText = object[index];
+	
+	                    html += _this.whichTagTypeWay(tag, { inner: innerText });
 	                } else {
-	                    html += _this.whichTagTypeWay(tag, id, classOfElement, style, other, innerText);
+	                    (function () {
+	                        var id = _this.findFromFirstChar(object[index], '#'),
+	                            classOfElement = _this.findFromFirstChar(object[index], '.'),
+	                            style = _this.findFromFirstChar(object[index], '*'),
+	                            other = _this.findFromFirstChar(object[index], '-'),
+	                            innerText = _this.findFromNotFirstChar(object[index], ['#', '.', '*', '-']);
+	                        var innerObject = object[index].find(function (elem) {
+	                            return (typeof elem === 'undefined' ? 'undefined' : _typeof(elem)) == 'object';
+	                        });
+	
+	                        if (innerObject) {
+	                            _this.cycle(innerObject, function (innerElement) {
+	                                html += _this.whichTagTypeWay(tag, {
+	                                    id: id,
+	                                    classOfElement: classOfElement,
+	                                    style: style,
+	                                    other: other,
+	                                    inner: innerText + innerElement
+	                                });
+	                            });
+	                        } else {
+	                            html += _this.whichTagTypeWay(tag, {
+	                                id: id,
+	                                classOfElement: classOfElement,
+	                                style: style,
+	                                other: other,
+	                                inner: innerText
+	                            });
+	                        }
+	                    })();
 	                }
 	            };
 	
@@ -178,114 +266,135 @@
 	
 	        /**
 	         * @param {string} tag
-	         * @param {string} id
-	         * @param {string} classOfElement
-	         * @param {string} style
-	         * @param {string} other
-	         * @param {string} inner
+	         * @param {string} [id]
+	         * @param {string} [classOfElement]
+	         * @param {string} [style]
+	         * @param {string} [other]
+	         * @param {string} [inner]
 	         * @return {string}
 	         */
 	
 	    }, {
 	        key: 'whichTagTypeWay',
-	        value: function whichTagTypeWay(tag, id, classOfElement, style) {
-	            var other = arguments.length <= 4 || arguments[4] === undefined ? '' : arguments[4];
-	            var inner = arguments.length <= 5 || arguments[5] === undefined ? '' : arguments[5];
+	        value: function whichTagTypeWay(tag, _ref) {
+	            var id = _ref.id;
+	            var classOfElement = _ref.classOfElement;
+	            var style = _ref.style;
+	            var _ref$other = _ref.other;
+	            var other = _ref$other === undefined ? '' : _ref$other;
+	            var _ref$inner = _ref.inner;
+	            var inner = _ref$inner === undefined ? '' : _ref$inner;
 	
-	            if (inner != '' && tag == 'input') {
-	                return this.selfClosedTag(tag, id, classOfElement, style, other);
+	            console.log(inner);
+	            if (tag == 'input') {
+	                return this.selfClosedTag(tag, {
+	                    id: id,
+	                    classOfElement: classOfElement,
+	                    style: style,
+	                    other: other
+	                });
 	            } else {
-	                return this.withCloseTag(tag, id, classOfElement, style, other, inner);
+	                return this.withCloseTag(tag, {
+	                    id: id,
+	                    classOfElement: classOfElement,
+	                    style: style,
+	                    other: other,
+	                    inner: inner
+	                });
 	            }
 	        }
 	
 	        /**
 	         * @param {string} tag
-	         * @param {string} id
-	         * @param {string} classOfElement
-	         * @param {string} style
-	         * @param {string} other
+	         * @param {string} [id]
+	         * @param {string} [classOfElement]
+	         * @param {string} [style]
+	         * @param {string} [other]
 	         * @return {string}
 	         */
 	
 	    }, {
 	        key: 'selfClosedTag',
-	        value: function selfClosedTag(tag, id, classOfElement, style) {
-	            var other = arguments.length <= 4 || arguments[4] === undefined ? '' : arguments[4];
+	        value: function selfClosedTag(tag, _ref2) {
+	            var id = _ref2.id;
+	            var classOfElement = _ref2.classOfElement;
+	            var style = _ref2.style;
+	            var _ref2$other = _ref2.other;
+	            var other = _ref2$other === undefined ? '' : _ref2$other;
 	
-	            return '<' + tag + ' id="' + id + '" class="' + classOfElement + '" style="' + style + '" ' + other + ' />';
+	            id = id ? 'id="' + id + '"' : '';
+	            classOfElement = classOfElement ? 'class="' + classOfElement + '"' : '';
+	            style = style ? 'style="' + style + '"' : '';
+	
+	            return '<' + tag + ' ' + id + ' ' + classOfElement + ' ' + style + ' ' + other + ' />';
 	        }
 	
 	        /**
 	         * @param {string} tag
-	         * @param {string} id
-	         * @param {string} classOfElement
-	         * @param {string} style
-	         * @param {string} other
-	         * @param {string} inner
+	         * @param {string} [id]
+	         * @param {string} [classOfElement]
+	         * @param {string} [style]
+	         * @param {string} [other]
+	         * @param {string} [inner]
 	         * @return {string}
 	         */
 	
 	    }, {
 	        key: 'withCloseTag',
-	        value: function withCloseTag(tag, id, classOfElement, style) {
-	            var other = arguments.length <= 4 || arguments[4] === undefined ? '' : arguments[4];
-	            var inner = arguments.length <= 5 || arguments[5] === undefined ? '' : arguments[5];
+	        value: function withCloseTag(tag, _ref3) {
+	            var id = _ref3.id;
+	            var classOfElement = _ref3.classOfElement;
+	            var style = _ref3.style;
+	            var _ref3$other = _ref3.other;
+	            var other = _ref3$other === undefined ? '' : _ref3$other;
+	            var _ref3$inner = _ref3.inner;
+	            var inner = _ref3$inner === undefined ? '' : _ref3$inner;
 	
-	            return '<' + tag + ' id="' + id + '" class="' + classOfElement + '" style="' + style + '" ' + other + '>\n                    ' + inner + '\n                </' + tag + '>';
+	            id = id ? 'id="' + id + '"' : '';
+	            classOfElement = classOfElement ? 'class="' + classOfElement + '"' : '';
+	            style = style ? 'style="' + style + '"' : '';
+	
+	            return '<' + tag + ' ' + id + ' ' + classOfElement + ' ' + style + ' ' + other + '>\n                    ' + inner + '\n                </' + tag + '>';
 	        }
 	
 	        /**
-	         * @param {[]} arrayOfChars
+	         * @param {[]} arrayOfElements
 	         * @param {string} char
 	         * @return {*}
 	         */
 	
 	    }, {
 	        key: 'findFromFirstChar',
-	        value: function findFromFirstChar(arrayOfChars, char) {
-	            var found = arrayOfChars.find(function (elem) {
+	        value: function findFromFirstChar(arrayOfElements, char) {
+	            var found = arrayOfElements.find(function (elem) {
 	                return typeof elem == 'string' && elem.charAt(0) == char;
 	            });
 	            return !found ? '' : found.substring(1);
 	        }
 	
 	        /**
-	         * @param {[]} arrayOfChars
+	         * @param {[]} arrayOfElements
 	         * @param {string} char
 	         * @return {*}
 	         */
 	
 	    }, {
 	        key: 'findFromNotFirstChar',
-	        value: function findFromNotFirstChar(arrayOfChars, chars) {
-	            var found = arrayOfChars.find(function (elem) {
+	        value: function findFromNotFirstChar(arrayOfElements, chars) {
+	            var found = arrayOfElements.find(function (elem) {
 	                return chars.indexOf(elem.charAt(0)) === -1;
 	            });
 	            return !found ? '' : found;
-	        }
-	
-	        /**
-	         * @param {string} value
-	         * @param {string} filename
-	         */
-	
-	    }], [{
-	        key: 'saveFile',
-	        value: function saveFile(value, filename) {
-	            value = '{"' + filename + '": ' + value + '}';
-	
-	            __webpack_require__(1).saveAs(new Blob([value], { type: 'application/json;charset=utf8' }), filename + '.json');
 	        }
 	    }]);
 	
 	    return JsonToHtml;
 	}();
 	
-	new JsonToHtml({});
+	exports.default = JsonToHtml;
 
 /***/ },
-/* 1 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;"use strict";
@@ -465,21 +574,21 @@
 	
 	if (typeof module !== "undefined" && module.exports) {
 		module.exports.saveAs = saveAs;
-	} else if ("function" !== "undefined" && __webpack_require__(2) !== null && __webpack_require__(3) !== null) {
+	} else if ("function" !== "undefined" && __webpack_require__(4) !== null && __webpack_require__(5) !== null) {
 		!(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
 			return saveAs;
 		}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	}
 
 /***/ },
-/* 2 */
+/* 4 */
 /***/ function(module, exports) {
 
 	module.exports = function() { throw new Error("define cannot be used indirect"); };
 
 
 /***/ },
-/* 3 */
+/* 5 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
@@ -488,4 +597,4 @@
 
 /***/ }
 /******/ ]);
-//# sourceMappingURL=JsonToHtml.js.map
+//# sourceMappingURL=index.js.map
