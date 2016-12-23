@@ -248,7 +248,7 @@ export default class AdminController
 
         function addAllDeleteEvent()
         {
-            that.addEventToAllElement('label', 'delete', 'click', (attr) =>
+            require('../src/helpers').addEventToAllElement('.label .delete', 'click', (attr) =>
             {
                 let section = attr.section,
                     button = attr.button;
@@ -264,7 +264,7 @@ export default class AdminController
 
         function addAllUpdateEvent()
         {
-            that.addEventToAllElement('label', 'update', 'click', (attr) =>
+            require('../src/helpers').addEventToAllElement('.label .update', 'click', (attr) =>
             {
                 let section = attr.section,
                     button = attr.button;
@@ -720,7 +720,7 @@ export default class AdminController
 
         function addAllDeleteEvent()
         {
-            that.addEventToAllElement('post', 'delete', 'click', (attr) =>
+            require('../src/helpers').addEventToAllElement('.post .delete', 'click', (attr) =>
             {
                 let section = attr.section,
                     button = attr.button;
@@ -744,7 +744,7 @@ export default class AdminController
 
         function addAllUpdateEvent()
         {
-            that.addEventToAllElement('post', 'update', 'click', (attr) =>
+            require('../src/helpers').addEventToAllElement('.post .update', 'click', (attr) =>
             {
                 let section = attr.section,
                     button = attr.button;
@@ -856,25 +856,6 @@ export default class AdminController
             });
         }
 
-    }
-
-    /**
-     * @param {string} sectionClass
-     * @param {string} buttonClass
-     * @param {string} eventName
-     * @param {function({section: HTMLElement, button: HTMLElement})} callback
-     */
-    addEventToAllElement (sectionClass, buttonClass, eventName, callback)
-    {
-        Array.from(document.querySelectorAll(`.${sectionClass} .${buttonClass}`)).forEach(element =>
-        {
-            element.addEventListener(eventName, (event) =>
-            {
-                let section = event.target.parentNode;
-
-                require('../src/helpers').ifExistCallbackICall(callback, {section: section, button: element});
-            });
-        });
     }
 
     /**

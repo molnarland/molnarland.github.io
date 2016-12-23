@@ -400,6 +400,24 @@ function arrayElementsConvertToNumber(notNumberArray)
     return numberArray;
 }
 
+/**
+ * @param {string} selector
+ * @param {string} eventName
+ * @param {function({section: HTMLElement, button: HTMLElement})} callback
+ */
+function addEventToAllElement (selector, eventName, callback)
+{
+    Array.from(document.querySelectorAll(selector)).forEach(element =>
+    {
+        element.addEventListener(eventName, (event) =>
+        {
+            let section = event.target.parentNode;
+
+            ifExistCallbackICall(callback, {section: section, button: element});
+        });
+    });
+}
+
 module.exports = {
     start: start,
     isEmptyObject: isEmptyObject,
@@ -417,5 +435,6 @@ module.exports = {
     isNode: isNode,
     isHtmlElement: isHtmlElement,
     changeAllOptionInSelect: changeAllOptionInSelect,
-    arrayElementsConvertToNumber: arrayElementsConvertToNumber
+    arrayElementsConvertToNumber: arrayElementsConvertToNumber,
+    addEventToAllElement: addEventToAllElement
 };

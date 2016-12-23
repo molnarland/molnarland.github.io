@@ -1,37 +1,98 @@
 import {DatabaseController} from '../src/imports';
+import JsonToHtml from '../../json2html/es6/JsonToHtml';
 
 export default class PublicController
 {
     constructor(language = 'en')
     {
+        this.whenUrlRefreshContentRefreshToo();
+
         this.contentElement = '#wrapper';
         this.language = language || 'hu';
+        this.helpers = require('../src/helpers');
+        this.reStart = this.helpers.start;
+
+        this.clearContent();
 
         const that = this,
             dc = new DatabaseController();
 
-        dc.select('posts', (result) =>
+        setTimeout(() =>
         {
-            that.posts = result;
-        }, {}, () =>
-        {
-            return that.postPreviews();
-        });
+            let hashes = this.helpers.getUrlHash();
+            if (hashes.length > 0)
+            {
+                try
+                {
+                    dc.select('languages', (languageResults) =>
+                    {
+                        if (languageResults.length > 0)
+                        {
+                            dc.select('posts', (postResults) =>
+                            {
+                                that.post = postResults[0];
+                            }, {
+                                where: [{
+                                    operator: '=',
+                                    opt1: languageResults[0].id,
+                                    opt1Avail: true,
+                                    opt2: 'urlId'
+                                }]
+                            }, () =>
+                            {
+                                new JsonToHtml(
+                                    that.post['content'][this.language],
+                                    document.querySelector(this.contentElement)
+                                );
+                            });
+                        }
+                        else
+                        {
+                            listAllPreviews();
+                        }
+                    }, {
+                        where: [{
+                            operator: '=',
+                            opt1: hashes.join('/'),
+                            opt1Avail: true,
+                            opt2: this.language
+                        }]
+                    });
+                }
+                catch (e)
+                {
+                    console.log(e);
+                    listAllPreviews();
+                }
+            }
+            else
+            {
+                listAllPreviews();
+            }
+        }, 10);
 
-        // this.iWillGo();
+
+        function listAllPreviews()
+        {
+            dc.select('posts', (result) =>
+            {
+                that.posts = result;
+            }, {}, () =>
+            {
+                return that.postPreviews();
+            });
+        }
     }
 
     /**
      * @param {number} from
      * @param {number} to
-     * @param {function} callback
      */
     postPreviews(from = 0, to = this.posts.length)
     {
-        var html = '';
+        let html = '';
 
-        for (let i = from; i < to; i++)
-        {
+        for (let i = from;  i < to; i++) {
             const post = this.posts[i];
             let content = this.getOneFromLanguages(post, 'content'),
                 title = this.getOneFromLanguages(post, 'title'),
@@ -40,26 +101,37 @@ export default class PublicController
 
             html +=
                 `<section class="post-preview">
-                    <div class="blog-header">
-                        <h2 class="post-title">
-                            <a id="post-${i+1}" class="post-link" href="#/${url}">${title}</a>
-                        </h2>
-                        <div class="post-datas">
-                            <div class="created">${post.created}</div>
-                        </div>
+                <div class="blog-header">
+                    <h2 class="post-title">
+                        <a id="post-${i + 1}" class="post-link" href="#/${url}">${title}</a>
+                    </h2>
+                    <div class="post-datas">
+                        <div class="created">${post.created}</div>
                     </div>
-                    ${content}
-                </section>`;
+                </div>
+                ${content}
+            </section>`;
         }
 
         document.querySelector(this.contentElement).innerHTML = html;
 
-        let reStart = require('./../src/helpers').start;
+        let loopForEventListener = this.helpers.addEventToAllElement;
 
-        for (let i = from; i < to; i++)
+        loopForEventListener('.post-link', 'click', this.reStart);
+    }
+
+
+    clearContent ()
+    {
+        document.querySelector(this.contentElement).innerHTML = '';
+    }
+
+    whenUrlRefreshContentRefreshToo ()
+    {
+        window.addEventListener('popstate', () =>
         {
-            document.getElementById(`post-${i+1}`).addEventListener('click', reStart);
-        }
+            this.reStart();
+        });
     }
 
     getOneFromLanguages(post, data)
@@ -72,19 +144,16 @@ export default class PublicController
             {
                 result = post[data][this.language];
             }
-            else
-            {
-                switch (this.language)
-                {
+            /*else {
+                switch (this.language) {
                     case 'hu':
                         result = post[data]['en'];
                         break;
                     case 'en':
-                    default:
                         result = post[data]['hu'];
                         break;
                 }
-            }
+            }*/
         }
 
         return (!result) ? '' : result;
@@ -95,8 +164,7 @@ export default class PublicController
         const dc = new DatabaseController();
         const that = this;
 
-        dc.select('posts', (result) =>
-        {
+        dc.select('posts', (result) => {
             that.result = result;
             console.log(result);
         }, {
@@ -108,8 +176,7 @@ export default class PublicController
                     opt2Avail: true
                 }
             ]
-        }, () =>
-        {
+        }, () => {
             document.querySelector(this.contentElement).innerHTML
                 = this.result[0].content[this.content];
         });

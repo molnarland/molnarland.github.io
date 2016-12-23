@@ -48,7 +48,7 @@
 	
 	// import {PublicController, AdminController} from './imports';
 	
-	var parameters = __webpack_require__(1).start();
+	/*const parameters = */__webpack_require__(1).start();
 
 /***/ },
 /* 1 */
@@ -492,6 +492,21 @@
 	    return numberArray;
 	}
 	
+	/**
+	 * @param {string} selector
+	 * @param {string} eventName
+	 * @param {function({section: HTMLElement, button: HTMLElement})} callback
+	 */
+	function addEventToAllElement(selector, eventName, callback) {
+	    Array.from(document.querySelectorAll(selector)).forEach(function (element) {
+	        element.addEventListener(eventName, function (event) {
+	            var section = event.target.parentNode;
+	
+	            ifExistCallbackICall(callback, { section: section, button: element });
+	        });
+	    });
+	}
+	
 	module.exports = {
 	    start: start,
 	    isEmptyObject: isEmptyObject,
@@ -509,7 +524,8 @@
 	    isNode: isNode,
 	    isHtmlElement: isHtmlElement,
 	    changeAllOptionInSelect: changeAllOptionInSelect,
-	    arrayElementsConvertToNumber: arrayElementsConvertToNumber
+	    arrayElementsConvertToNumber: arrayElementsConvertToNumber,
+	    addEventToAllElement: addEventToAllElement
 	};
 
 /***/ },
@@ -543,7 +559,7 @@
 	
 	var _PublicController2 = _interopRequireDefault(_PublicController);
 	
-	var _AdminController = __webpack_require__(11);
+	var _AdminController = __webpack_require__(12);
 	
 	var _AdminController2 = _interopRequireDefault(_AdminController);
 	
@@ -1267,33 +1283,84 @@
 	
 	var _imports = __webpack_require__(2);
 	
+	var _JsonToHtml = __webpack_require__(11);
+	
+	var _JsonToHtml2 = _interopRequireDefault(_JsonToHtml);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var PublicController = function () {
 	    function PublicController() {
+	        var _this = this;
+	
 	        var language = arguments.length <= 0 || arguments[0] === undefined ? 'en' : arguments[0];
 	
 	        _classCallCheck(this, PublicController);
 	
+	        this.whenUrlRefreshContentRefreshToo();
+	
 	        this.contentElement = '#wrapper';
 	        this.language = language || 'hu';
+	        this.helpers = __webpack_require__(1);
+	        this.reStart = this.helpers.start;
+	
+	        this.clearContent();
 	
 	        var that = this,
 	            dc = new _imports.DatabaseController();
 	
-	        dc.select('posts', function (result) {
-	            that.posts = result;
-	        }, {}, function () {
-	            return that.postPreviews();
-	        });
+	        setTimeout(function () {
+	            var hashes = _this.helpers.getUrlHash();
+	            if (hashes.length > 0) {
+	                try {
+	                    dc.select('languages', function (languageResults) {
+	                        if (languageResults.length > 0) {
+	                            dc.select('posts', function (postResults) {
+	                                that.post = postResults[0];
+	                            }, {
+	                                where: [{
+	                                    operator: '=',
+	                                    opt1: languageResults[0].id,
+	                                    opt1Avail: true,
+	                                    opt2: 'urlId'
+	                                }]
+	                            }, function () {
+	                                new _JsonToHtml2.default(that.post['content'][_this.language], document.querySelector(_this.contentElement));
+	                            });
+	                        } else {
+	                            listAllPreviews();
+	                        }
+	                    }, {
+	                        where: [{
+	                            operator: '=',
+	                            opt1: hashes.join('/'),
+	                            opt1Avail: true,
+	                            opt2: _this.language
+	                        }]
+	                    });
+	                } catch (e) {
+	                    console.log(e);
+	                    listAllPreviews();
+	                }
+	            } else {
+	                listAllPreviews();
+	            }
+	        }, 10);
 	
-	        // this.iWillGo();
+	        function listAllPreviews() {
+	            dc.select('posts', function (result) {
+	                that.posts = result;
+	            }, {}, function () {
+	                return that.postPreviews();
+	            });
+	        }
 	    }
 	
 	    /**
 	     * @param {number} from
 	     * @param {number} to
-	     * @param {function} callback
 	     */
 	
 	
@@ -1311,16 +1378,28 @@
 	                    title = this.getOneFromLanguages(post, 'title'),
 	                    url = this.getOneFromLanguages(post, 'url');
 	
-	                html += '<section class="post-preview">\n                    <div class="blog-header">\n                        <h2 class="post-title">\n                            <a id="post-' + (i + 1) + '" class="post-link" href="#/' + url + '">' + title + '</a>\n                        </h2>\n                        <div class="post-datas">\n                            <div class="created">' + post.created + '</div>\n                        </div>\n                    </div>\n                    ' + content + '\n                </section>';
+	                html += '<section class="post-preview">\n                <div class="blog-header">\n                    <h2 class="post-title">\n                        <a id="post-' + (i + 1) + '" class="post-link" href="#/' + url + '">' + title + '</a>\n                    </h2>\n                    <div class="post-datas">\n                        <div class="created">' + post.created + '</div>\n                    </div>\n                </div>\n                ' + content + '\n            </section>';
 	            }
 	
 	            document.querySelector(this.contentElement).innerHTML = html;
 	
-	            var reStart = __webpack_require__(1).start;
+	            var loopForEventListener = this.helpers.addEventToAllElement;
 	
-	            for (var _i = from; _i < to; _i++) {
-	                document.getElementById('post-' + (_i + 1)).addEventListener('click', reStart);
-	            }
+	            loopForEventListener('.post-link', 'click', this.reStart);
+	        }
+	    }, {
+	        key: 'clearContent',
+	        value: function clearContent() {
+	            document.querySelector(this.contentElement).innerHTML = '';
+	        }
+	    }, {
+	        key: 'whenUrlRefreshContentRefreshToo',
+	        value: function whenUrlRefreshContentRefreshToo() {
+	            var _this2 = this;
+	
+	            window.addEventListener('popstate', function () {
+	                _this2.reStart();
+	            });
 	        }
 	    }, {
 	        key: 'getOneFromLanguages',
@@ -1330,17 +1409,17 @@
 	            if (post[data]) {
 	                if (post[data][this.language]) {
 	                    result = post[data][this.language];
-	                } else {
+	                }
+	                /*else {
 	                    switch (this.language) {
 	                        case 'hu':
 	                            result = post[data]['en'];
 	                            break;
 	                        case 'en':
-	                        default:
 	                            result = post[data]['hu'];
 	                            break;
 	                    }
-	                }
+	                }*/
 	            }
 	
 	            return !result ? '' : result;
@@ -1348,7 +1427,7 @@
 	    }, {
 	        key: 'iWillGo',
 	        value: function iWillGo() {
-	            var _this = this;
+	            var _this3 = this;
 	
 	            var dc = new _imports.DatabaseController();
 	            var that = this;
@@ -1364,7 +1443,7 @@
 	                    opt2Avail: true
 	                }]
 	            }, function () {
-	                document.querySelector(_this.contentElement).innerHTML = _this.result[0].content[_this.content];
+	                document.querySelector(_this3.contentElement).innerHTML = _this3.result[0].content[_this3.content];
 	            });
 	        }
 	    }]);
@@ -1376,6 +1455,237 @@
 
 /***/ },
 /* 11 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var JsonToHtml = function () {
+	    /**
+	     * @param {string} jsonString
+	     * @param {HTMLElement} out
+	     */
+	    function JsonToHtml(jsonString, out) {
+	        _classCallCheck(this, JsonToHtml);
+	
+	        var outString = '';
+	
+	        try {
+	            this.object = JSON.parse(jsonString);
+	            outString = this.cycle(this.object);
+	        } catch (e) {
+	            outString = jsonString;
+	            console.info(e.message);
+	        }
+	
+	        out.innerHTML = outString;
+	    }
+	
+	    /**
+	     * @param {object} object
+	     * @param {function} callback - optional
+	     * @return {string}
+	     */
+	
+	
+	    _createClass(JsonToHtml, [{
+	        key: 'cycle',
+	        value: function cycle(object, callback) {
+	            var _this = this;
+	
+	            var html = '';
+	
+	            var _loop = function _loop(index) {
+	                var tag = index;
+	
+	                if (typeof object[index] === 'string') {
+	                    var innerText = object[index];
+	
+	                    html += _this.whichTagTypeWay(tag, { inner: innerText });
+	                } else {
+	                    (function () {
+	                        var id = _this.findFromFirstChar(object[index], '#'),
+	                            classOfElement = _this.findFromFirstChar(object[index], '.'),
+	                            style = _this.findFromFirstChar(object[index], '*'),
+	                            other = _this.findFromFirstChar(object[index], '-'),
+	                            innerText = _this.findFromNotFirstChar(object[index], ['#', '.', '*', '-']);
+	                        var innerObject = object[index].find(function (elem) {
+	                            return (typeof elem === 'undefined' ? 'undefined' : _typeof(elem)) == 'object';
+	                        });
+	
+	                        if (innerObject) {
+	                            _this.cycle(innerObject, function (innerElement) {
+	                                html += _this.whichTagTypeWay(tag, {
+	                                    id: id,
+	                                    classOfElement: classOfElement,
+	                                    style: style,
+	                                    other: other,
+	                                    inner: innerText + innerElement
+	                                });
+	                            });
+	                        } else {
+	                            html += _this.whichTagTypeWay(tag, {
+	                                id: id,
+	                                classOfElement: classOfElement,
+	                                style: style,
+	                                other: other,
+	                                inner: innerText
+	                            });
+	                        }
+	                    })();
+	                }
+	            };
+	
+	            for (var index in object) {
+	                _loop(index);
+	            }
+	
+	            if (typeof callback == "function") {
+	                return callback(html);
+	            }
+	
+	            return html;
+	        }
+	
+	        /**
+	         * @param {string} tag
+	         * @param {string} [id]
+	         * @param {string} [classOfElement]
+	         * @param {string} [style]
+	         * @param {string} [other]
+	         * @param {string} [inner]
+	         * @return {string}
+	         */
+	
+	    }, {
+	        key: 'whichTagTypeWay',
+	        value: function whichTagTypeWay(tag, _ref) {
+	            var id = _ref.id;
+	            var classOfElement = _ref.classOfElement;
+	            var style = _ref.style;
+	            var _ref$other = _ref.other;
+	            var other = _ref$other === undefined ? '' : _ref$other;
+	            var _ref$inner = _ref.inner;
+	            var inner = _ref$inner === undefined ? '' : _ref$inner;
+	
+	            if (tag == 'input') {
+	                return this.selfClosedTag(tag, {
+	                    id: id,
+	                    classOfElement: classOfElement,
+	                    style: style,
+	                    other: other
+	                });
+	            } else {
+	                return this.withCloseTag(tag, {
+	                    id: id,
+	                    classOfElement: classOfElement,
+	                    style: style,
+	                    other: other,
+	                    inner: inner
+	                });
+	            }
+	        }
+	
+	        /**
+	         * @param {string} tag
+	         * @param {string} [id]
+	         * @param {string} [classOfElement]
+	         * @param {string} [style]
+	         * @param {string} [other]
+	         * @return {string}
+	         */
+	
+	    }, {
+	        key: 'selfClosedTag',
+	        value: function selfClosedTag(tag, _ref2) {
+	            var id = _ref2.id;
+	            var classOfElement = _ref2.classOfElement;
+	            var style = _ref2.style;
+	            var _ref2$other = _ref2.other;
+	            var other = _ref2$other === undefined ? '' : _ref2$other;
+	
+	            id = id ? 'id="' + id + '"' : '';
+	            classOfElement = classOfElement ? 'class="' + classOfElement + '"' : '';
+	            style = style ? 'style="' + style + '"' : '';
+	
+	            return '<' + tag + ' ' + id + ' ' + classOfElement + ' ' + style + ' ' + other + ' />';
+	        }
+	
+	        /**
+	         * @param {string} tag
+	         * @param {string} [id]
+	         * @param {string} [classOfElement]
+	         * @param {string} [style]
+	         * @param {string} [other]
+	         * @param {string} [inner]
+	         * @return {string}
+	         */
+	
+	    }, {
+	        key: 'withCloseTag',
+	        value: function withCloseTag(tag, _ref3) {
+	            var id = _ref3.id;
+	            var classOfElement = _ref3.classOfElement;
+	            var style = _ref3.style;
+	            var _ref3$other = _ref3.other;
+	            var other = _ref3$other === undefined ? '' : _ref3$other;
+	            var _ref3$inner = _ref3.inner;
+	            var inner = _ref3$inner === undefined ? '' : _ref3$inner;
+	
+	            id = id ? 'id="' + id + '"' : '';
+	            classOfElement = classOfElement ? 'class="' + classOfElement + '"' : '';
+	            style = style ? 'style="' + style + '"' : '';
+	
+	            return '<' + tag + ' ' + id + ' ' + classOfElement + ' ' + style + ' ' + other + '>\n                    ' + inner + '\n                </' + tag + '>';
+	        }
+	
+	        /**
+	         * @param {[]} arrayOfElements
+	         * @param {string} char
+	         * @return {*}
+	         */
+	
+	    }, {
+	        key: 'findFromFirstChar',
+	        value: function findFromFirstChar(arrayOfElements, char) {
+	            var found = arrayOfElements.find(function (elem) {
+	                return typeof elem == 'string' && elem.charAt(0) == char;
+	            });
+	            return !found ? '' : found.substring(1);
+	        }
+	
+	        /**
+	         * @param {[]} arrayOfElements
+	         * @param {string} char
+	         * @return {*}
+	         */
+	
+	    }, {
+	        key: 'findFromNotFirstChar',
+	        value: function findFromNotFirstChar(arrayOfElements, chars) {
+	            var found = arrayOfElements.find(function (elem) {
+	                return chars.indexOf(elem.charAt(0)) === -1;
+	            });
+	            return !found ? '' : found;
+	        }
+	    }]);
+	
+	    return JsonToHtml;
+	}();
+	
+	exports.default = JsonToHtml;
+
+/***/ },
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1388,7 +1698,7 @@
 	
 	var _imports = __webpack_require__(2);
 	
-	var _JsonToHtml = __webpack_require__(12);
+	var _JsonToHtml = __webpack_require__(11);
 	
 	var _JsonToHtml2 = _interopRequireDefault(_JsonToHtml);
 	
@@ -1669,7 +1979,7 @@
 	            }
 	
 	            function addAllDeleteEvent() {
-	                that.addEventToAllElement('label', 'delete', 'click', function (attr) {
+	                __webpack_require__(1).addEventToAllElement('.label .delete', 'click', function (attr) {
 	                    var section = attr.section,
 	                        button = attr.button;
 	
@@ -1682,7 +1992,7 @@
 	            }
 	
 	            function addAllUpdateEvent() {
-	                that.addEventToAllElement('label', 'update', 'click', function (attr) {
+	                __webpack_require__(1).addEventToAllElement('.label .update', 'click', function (attr) {
 	                    var section = attr.section,
 	                        button = attr.button;
 	
@@ -2220,7 +2530,7 @@
 	            }
 	
 	            function addAllDeleteEvent() {
-	                that.addEventToAllElement('post', 'delete', 'click', function (attr) {
+	                __webpack_require__(1).addEventToAllElement('.post .delete', 'click', function (attr) {
 	                    var section = attr.section,
 	                        button = attr.button;
 	
@@ -2234,7 +2544,7 @@
 	            }
 	
 	            function addAllUpdateEvent() {
-	                that.addEventToAllElement('post', 'update', 'click', function (attr) {
+	                __webpack_require__(1).addEventToAllElement('.post .update', 'click', function (attr) {
 	                    var section = attr.section,
 	                        button = attr.button;
 	
@@ -2355,25 +2665,6 @@
 	        }
 	
 	        /**
-	         * @param {string} sectionClass
-	         * @param {string} buttonClass
-	         * @param {string} eventName
-	         * @param {function({section: HTMLElement, button: HTMLElement})} callback
-	         */
-	
-	    }, {
-	        key: 'addEventToAllElement',
-	        value: function addEventToAllElement(sectionClass, buttonClass, eventName, callback) {
-	            Array.from(document.querySelectorAll('.' + sectionClass + ' .' + buttonClass)).forEach(function (element) {
-	                element.addEventListener(eventName, function (event) {
-	                    var section = event.target.parentNode;
-	
-	                    __webpack_require__(1).ifExistCallbackICall(callback, { section: section, button: element });
-	                });
-	            });
-	        }
-	
-	        /**
 	         * @param {HTMLElement} p
 	         * @return {string|string[]}
 	         */
@@ -2460,238 +2751,6 @@
 	exports.default = AdminController;
 
 /***/ },
-/* 12 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var JsonToHtml = function () {
-	    /**
-	     * @param {string} jsonString
-	     * @param {HTMLElement} out
-	     */
-	    function JsonToHtml(jsonString, out) {
-	        _classCallCheck(this, JsonToHtml);
-	
-	        var outString = '';
-	
-	        try {
-	            this.object = JSON.parse(jsonString);
-	            outString = this.cycle(this.object);
-	        } catch (e) {
-	            outString = jsonString;
-	            console.error(e.message);
-	        }
-	
-	        out.innerHTML = outString;
-	    }
-	
-	    /**
-	     * @param {object} object
-	     * @param {function} callback - optional
-	     * @return {string}
-	     */
-	
-	
-	    _createClass(JsonToHtml, [{
-	        key: 'cycle',
-	        value: function cycle(object, callback) {
-	            var _this = this;
-	
-	            var html = '';
-	
-	            var _loop = function _loop(index) {
-	                var tag = index;
-	
-	                if (typeof object[index] === 'string') {
-	                    var innerText = object[index];
-	
-	                    html += _this.whichTagTypeWay(tag, { inner: innerText });
-	                } else {
-	                    (function () {
-	                        var id = _this.findFromFirstChar(object[index], '#'),
-	                            classOfElement = _this.findFromFirstChar(object[index], '.'),
-	                            style = _this.findFromFirstChar(object[index], '*'),
-	                            other = _this.findFromFirstChar(object[index], '-'),
-	                            innerText = _this.findFromNotFirstChar(object[index], ['#', '.', '*', '-']);
-	                        var innerObject = object[index].find(function (elem) {
-	                            return (typeof elem === 'undefined' ? 'undefined' : _typeof(elem)) == 'object';
-	                        });
-	
-	                        if (innerObject) {
-	                            _this.cycle(innerObject, function (innerElement) {
-	                                html += _this.whichTagTypeWay(tag, {
-	                                    id: id,
-	                                    classOfElement: classOfElement,
-	                                    style: style,
-	                                    other: other,
-	                                    inner: innerText + innerElement
-	                                });
-	                            });
-	                        } else {
-	                            html += _this.whichTagTypeWay(tag, {
-	                                id: id,
-	                                classOfElement: classOfElement,
-	                                style: style,
-	                                other: other,
-	                                inner: innerText
-	                            });
-	                        }
-	                    })();
-	                }
-	            };
-	
-	            for (var index in object) {
-	                _loop(index);
-	            }
-	
-	            if (typeof callback == "function") {
-	                return callback(html);
-	            }
-	
-	            return html;
-	        }
-	
-	        /**
-	         * @param {string} tag
-	         * @param {string} [id]
-	         * @param {string} [classOfElement]
-	         * @param {string} [style]
-	         * @param {string} [other]
-	         * @param {string} [inner]
-	         * @return {string}
-	         */
-	
-	    }, {
-	        key: 'whichTagTypeWay',
-	        value: function whichTagTypeWay(tag, _ref) {
-	            var id = _ref.id;
-	            var classOfElement = _ref.classOfElement;
-	            var style = _ref.style;
-	            var _ref$other = _ref.other;
-	            var other = _ref$other === undefined ? '' : _ref$other;
-	            var _ref$inner = _ref.inner;
-	            var inner = _ref$inner === undefined ? '' : _ref$inner;
-	
-	            console.log(inner);
-	            if (tag == 'input') {
-	                return this.selfClosedTag(tag, {
-	                    id: id,
-	                    classOfElement: classOfElement,
-	                    style: style,
-	                    other: other
-	                });
-	            } else {
-	                return this.withCloseTag(tag, {
-	                    id: id,
-	                    classOfElement: classOfElement,
-	                    style: style,
-	                    other: other,
-	                    inner: inner
-	                });
-	            }
-	        }
-	
-	        /**
-	         * @param {string} tag
-	         * @param {string} [id]
-	         * @param {string} [classOfElement]
-	         * @param {string} [style]
-	         * @param {string} [other]
-	         * @return {string}
-	         */
-	
-	    }, {
-	        key: 'selfClosedTag',
-	        value: function selfClosedTag(tag, _ref2) {
-	            var id = _ref2.id;
-	            var classOfElement = _ref2.classOfElement;
-	            var style = _ref2.style;
-	            var _ref2$other = _ref2.other;
-	            var other = _ref2$other === undefined ? '' : _ref2$other;
-	
-	            id = id ? 'id="' + id + '"' : '';
-	            classOfElement = classOfElement ? 'class="' + classOfElement + '"' : '';
-	            style = style ? 'style="' + style + '"' : '';
-	
-	            return '<' + tag + ' ' + id + ' ' + classOfElement + ' ' + style + ' ' + other + ' />';
-	        }
-	
-	        /**
-	         * @param {string} tag
-	         * @param {string} [id]
-	         * @param {string} [classOfElement]
-	         * @param {string} [style]
-	         * @param {string} [other]
-	         * @param {string} [inner]
-	         * @return {string}
-	         */
-	
-	    }, {
-	        key: 'withCloseTag',
-	        value: function withCloseTag(tag, _ref3) {
-	            var id = _ref3.id;
-	            var classOfElement = _ref3.classOfElement;
-	            var style = _ref3.style;
-	            var _ref3$other = _ref3.other;
-	            var other = _ref3$other === undefined ? '' : _ref3$other;
-	            var _ref3$inner = _ref3.inner;
-	            var inner = _ref3$inner === undefined ? '' : _ref3$inner;
-	
-	            id = id ? 'id="' + id + '"' : '';
-	            classOfElement = classOfElement ? 'class="' + classOfElement + '"' : '';
-	            style = style ? 'style="' + style + '"' : '';
-	
-	            return '<' + tag + ' ' + id + ' ' + classOfElement + ' ' + style + ' ' + other + '>\n                    ' + inner + '\n                </' + tag + '>';
-	        }
-	
-	        /**
-	         * @param {[]} arrayOfElements
-	         * @param {string} char
-	         * @return {*}
-	         */
-	
-	    }, {
-	        key: 'findFromFirstChar',
-	        value: function findFromFirstChar(arrayOfElements, char) {
-	            var found = arrayOfElements.find(function (elem) {
-	                return typeof elem == 'string' && elem.charAt(0) == char;
-	            });
-	            return !found ? '' : found.substring(1);
-	        }
-	
-	        /**
-	         * @param {[]} arrayOfElements
-	         * @param {string} char
-	         * @return {*}
-	         */
-	
-	    }, {
-	        key: 'findFromNotFirstChar',
-	        value: function findFromNotFirstChar(arrayOfElements, chars) {
-	            var found = arrayOfElements.find(function (elem) {
-	                return chars.indexOf(elem.charAt(0)) === -1;
-	            });
-	            return !found ? '' : found;
-	        }
-	    }]);
-	
-	    return JsonToHtml;
-	}();
-	
-	exports.default = JsonToHtml;
-
-/***/ },
 /* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -2703,7 +2762,7 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _JsonToHtml = __webpack_require__(12);
+	var _JsonToHtml = __webpack_require__(11);
 	
 	var _JsonToHtml2 = _interopRequireDefault(_JsonToHtml);
 	

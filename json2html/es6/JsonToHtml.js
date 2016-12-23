@@ -16,7 +16,7 @@ export default class JsonToHtml
         catch (e)
         {
             outString = jsonString;
-            console.error(e.message);
+            console.info(e.message);
         }
 
         out.innerHTML = outString;
@@ -95,7 +95,6 @@ export default class JsonToHtml
      */
     whichTagTypeWay (tag, {id, classOfElement, style, other = '', inner = ''})
     {
-        console.log(inner);
         if (tag == 'input')
         {
             return this.selfClosedTag(tag, {

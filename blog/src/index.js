@@ -1,4 +1,4 @@
 // import {PublicController, AdminController} from './imports';
 
-const parameters = require('./helpers').start();
+/*const parameters = */require('./helpers').start();
 
