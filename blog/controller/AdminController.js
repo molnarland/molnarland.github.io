@@ -191,8 +191,8 @@ export default class AdminController
             }
 
 
-            DatabaseController.saveJSON(languages, 'languages');
-            DatabaseController.saveJSON(endLabels, 'labels');
+            DatabaseController.saveJSONToFile(languages, 'languages');
+            DatabaseController.saveJSONToFile(endLabels, 'labels');
         }
 
         function labelHtmlTemplate(id, hu, en)
@@ -641,8 +641,8 @@ export default class AdminController
             }
 
 
-            DatabaseController.saveJSON(languages, 'languages');
-            DatabaseController.saveJSON(endPosts, 'posts');
+            DatabaseController.saveJSONToFile(languages, 'languages');
+            DatabaseController.saveJSONToFile(endPosts, 'posts');
         }
 
         /**

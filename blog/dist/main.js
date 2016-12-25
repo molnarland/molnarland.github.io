@@ -498,13 +498,39 @@
 	 * @param {function({section: HTMLElement, button: HTMLElement})} callback
 	 */
 	function addEventToAllElement(selector, eventName, callback) {
-	    Array.from(document.querySelectorAll(selector)).forEach(function (element) {
-	        element.addEventListener(eventName, function (event) {
-	            var section = event.target.parentNode;
+	    var elements = document.querySelectorAll(selector);
+	    var _iteratorNormalCompletion6 = true;
+	    var _didIteratorError6 = false;
+	    var _iteratorError6 = undefined;
 	
-	            ifExistCallbackICall(callback, { section: section, button: element });
-	        });
-	    });
+	    try {
+	        var _loop = function _loop() {
+	            var element = _step6.value;
+	
+	            element.addEventListener(eventName, function (event) {
+	                var section = event.target.parentNode;
+	
+	                ifExistCallbackICall(callback, { section: section, button: element });
+	            });
+	        };
+	
+	        for (var _iterator6 = elements[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+	            _loop();
+	        }
+	    } catch (err) {
+	        _didIteratorError6 = true;
+	        _iteratorError6 = err;
+	    } finally {
+	        try {
+	            if (!_iteratorNormalCompletion6 && _iterator6.return) {
+	                _iterator6.return();
+	            }
+	        } finally {
+	            if (_didIteratorError6) {
+	                throw _iteratorError6;
+	            }
+	        }
+	    }
 	}
 	
 	module.exports = {
@@ -555,11 +581,11 @@
 	
 	var _DatabaseController2 = _interopRequireDefault(_DatabaseController);
 	
-	var _PublicController = __webpack_require__(10);
+	var _PublicController = __webpack_require__(11);
 	
 	var _PublicController2 = _interopRequireDefault(_PublicController);
 	
-	var _AdminController = __webpack_require__(12);
+	var _AdminController = __webpack_require__(13);
 	
 	var _AdminController2 = _interopRequireDefault(_AdminController);
 	
@@ -802,6 +828,12 @@
 	
 	var _imports = __webpack_require__(2);
 	
+	var _js = __webpack_require__(7);
+	
+	var Cookies = _interopRequireWildcard(_js);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var DatabaseController = function () {
@@ -834,6 +866,8 @@
 	            }
 	
 	            this.loadJSON(from, function (response) {
+	                // console.log(response);
+	
 	                var array = [];
 	                var that = _this;
 	
@@ -982,14 +1016,42 @@
 	        }
 	
 	        /**
-	         * @author https://codepen.io/KryptoniteDove/post/load-json-file-locally-using-pure-javascript
 	         * @param {string} filename
-	         * @param {function(*[])} callback
+	         * @param {function(object)} callback
 	         */
 	
 	    }, {
 	        key: 'loadJSON',
 	        value: function loadJSON(filename, callback) {
+	            var _this3 = this;
+	
+	            var result = this.JSONSession(filename).get();
+	            if (!result) {
+	                result = this.JSONCookie(filename).get();
+	                if (!result) {
+	                    this.JSONSession(filename).set(result);
+	
+	                    this.loadJSONFromFile(filename, function (result) {
+	                        _this3.JSONSession(filename).set(result);
+	                        _this3.JSONCookie(filename).set(result);
+	
+	                        return callback(result);
+	                    });
+	                }
+	            }
+	
+	            return callback(result);
+	        }
+	
+	        /**
+	         * @author https://codepen.io/KryptoniteDove/post/load-json-file-locally-using-pure-javascript
+	         * @param {string} filename
+	         * @param {function(object)} callback
+	         */
+	
+	    }, {
+	        key: 'loadJSONFromFile',
+	        value: function loadJSONFromFile(filename, callback) {
 	            var xobj = new XMLHttpRequest();
 	            xobj.overrideMimeType("application/json");
 	            xobj.open('GET', '/blog/json/' + filename + '.json', true);
@@ -1000,15 +1062,74 @@
 	            };
 	            xobj.send(null);
 	        }
-	    }, {
-	        key: 'getModelByFrom',
 	
+	        /**
+	         * @param {object} datas
+	         * @param {string} filename
+	         */
+	
+	    }, {
+	        key: 'JSONSession',
+	
+	
+	        /**
+	         * @param {string} name
+	         * @return {object}
+	         */
+	        value: function JSONSession(name) {
+	            return {
+	                /**
+	                 * @return {object|null}
+	                 */
+	                get: function get() {
+	                    if (sessionStorage) {
+	                        return JSON.parse(sessionStorage.getItem(name));
+	                    }
+	                    return null;
+	                },
+	                /**
+	                 * @param {object} datas
+	                 */
+	                set: function set(datas) {
+	                    if (sessionStorage) {
+	                        sessionStorage.setItem(name, JSON.stringify(datas));
+	                    }
+	                }
+	            };
+	        }
+	
+	        /**
+	         * @param {string} name
+	         * @return {object}
+	         */
+	
+	    }, {
+	        key: 'JSONCookie',
+	        value: function JSONCookie(name) {
+	            return {
+	                /**
+	                 * @return {object}
+	                 */
+	                get: function get() {
+	                    return Cookies.getJSON(name);
+	                },
+	                /**
+	                 * @param {object} datas
+	                 */
+	                set: function set(datas) {
+	                    Cookies.set(name, datas, { expires: 3 });
+	                }
+	            };
+	        }
 	
 	        /**
 	         *
 	         * @param {string} from
 	         * @return {*}
 	         */
+	
+	    }, {
+	        key: 'getModelByFrom',
 	        value: function getModelByFrom(from) {
 	            switch (from) {
 	                case 'languages':
@@ -1053,11 +1174,11 @@
 	            }
 	        }
 	    }], [{
-	        key: 'saveJSON',
-	        value: function saveJSON(datas, filename) {
+	        key: 'saveJSONToFile',
+	        value: function saveJSONToFile(datas, filename) {
 	            datas = '{"' + filename + '": ' + JSON.stringify(datas) + '}';
 	
-	            __webpack_require__(7).saveAs(new Blob([datas], { type: 'application/json;charset=utf8' }), filename + '.json');
+	            __webpack_require__(8).saveAs(new Blob([datas], { type: 'application/json;charset=utf8' }), filename + '.json');
 	        }
 	    }]);
 	
@@ -1069,6 +1190,163 @@
 
 /***/ },
 /* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
+	
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+	
+	/*!
+	 * JavaScript Cookie v2.1.3
+	 * https://github.com/js-cookie/js-cookie
+	 *
+	 * Copyright 2006, 2015 Klaus Hartl & Fagner Brack
+	 * Released under the MIT license
+	 */
+	;(function (factory) {
+		var registeredInModuleLoader = false;
+		if (true) {
+			!(__WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+			registeredInModuleLoader = true;
+		}
+		if (( false ? 'undefined' : _typeof(exports)) === 'object') {
+			module.exports = factory();
+			registeredInModuleLoader = true;
+		}
+		if (!registeredInModuleLoader) {
+			var OldCookies = window.Cookies;
+			var api = window.Cookies = factory();
+			api.noConflict = function () {
+				window.Cookies = OldCookies;
+				return api;
+			};
+		}
+	})(function () {
+		function extend() {
+			var i = 0;
+			var result = {};
+			for (; i < arguments.length; i++) {
+				var attributes = arguments[i];
+				for (var key in attributes) {
+					result[key] = attributes[key];
+				}
+			}
+			return result;
+		}
+	
+		function init(converter) {
+			function api(key, value, attributes) {
+				var result;
+				if (typeof document === 'undefined') {
+					return;
+				}
+	
+				// Write
+	
+				if (arguments.length > 1) {
+					attributes = extend({
+						path: '/'
+					}, api.defaults, attributes);
+	
+					if (typeof attributes.expires === 'number') {
+						var expires = new Date();
+						expires.setMilliseconds(expires.getMilliseconds() + attributes.expires * 864e+5);
+						attributes.expires = expires;
+					}
+	
+					try {
+						result = JSON.stringify(value);
+						if (/^[\{\[]/.test(result)) {
+							value = result;
+						}
+					} catch (e) {}
+	
+					if (!converter.write) {
+						value = encodeURIComponent(String(value)).replace(/%(23|24|26|2B|3A|3C|3E|3D|2F|3F|40|5B|5D|5E|60|7B|7D|7C)/g, decodeURIComponent);
+					} else {
+						value = converter.write(value, key);
+					}
+	
+					key = encodeURIComponent(String(key));
+					key = key.replace(/%(23|24|26|2B|5E|60|7C)/g, decodeURIComponent);
+					key = key.replace(/[\(\)]/g, escape);
+	
+					return document.cookie = [key, '=', value, attributes.expires ? '; expires=' + attributes.expires.toUTCString() : '', // use expires attribute, max-age is not supported by IE
+					attributes.path ? '; path=' + attributes.path : '', attributes.domain ? '; domain=' + attributes.domain : '', attributes.secure ? '; secure' : ''].join('');
+				}
+	
+				// Read
+	
+				if (!key) {
+					result = {};
+				}
+	
+				// To prevent the for loop in the first place assign an empty array
+				// in case there are no cookies at all. Also prevents odd result when
+				// calling "get()"
+				var cookies = document.cookie ? document.cookie.split('; ') : [];
+				var rdecode = /(%[0-9A-Z]{2})+/g;
+				var i = 0;
+	
+				for (; i < cookies.length; i++) {
+					var parts = cookies[i].split('=');
+					var cookie = parts.slice(1).join('=');
+	
+					if (cookie.charAt(0) === '"') {
+						cookie = cookie.slice(1, -1);
+					}
+	
+					try {
+						var name = parts[0].replace(rdecode, decodeURIComponent);
+						cookie = converter.read ? converter.read(cookie, name) : converter(cookie, name) || cookie.replace(rdecode, decodeURIComponent);
+	
+						if (this.json) {
+							try {
+								cookie = JSON.parse(cookie);
+							} catch (e) {}
+						}
+	
+						if (key === name) {
+							result = cookie;
+							break;
+						}
+	
+						if (!key) {
+							result[name] = cookie;
+						}
+					} catch (e) {}
+				}
+	
+				return result;
+			}
+	
+			api.set = api;
+			api.get = function (key) {
+				return api.call(api, key);
+			};
+			api.getJSON = function () {
+				return api.apply({
+					json: true
+				}, [].slice.call(arguments));
+			};
+			api.defaults = {};
+	
+			api.remove = function (key, attributes) {
+				api(key, '', extend(attributes, {
+					expires: -1
+				}));
+			};
+	
+			api.withConverter = init;
+	
+			return api;
+		}
+	
+		return init(function () {});
+	});
+
+/***/ },
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;"use strict";
@@ -1248,21 +1526,21 @@
 	
 	if (typeof module !== "undefined" && module.exports) {
 		module.exports.saveAs = saveAs;
-	} else if ("function" !== "undefined" && __webpack_require__(8) !== null && __webpack_require__(9) !== null) {
+	} else if ("function" !== "undefined" && __webpack_require__(9) !== null && __webpack_require__(10) !== null) {
 		!(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
 			return saveAs;
 		}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	}
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports) {
 
 	module.exports = function() { throw new Error("define cannot be used indirect"); };
 
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
@@ -1270,7 +1548,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1283,7 +1561,7 @@
 	
 	var _imports = __webpack_require__(2);
 	
-	var _JsonToHtml = __webpack_require__(11);
+	var _JsonToHtml = __webpack_require__(12);
 	
 	var _JsonToHtml2 = _interopRequireDefault(_JsonToHtml);
 	
@@ -1352,15 +1630,16 @@
 	        function listAllPreviews() {
 	            dc.select('posts', function (result) {
 	                that.posts = result;
-	            }, {}, function () {
 	                return that.postPreviews();
+	            }, {}, function () {
+	                return that.posts && that.postPreviews();
 	            });
 	        }
 	    }
 	
 	    /**
-	     * @param {number} from
-	     * @param {number} to
+	     * @param {number} [from]
+	     * @param {number} [to]
 	     */
 	
 	
@@ -1378,14 +1657,12 @@
 	                    title = this.getOneFromLanguages(post, 'title'),
 	                    url = this.getOneFromLanguages(post, 'url');
 	
-	                html += '<section class="post-preview">\n                <div class="blog-header">\n                    <h2 class="post-title">\n                        <a id="post-' + (i + 1) + '" class="post-link" href="#/' + url + '">' + title + '</a>\n                    </h2>\n                    <div class="post-datas">\n                        <div class="created">' + post.created + '</div>\n                    </div>\n                </div>\n                ' + content + '\n            </section>';
+	                html += '<section class="post-preview">\n                    <div class="blog-header">\n                        <h2 class="post-title">\n                            <a id="post-' + (i + 1) + '" class="post-link" href="#/' + url + '">' + title + '</a>\n                        </h2>\n                        <div class="post-datas">\n                            <div class="created">' + post.created + '</div>\n                        </div>\n                    </div>\n                    ' + content + '\n                </section>';
 	            }
 	
 	            document.querySelector(this.contentElement).innerHTML = html;
 	
-	            var loopForEventListener = this.helpers.addEventToAllElement;
-	
-	            loopForEventListener('.post-link', 'click', this.reStart);
+	            this.helpers.addEventToAllElement('.post-link', 'click', this.reStart);
 	        }
 	    }, {
 	        key: 'clearContent',
@@ -1434,7 +1711,7 @@
 	
 	            dc.select('posts', function (result) {
 	                that.result = result;
-	                console.log(result);
+	                // console.log(result);
 	            }, {
 	                where: [{
 	                    operator: '=',
@@ -1454,7 +1731,7 @@
 	exports.default = PublicController;
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1685,7 +1962,7 @@
 	exports.default = JsonToHtml;
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1698,11 +1975,11 @@
 	
 	var _imports = __webpack_require__(2);
 	
-	var _JsonToHtml = __webpack_require__(11);
+	var _JsonToHtml = __webpack_require__(12);
 	
 	var _JsonToHtml2 = _interopRequireDefault(_JsonToHtml);
 	
-	var _Editor = __webpack_require__(13);
+	var _Editor = __webpack_require__(14);
 	
 	var _Editor2 = _interopRequireDefault(_Editor);
 	
@@ -1715,7 +1992,7 @@
 	        _classCallCheck(this, AdminController);
 	
 	        this.helpers = __webpack_require__(1);
-	        this.functions = __webpack_require__(14);
+	        this.functions = __webpack_require__(15);
 	
 	        this.contentElement = '#wrapper';
 	        this.dc = new _imports.DatabaseController();
@@ -1919,8 +2196,8 @@
 	                    }
 	                }
 	
-	                _imports.DatabaseController.saveJSON(languages, 'languages');
-	                _imports.DatabaseController.saveJSON(endLabels, 'labels');
+	                _imports.DatabaseController.saveJSONToFile(languages, 'languages');
+	                _imports.DatabaseController.saveJSONToFile(endLabels, 'labels');
 	            }
 	
 	            function labelHtmlTemplate(id, hu, en) {
@@ -2442,8 +2719,8 @@
 	                    }
 	                }
 	
-	                _imports.DatabaseController.saveJSON(languages, 'languages');
-	                _imports.DatabaseController.saveJSON(endPosts, 'posts');
+	                _imports.DatabaseController.saveJSONToFile(languages, 'languages');
+	                _imports.DatabaseController.saveJSONToFile(endPosts, 'posts');
 	            }
 	
 	            /**
@@ -2751,7 +3028,7 @@
 	exports.default = AdminController;
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2762,7 +3039,7 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _JsonToHtml = __webpack_require__(11);
+	var _JsonToHtml = __webpack_require__(12);
 	
 	var _JsonToHtml2 = _interopRequireDefault(_JsonToHtml);
 	
@@ -2848,7 +3125,7 @@
 	    }], [{
 	        key: 'saveFile',
 	        value: function saveFile(value, filename) {
-	            __webpack_require__(7).saveAs(new Blob([value], { type: 'application/json;charset=utf8' }), filename + '.json');
+	            __webpack_require__(8).saveAs(new Blob([value], { type: 'application/json;charset=utf8' }), filename + '.json');
 	        }
 	    }]);
 	
@@ -2858,7 +3135,7 @@
 	exports.default = Editor;
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

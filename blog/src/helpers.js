@@ -407,7 +407,8 @@ function arrayElementsConvertToNumber(notNumberArray)
  */
 function addEventToAllElement (selector, eventName, callback)
 {
-    Array.from(document.querySelectorAll(selector)).forEach(element =>
+    let elements = document.querySelectorAll(selector);
+    for (let element of elements)
     {
         element.addEventListener(eventName, (event) =>
         {
@@ -415,7 +416,7 @@ function addEventToAllElement (selector, eventName, callback)
 
             ifExistCallbackICall(callback, {section: section, button: element});
         });
-    });
+    }
 }
 
 module.exports = {

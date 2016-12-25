@@ -77,16 +77,17 @@ export default class PublicController
             dc.select('posts', (result) =>
             {
                 that.posts = result;
+                return that.postPreviews();
             }, {}, () =>
             {
-                return that.postPreviews();
+                return that.posts && that.postPreviews();
             });
         }
     }
 
     /**
-     * @param {number} from
-     * @param {number} to
+     * @param {number} [from]
+     * @param {number} [to]
      */
     postPreviews(from = 0, to = this.posts.length)
     {
@@ -101,23 +102,21 @@ export default class PublicController
 
             html +=
                 `<section class="post-preview">
-                <div class="blog-header">
-                    <h2 class="post-title">
-                        <a id="post-${i + 1}" class="post-link" href="#/${url}">${title}</a>
-                    </h2>
-                    <div class="post-datas">
-                        <div class="created">${post.created}</div>
+                    <div class="blog-header">
+                        <h2 class="post-title">
+                            <a id="post-${i + 1}" class="post-link" href="#/${url}">${title}</a>
+                        </h2>
+                        <div class="post-datas">
+                            <div class="created">${post.created}</div>
+                        </div>
                     </div>
-                </div>
-                ${content}
-            </section>`;
+                    ${content}
+                </section>`;
         }
 
         document.querySelector(this.contentElement).innerHTML = html;
 
-        let loopForEventListener = this.helpers.addEventToAllElement;
-
-        loopForEventListener('.post-link', 'click', this.reStart);
+        this.helpers.addEventToAllElement('.post-link', 'click', this.reStart);
     }
 
 
@@ -166,7 +165,7 @@ export default class PublicController
 
         dc.select('posts', (result) => {
             that.result = result;
-            console.log(result);
+            // console.log(result);
         }, {
             where: [
                 {

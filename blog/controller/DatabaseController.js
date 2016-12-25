@@ -1,4 +1,5 @@
 import {LanguageModel, LabelModel, PostModel} from '../src/imports';
+import * as Cookies from '../../libs/js.cookie';
 
 export default class DatabaseController
 {
@@ -24,6 +25,8 @@ export default class DatabaseController
 
         this.loadJSON(from, (response) =>
         {
+            // console.log(response);
+
             let array = [];
             const that = this;
 
@@ -137,13 +140,39 @@ export default class DatabaseController
         return callback(okay, from);
     }
 
+    /**
+     * @param {string} filename
+     * @param {function(object)} callback
+     */
+    loadJSON (filename, callback)
+    {
+        let result = this.JSONSession(filename).get();
+        if (!result)
+        {
+            result = this.JSONCookie(filename).get();
+            if (!result)
+            {
+                this.JSONSession(filename).set(result);
+
+                this.loadJSONFromFile(filename, (result) =>
+                {
+                    this.JSONSession(filename).set(result);
+                    this.JSONCookie(filename).set(result);
+
+                    return callback(result);
+                });
+            }
+        }
+
+        return callback(result);
+    }
 
     /**
      * @author https://codepen.io/KryptoniteDove/post/load-json-file-locally-using-pure-javascript
      * @param {string} filename
-     * @param {function(*[])} callback
+     * @param {function(object)} callback
      */
-    loadJSON (filename, callback)
+    loadJSONFromFile (filename, callback)
     {
         let xobj = new XMLHttpRequest();
         xobj.overrideMimeType("application/json");
@@ -159,7 +188,11 @@ export default class DatabaseController
     }
 
 
-    static saveJSON (datas, filename)
+    /**
+     * @param {object} datas
+     * @param {string} filename
+     */
+    static saveJSONToFile (datas, filename)
     {
         datas = `{"${filename}": ${JSON.stringify(datas)}}`;
 
@@ -168,6 +201,61 @@ export default class DatabaseController
             `${filename}.json`
         );
 
+    }
+
+    /**
+     * @param {string} name
+     * @return {object}
+     */
+    JSONSession (name)
+    {
+        return {
+            /**
+             * @return {object|null}
+             */
+            get: () =>
+            {
+                if (sessionStorage)
+                {
+                    return JSON.parse(sessionStorage.getItem(name));
+                }
+                return null;
+            },
+            /**
+             * @param {object} datas
+             */
+            set: (datas) =>
+            {
+                if (sessionStorage)
+                {
+                    sessionStorage.setItem(name, JSON.stringify(datas));
+                }
+            }
+        }
+    }
+
+    /**
+     * @param {string} name
+     * @return {object}
+     */
+    JSONCookie (name)
+    {
+        return {
+            /**
+             * @return {object}
+             */
+            get: () =>
+            {
+                return Cookies.getJSON(name);
+            },
+            /**
+             * @param {object} datas
+             */
+            set: (datas) =>
+            {
+                Cookies.set(name, datas, {expires: 3});
+            }
+        }
     }
 
     /**
