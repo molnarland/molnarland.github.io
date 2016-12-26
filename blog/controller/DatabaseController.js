@@ -146,25 +146,33 @@ export default class DatabaseController
      */
     loadJSON (filename, callback)
     {
-        let result = this.JSONSession(filename).get();
-        if (!result)
+        try
         {
-            result = this.JSONCookie(filename).get();
+            return callback(require(`../json/${filename}.json`)[filename]);
+        }
+        catch (e)
+        {
+            let result = this.JSONSession(filename).get();
             if (!result)
             {
-                this.JSONSession(filename).set(result);
-
-                this.loadJSONFromFile(filename, (result) =>
+                result = this.JSONCookie(filename).get();
+                if (!result)
                 {
                     this.JSONSession(filename).set(result);
-                    this.JSONCookie(filename).set(result);
 
-                    return callback(result);
-                });
+                    this.loadJSONFromFile(filename, (result) =>
+                    {
+                        this.JSONSession(filename).set(result);
+                        this.JSONCookie(filename).set(result);
+
+                        return callback(result);
+                    });
+                }
             }
+
+            return callback(result);
         }
 
-        return callback(result);
     }
 
     /**
@@ -215,7 +223,7 @@ export default class DatabaseController
              */
             get: () =>
             {
-                if (sessionStorage)
+                if (typeof sessionStorage !== 'undefined')
                 {
                     return JSON.parse(sessionStorage.getItem(name));
                 }
@@ -226,7 +234,7 @@ export default class DatabaseController
              */
             set: (datas) =>
             {
-                if (sessionStorage)
+                if (typeof sessionStorage !== 'undefined')
                 {
                     sessionStorage.setItem(name, JSON.stringify(datas));
                 }
