@@ -581,11 +581,11 @@
 	
 	var _DatabaseController2 = _interopRequireDefault(_DatabaseController);
 	
-	var _PublicController = __webpack_require__(11);
+	var _PublicController = __webpack_require__(15);
 	
 	var _PublicController2 = _interopRequireDefault(_PublicController);
 	
-	var _AdminController = __webpack_require__(13);
+	var _AdminController = __webpack_require__(17);
 	
 	var _AdminController2 = _interopRequireDefault(_AdminController);
 	
@@ -1025,22 +1025,26 @@
 	        value: function loadJSON(filename, callback) {
 	            var _this3 = this;
 	
-	            var result = this.JSONSession(filename).get();
-	            if (!result) {
-	                result = this.JSONCookie(filename).get();
+	            try {
+	                return callback(__webpack_require__(8)("./" + filename + '.json')[filename]);
+	            } catch (e) {
+	                var result = this.JSONSession(filename).get();
 	                if (!result) {
-	                    this.JSONSession(filename).set(result);
+	                    result = this.JSONCookie(filename).get();
+	                    if (!result) {
+	                        this.JSONSession(filename).set(result);
 	
-	                    this.loadJSONFromFile(filename, function (result) {
-	                        _this3.JSONSession(filename).set(result);
-	                        _this3.JSONCookie(filename).set(result);
+	                        this.loadJSONFromFile(filename, function (result) {
+	                            _this3.JSONSession(filename).set(result);
+	                            _this3.JSONCookie(filename).set(result);
 	
-	                        return callback(result);
-	                    });
+	                            return callback(result);
+	                        });
+	                    }
 	                }
-	            }
 	
-	            return callback(result);
+	                return callback(result);
+	            }
 	        }
 	
 	        /**
@@ -1082,7 +1086,7 @@
 	                 * @return {object|null}
 	                 */
 	                get: function get() {
-	                    if (sessionStorage) {
+	                    if (typeof sessionStorage !== 'undefined') {
 	                        return JSON.parse(sessionStorage.getItem(name));
 	                    }
 	                    return null;
@@ -1091,7 +1095,7 @@
 	                 * @param {object} datas
 	                 */
 	                set: function set(datas) {
-	                    if (sessionStorage) {
+	                    if (typeof sessionStorage !== 'undefined') {
 	                        sessionStorage.setItem(name, JSON.stringify(datas));
 	                    }
 	                }
@@ -1178,7 +1182,7 @@
 	        value: function saveJSONToFile(datas, filename) {
 	            datas = '{"' + filename + '": ' + JSON.stringify(datas) + '}';
 	
-	            __webpack_require__(8).saveAs(new Blob([datas], { type: 'application/json;charset=utf8' }), filename + '.json');
+	            __webpack_require__(12).saveAs(new Blob([datas], { type: 'application/json;charset=utf8' }), filename + '.json');
 	        }
 	    }]);
 	
@@ -1347,6 +1351,28 @@
 
 /***/ },
 /* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var map = {};
+	function webpackContext(req) {
+		return __webpack_require__(webpackContextResolve(req));
+	};
+	function webpackContextResolve(req) {
+		return map[req] || (function() { throw new Error("Cannot find module '" + req + "'.") }());
+	};
+	webpackContext.keys = function webpackContextKeys() {
+		return Object.keys(map);
+	};
+	webpackContext.resolve = webpackContextResolve;
+	module.exports = webpackContext;
+	webpackContext.id = 8;
+
+
+/***/ },
+/* 9 */,
+/* 10 */,
+/* 11 */,
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;"use strict";
@@ -1526,21 +1552,21 @@
 	
 	if (typeof module !== "undefined" && module.exports) {
 		module.exports.saveAs = saveAs;
-	} else if ("function" !== "undefined" && __webpack_require__(9) !== null && __webpack_require__(10) !== null) {
+	} else if ("function" !== "undefined" && __webpack_require__(13) !== null && __webpack_require__(14) !== null) {
 		!(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
 			return saveAs;
 		}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	}
 
 /***/ },
-/* 9 */
+/* 13 */
 /***/ function(module, exports) {
 
 	module.exports = function() { throw new Error("define cannot be used indirect"); };
 
 
 /***/ },
-/* 10 */
+/* 14 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
@@ -1548,7 +1574,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
-/* 11 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1561,7 +1587,7 @@
 	
 	var _imports = __webpack_require__(2);
 	
-	var _JsonToHtml = __webpack_require__(12);
+	var _JsonToHtml = __webpack_require__(16);
 	
 	var _JsonToHtml2 = _interopRequireDefault(_JsonToHtml);
 	
@@ -1605,7 +1631,7 @@
 	                                    opt2: 'urlId'
 	                                }]
 	                            }, function () {
-	                                new _JsonToHtml2.default(that.post['content'][_this.language], document.querySelector(_this.contentElement));
+	                                new _JsonToHtml2.default(that.post['content'][_this.language]).printOut(document.querySelector(_this.contentElement));
 	                            });
 	                        } else {
 	                            listAllPreviews();
@@ -1657,7 +1683,9 @@
 	                    title = this.getOneFromLanguages(post, 'title'),
 	                    url = this.getOneFromLanguages(post, 'url');
 	
-	                html += '<section class="post-preview">\n                    <div class="blog-header">\n                        <h2 class="post-title">\n                            <a id="post-' + (i + 1) + '" class="post-link" href="#/' + url + '">' + title + '</a>\n                        </h2>\n                        <div class="post-datas">\n                            <div class="created">' + post.created + '</div>\n                        </div>\n                    </div>\n                    ' + content + '\n                </section>';
+	                url = url.split('.')[1] === 'html' ? url : '#/' + url;
+	
+	                html += '<section class="post-preview">\n                    <div class="blog-header">\n                        <h2 class="post-title">\n                            <a id="post-' + (i + 1) + '" class="post-link" href="' + url + '">' + title + '</a>\n                        </h2>\n                        <div class="post-datas">\n                            <div class="created">' + post.created + '</div>\n                        </div>\n                    </div>\n                    ' + content + '\n                </section>';
 	            }
 	
 	            document.querySelector(this.contentElement).innerHTML = html;
@@ -1731,7 +1759,7 @@
 	exports.default = PublicController;
 
 /***/ },
-/* 12 */
+/* 16 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1749,9 +1777,9 @@
 	var JsonToHtml = function () {
 	    /**
 	     * @param {string} jsonString
-	     * @param {HTMLElement} out
+	     * @return {string}
 	     */
-	    function JsonToHtml(jsonString, out) {
+	    function JsonToHtml(jsonString) {
 	        _classCallCheck(this, JsonToHtml);
 	
 	        var outString = '';
@@ -1764,17 +1792,32 @@
 	            console.info(e.message);
 	        }
 	
-	        out.innerHTML = outString;
+	        this.html = outString;
 	    }
 	
-	    /**
-	     * @param {object} object
-	     * @param {function} callback - optional
-	     * @return {string}
-	     */
-	
-	
 	    _createClass(JsonToHtml, [{
+	        key: 'getHtml',
+	        value: function getHtml() {
+	            return this.html;
+	        }
+	
+	        /**
+	         * @param {HTMLElement} [out]
+	         */
+	
+	    }, {
+	        key: 'printOut',
+	        value: function printOut(out) {
+	            out.innerHTML = this.html;
+	        }
+	
+	        /**
+	         * @param {object} object
+	         * @param {function} callback - optional
+	         * @return {string}
+	         */
+	
+	    }, {
 	        key: 'cycle',
 	        value: function cycle(object, callback) {
 	            var _this = this;
@@ -1962,7 +2005,7 @@
 	exports.default = JsonToHtml;
 
 /***/ },
-/* 13 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1975,11 +2018,11 @@
 	
 	var _imports = __webpack_require__(2);
 	
-	var _JsonToHtml = __webpack_require__(12);
+	var _JsonToHtml = __webpack_require__(16);
 	
 	var _JsonToHtml2 = _interopRequireDefault(_JsonToHtml);
 	
-	var _Editor = __webpack_require__(14);
+	var _Editor = __webpack_require__(18);
 	
 	var _Editor2 = _interopRequireDefault(_Editor);
 	
@@ -1992,7 +2035,7 @@
 	        _classCallCheck(this, AdminController);
 	
 	        this.helpers = __webpack_require__(1);
-	        this.functions = __webpack_require__(15);
+	        this.functions = __webpack_require__(19);
 	
 	        this.contentElement = '#wrapper';
 	        this.dc = new _imports.DatabaseController();
@@ -3028,7 +3071,7 @@
 	exports.default = AdminController;
 
 /***/ },
-/* 14 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3039,7 +3082,7 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _JsonToHtml = __webpack_require__(12);
+	var _JsonToHtml = __webpack_require__(16);
 	
 	var _JsonToHtml2 = _interopRequireDefault(_JsonToHtml);
 	
@@ -3094,7 +3137,7 @@
 	        key: 'addJsonParseToHtmlOnEditorChange',
 	        value: function addJsonParseToHtmlOnEditorChange() {
 	            this.editor.on('change', function (cm) {
-	                new _JsonToHtml2.default(cm.getValue(), document.getElementById(this.out));
+	                new _JsonToHtml2.default(cm.getValue()).printOut(document.getElementById(this.out));
 	            }.bind(this));
 	        }
 	    }, {
@@ -3125,7 +3168,7 @@
 	    }], [{
 	        key: 'saveFile',
 	        value: function saveFile(value, filename) {
-	            __webpack_require__(8).saveAs(new Blob([value], { type: 'application/json;charset=utf8' }), filename + '.json');
+	            __webpack_require__(12).saveAs(new Blob([value], { type: 'application/json;charset=utf8' }), filename + '.json');
 	        }
 	    }]);
 	
@@ -3135,7 +3178,7 @@
 	exports.default = Editor;
 
 /***/ },
-/* 15 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

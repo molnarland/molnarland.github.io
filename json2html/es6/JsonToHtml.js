@@ -2,9 +2,9 @@ export default class JsonToHtml
 {
     /**
      * @param {string} jsonString
-     * @param {HTMLElement} out
+     * @return {string}
      */
-    constructor (jsonString, out)
+    constructor (jsonString)
     {
         let outString = '';
 
@@ -19,7 +19,20 @@ export default class JsonToHtml
             console.info(e.message);
         }
 
-        out.innerHTML = outString;
+        this.html = outString;
+    }
+
+    getHtml ()
+    {
+        return this.html;
+    }
+
+    /**
+     * @param {HTMLElement} [out]
+     */
+    printOut (out)
+    {
+        out.innerHTML = this.html;
     }
 
     /**

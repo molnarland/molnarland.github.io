@@ -3,7 +3,7 @@ module.exports = {
     output: {
         path: __dirname + '/dist',
         filename: '[name].js',
-        comments: false
+        pathinfo: false
     },
     module: {
         loaders: [
@@ -17,5 +17,6 @@ module.exports = {
             }
         ]
     },
-    devtool: 'source-map'
+    devtool: 'source-map',
+    debug: false
 };

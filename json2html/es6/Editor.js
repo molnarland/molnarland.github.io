@@ -41,7 +41,8 @@ export default class Editor
     {
         this.editor.on('change', function (cm)
         {
-            new JsonToHtml(cm.getValue(), document.getElementById(this.out));
+            new JsonToHtml(cm.getValue()).printOut(document.getElementById(this.out));
+
         }.bind(this));
     }
 

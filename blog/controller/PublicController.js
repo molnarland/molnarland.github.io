@@ -40,10 +40,8 @@ export default class PublicController
                                 }]
                             }, () =>
                             {
-                                new JsonToHtml(
-                                    that.post['content'][this.language],
-                                    document.querySelector(this.contentElement)
-                                );
+                                new JsonToHtml(that.post['content'][this.language])
+                                    .printOut(document.querySelector(this.contentElement));
                             });
                         }
                         else
@@ -99,12 +97,13 @@ export default class PublicController
                 title = this.getOneFromLanguages(post, 'title'),
                 url = this.getOneFromLanguages(post, 'url');
 
+            url = (url.split('.')[1] === 'html') ? url : `#/${url}`;
 
             html +=
                 `<section class="post-preview">
                     <div class="blog-header">
                         <h2 class="post-title">
-                            <a id="post-${i + 1}" class="post-link" href="#/${url}">${title}</a>
+                            <a id="post-${i + 1}" class="post-link" href="${url}">${title}</a>
                         </h2>
                         <div class="post-datas">
                             <div class="created">${post.created}</div>
