@@ -10,6 +10,7 @@ export default class PostModel
         this.titleId = attributes.titleId || null;
         this.contentId = attributes.contentId || null;
         this.urlId = attributes.urlId || null;
+        this.shortId = attributes.shortId || null;
 
         const dc = new DatabaseController();
 
@@ -18,11 +19,14 @@ export default class PostModel
         {
             this.selectOne('contentId', 'content', () =>
             {
-                this.selectOne('titleId', 'title', () =>
+                this.selectOne('shortId', 'short', () =>
                 {
-                    this.selectOne('urlId', 'url', callback, dc);
-                }, dc);
-            }, dc)
+                    this.selectOne('titleId', 'title', () =>
+                    {
+                        this.selectOne('urlId', 'url', callback, dc);
+                    }, dc);
+                }, dc)
+            }, dc);
         }, dc);
     }
 

@@ -152,25 +152,35 @@ export default class DatabaseController
         }
         catch (e)
         {
-            let result = this.JSONSession(filename).get();
-            if (!result)
+            if (require('../src/helpers').getUrlPath().indexOf('admin') == -1) //if it isn't admin page
             {
-                result = this.JSONCookie(filename).get();
+                let result = this.JSONSession(filename).get();
                 if (!result)
                 {
-                    this.JSONSession(filename).set(result);
-
-                    this.loadJSONFromFile(filename, (result) =>
+                    result = this.JSONCookie(filename).get();
+                    if (!result)
                     {
                         this.JSONSession(filename).set(result);
-                        this.JSONCookie(filename).set(result);
 
-                        return callback(result);
-                    });
+                        this.loadJSONFromFile(filename, (result) =>
+                        {
+                            this.JSONSession(filename).set(result);
+                            this.JSONCookie(filename).set(result);
+
+                            return callback(result);
+                        });
+                    }
                 }
-            }
 
-            return callback(result);
+                return callback(result);
+            }
+            else
+            {
+                this.loadJSONFromFile(filename, (result) =>
+                {
+                    return callback(result);
+                });
+            }
         }
 
     }
@@ -225,7 +235,11 @@ export default class DatabaseController
             {
                 if (typeof sessionStorage !== 'undefined')
                 {
-                    return JSON.parse(sessionStorage.getItem(name));
+                    try
+                    {
+                        return JSON.parse(sessionStorage.getItem(name));
+                    }
+                    catch (e) {}
                 }
                 return null;
             },
@@ -254,7 +268,11 @@ export default class DatabaseController
              */
             get: () =>
             {
-                return Cookies.getJSON(name);
+                try
+                {
+                    return Cookies.getJSON(name);
+                }
+                catch (e) {}
             },
             /**
              * @param {object} datas

@@ -294,6 +294,11 @@ function getElementValue(selectorOrNode, editorObject)
             return node.value;
             break;
         case 'textarea':
+            if (typeof editorObject == 'undefined')
+            {
+                return node;
+            }
+
             return editorObject.getValueOfEditor() || node.value;
             break;
         case 'select':

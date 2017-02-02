@@ -93,7 +93,7 @@ export default class PublicController
 
         for (let i = from;  i < to; i++) {
             const post = this.posts[i];
-            let content = this.getOneFromLanguages(post, 'content'),
+            let short = this.getOneFromLanguages(post, 'short'),
                 title = this.getOneFromLanguages(post, 'title'),
                 url = this.getOneFromLanguages(post, 'url');
 
@@ -109,7 +109,7 @@ export default class PublicController
                             <div class="created">${post.created}</div>
                         </div>
                     </div>
-                    ${content}
+                    <div class="short">${short}</div>
                 </section>`;
         }
 

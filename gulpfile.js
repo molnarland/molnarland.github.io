@@ -8,14 +8,14 @@ var gulp = require('gulp'),
 	browserSync = require('browser-sync').create();
 
 var paths = {
-	views: [
+	pug: [
 		'./wordsoutinjs/**/*.pug',
 		'index.pug',
 		'./blog/index.pug',
 		'./blog/admin/*.pug',
 		'./json2html/*.pug'
 	],
-	styles: ['./wordsoutinjs/*.sass', './style/*.sass', './blog/style/*.sass'],
+	sass: ['./wordsoutinjs/*.sass', './style/*.sass', './blog/style/*.sass'],
 	coffee: ['./wordsoutinjs/*.coffee'],
 	blogJs: ['./blog/src/*.js', './blog/model/*.js', './blog/controller/*.js'],
 	landingJs: ['script/es6/*.js'],
@@ -33,7 +33,7 @@ function reloadBrowser(done)
 
 
 gulp.task('pug', function build_html (done) {
-	gulp.src(paths.views, base)
+	gulp.src(paths.pug, base)
 		.pipe(pug2({
 			pretty: true,
 			cache: false
@@ -44,7 +44,7 @@ gulp.task('pug', function build_html (done) {
 });
 
 gulp.task('sass', function build_sass (done) {
-	gulp.src(paths.styles, base)
+	gulp.src(paths.sass, base)
 		.pipe(sass({indentedSyntax: true/*, outputStyle: 'compressed'*/}).on('error', sass.logError))
 		.pipe(autoprefixer({
 			browsers: ['last 10 versions'],
@@ -63,7 +63,7 @@ gulp.task('coffee', function build_coffee (done) {
 	reloadBrowser(done);
 });
 
-gulp.task('blog-js', function (done) {
+gulp.task('blogJs', function (done) {
 	gulp.src(paths.blogJs)
 		.pipe(webpack(require('./blog.webpack.config.js')))
 		.pipe(gulp.dest('blog/dist/'));
@@ -71,39 +71,56 @@ gulp.task('blog-js', function (done) {
 	reloadBrowser(done);
 });
 
-gulp.task('landing-js'/*, function (done) {
+gulp.task('landingJs', function (done) {
 	gulp.src(paths.landingJs)
 		.pipe(babel()).on('error', console.error.bind(console))
 		.pipe(gulp.dest('script'));
 
 	reloadBrowser(done);
-}*/);
+});
 
-gulp.task('j2h-js'/*, function (done) {
+gulp.task('j2hJs', function (done) {
 	gulp.src(paths.json2HtmlJs)
 		.pipe(webpack(require('./json2html.webpack.config')))
 		.pipe(gulp.dest('json2html'));
 
 	reloadBrowser(done);
-}*/);
-
-
-gulp.task('server', ['pug', 'sass', 'coffee', 'blog-js', 'landing-js', 'j2h-js'], function () {
-	browserSync.init(['index.html'], {
-		server: './',
-		open: false
-	});
 });
 
-function watch () {
-	gulp.watch(paths.views, ['pug']);
-	gulp.watch(paths.styles, ['sass']);
-	gulp.watch(paths.coffee, ['coffee']);
-	gulp.watch(paths.blogJs, ['blog-js']);
-	gulp.watch(paths.landingJs, ['landing-js']);
-	gulp.watch(paths.json2HtmlJs, ['j2h-js']);
+
+gulp.task('fullServer', ['pug', 'sass', 'coffee', 'blogJs', 'landingJs', 'j2hJs'], function () {
+	watch();
+	browserSyncInit();
+});
+
+function browserSyncInit(callback) {
+    browserSync.init(['index.html'], {
+        server: './',
+        open: false
+    });
 }
 
-gulp.task('watch', watch());
+function watch (tasks = ['pug', 'sass', 'coffee', 'blogJs', 'landingJs', 'j2hJs']) {
+	for (var index = 0; index < tasks.length; index++)
+	{
+		var task = tasks[index];
+        gulp.watch(paths[task], [task]);
+	}
+}
 
-gulp.task('default', ['server']);
+gulp.task('default', ['fullServer']);
+gulp.task('jws', ['pug', 'sass', 'j2hJs'], function () { //j2h watching + server
+	watch(['pug', 'sass', 'j2hJs']);
+    browserSyncInit();
+});
+gulp.task('lws', ['pug', 'sass', 'landingJs'], function () { //landing watching + server
+	watch(['pug', 'sass', 'landingJs']);
+    browserSyncInit();
+});
+gulp.task('bws', ['pug', 'sass', 'blogJs'], function () { //blog watching + server
+	watch(['pug', 'sass', 'blogJs']);
+    browserSyncInit();
+});
+
+
+//5223

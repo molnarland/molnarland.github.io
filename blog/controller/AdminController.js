@@ -339,6 +339,8 @@ export default class AdminController
             contentEnSelector = '#content-en',
             titleHuSelector = '#title-hu',
             titleEnSelector = '#title-en',
+			shortHuSelector = '#short-hu',
+			shortEnSelector = '#short-en',
             urlHuSelector = '#url-hu',
             urlEnSelector = '#url-en',
             contentHuOutputSelector = '#content-hu-output',
@@ -360,6 +362,7 @@ export default class AdminController
 
             this.dc.select('posts', (result) =>
             {
+                console.log(result);
                 currentPosts = result;
             }, {once: true}, () =>
             {
@@ -438,6 +441,8 @@ export default class AdminController
                         currentPost.content.en,
                         currentPost.title.hu,
                         currentPost.title.en,
+						currentPost.short.hu,
+						currentPost.short.en,
                         currentPost.url.hu,
                         currentPost.url.en
                     );
@@ -460,11 +465,13 @@ export default class AdminController
          * @param {string} contentEn
          * @param {string} titleHu
          * @param {string} titleEn
+		 * @param {string} shortHu
+		 * @param {string} shortEn
          * @param {string} urlHu
          * @param {string} urlEn
          * @return {string}
          */
-        function postHtmlTemplate(id, created, labelsHu, labelsEn, contentHu, contentEn, titleHu, titleEn, urlHu, urlEn)
+        function postHtmlTemplate(id, created, labelsHu, labelsEn, contentHu, contentEn, titleHu, titleEn, shortHu, shortEn, urlHu, urlEn)
         {
             let labelHuString = labelsHu.join(labelSeparator),
                 labelEnString = labelsEn.join(labelSeparator);
@@ -478,6 +485,8 @@ export default class AdminController
                         <p data-original="${contentEn}" class="content-en">Content in english: <var>${contentEn}</var></p>
                         <p data-original="${titleHu}" class="title-hu">Title in hungarian: <var>${titleHu}</var></p>
                         <p data-original="${titleEn}" class="title-en">Title in english: <var>${titleEn}</var></p>
+						<p data-original="${shortHu}" class="short-hu">Short in hungarian: <var>${shortHu}</var></p>
+						<p data-original="${shortEn}" class="short-en">Short in english: <var>${shortEn}</var></p>
                         <p data-original="${urlHu}" class="url-hu">Url in hungarian: <var>${urlHu}</var></p>
                         <p data-original="${urlEn}" class="url-en">Url in english: <var>${urlEn}</var></p>
                         <button class="update" data-clicked="0">Update</button>
@@ -493,6 +502,8 @@ export default class AdminController
                 contentEn = that.helpers.getElementValue(contentEnSelector, enEditor),
                 titleHu = that.helpers.getElementValue(titleHuSelector),
                 titleEn = that.helpers.getElementValue(titleEnSelector),
+				shortHu = that.helpers.getElementValue(shortHuSelector),
+                shortEn = that.helpers.getElementValue(shortEnSelector),
                 urlHu = that.helpers.getElementValue(urlHuSelector),
                 urlEn = that.helpers.getElementValue(urlEnSelector),
                 valuesAndSelectors = [
@@ -502,6 +513,9 @@ export default class AdminController
                     {value: contentEn, selector: contentEnSelector},
                     {value: titleHu, selector: titleHuSelector},
                     {value: titleEn, selector: titleEnSelector},
+                    {value: shortHu, selector: shortHuSelector},
+                    {value: shortEn, selector: shortEnSelector},
+                    {value: shortEn, selector: shortEnSelector},
                     {value: urlHu, selector: urlHuSelector},
                     {value: urlEn, selector: urlEnSelector}
                 ],
@@ -533,6 +547,7 @@ export default class AdminController
                     labels: labels,
                     content: {hu: contentHu, en: contentEn},
                     title: {hu: titleHu, en: titleEn},
+                    short: {hu: shortHu, en: shortEn},
                     url: {hu: urlHu, en: urlEn}
                 });
 
@@ -552,7 +567,7 @@ export default class AdminController
 
                     element.innerHTML += postHtmlTemplate(
                         null, created, fullLabelsHu, fullLabelsEn, contentHu,
-                        contentEn, titleHu, titleEn, urlHu, urlEn
+                        contentEn, titleHu, titleEn, shortHu, shortEn, urlHu, urlEn
                     );
                 });
 
@@ -597,16 +612,21 @@ export default class AdminController
                     titleLanguageIndex = languages.indexOf(languages.find(
                         (language) => String(language.hu) == originalPostInfos['title-hu'] && String(language.en) == originalPostInfos['title-en']
                     )),
+                    shortLanguageIndex = languages.indexOf(languages.find(
+                        (language) => String(language.hu) == originalPostInfos['short-hu'] && String(language.en) == originalPostInfos['short-en']
+                    )),
                     urlLanguageIndex = languages.indexOf(languages.find(
                         (language) => String(language.hu) == originalPostInfos['url-hu'] && String(language.en) == originalPostInfos['url-en']
                     ));
 
-                console.log(contentLanguageIndex, languages, originalPostInfos);
+                console.log(contentLanguageIndex, languages, originalPostInfos, currentPost);
 
                 languages[contentLanguageIndex].hu = currentPost.content.hu;
                 languages[contentLanguageIndex].en = currentPost.content.en;
                 languages[titleLanguageIndex].hu = currentPost.title.hu;
                 languages[titleLanguageIndex].en = currentPost.title.en;
+                languages[shortLanguageIndex].hu = currentPost.short.hu;
+                languages[shortLanguageIndex].en = currentPost.short.en;
                 languages[urlLanguageIndex].hu = currentPost.url.hu;
                 languages[urlLanguageIndex].en = currentPost.url.en;
 
@@ -616,6 +636,7 @@ export default class AdminController
                     labelIds: currentPost.labelIds,
                     contentId: currentPost.contentId,
                     titleId: currentPost.titleId,
+                    shortId: currentPost.shortId,
                     urlId: currentPost.urlId
                 });
             }
@@ -635,6 +656,7 @@ export default class AdminController
                         labelIds: that.helpers.arrayElementsConvertToNumber(newPost.labels),
                         contentId: addTextToLanguageAndReturnId(newPost, 'content'),
                         titleId: addTextToLanguageAndReturnId(newPost, 'title'),
+                        shortId: addTextToLanguageAndReturnId(newPost, 'short'),
                         urlId: addTextToLanguageAndReturnId(newPost, 'url')
                     });
                 }
@@ -681,6 +703,7 @@ export default class AdminController
                     // labels: {},
                     content: {},
                     title: {},
+                    short: {},
                     url: {}
                 },
                 callCallback = that.helpers.ifExistCallbackICall,
@@ -744,7 +767,7 @@ export default class AdminController
 
         function addAllUpdateEvent()
         {
-            require('../src/helpers').addEventToAllElement('.post .update', 'click', (attr) =>
+            that.helpers.addEventToAllElement('.post .update', 'click', (attr) =>
             {
                 let section = attr.section,
                     button = attr.button;
@@ -838,6 +861,7 @@ export default class AdminController
                         getPostInfosFromNodeAndChangeNodeHtmlToInputThenToText,
                         (postArray, index/*, isCurrent*/) =>
                         {
+                            console.log(postArray); //<-- false -_- TODO
                             if (postArray)
                             {
                                 postArray[index].id = postInfos.id;
@@ -846,6 +870,8 @@ export default class AdminController
                                 postArray[index].title.en = postInfos['title-en'];
                                 postArray[index].content.hu = postInfos['content-hu'];
                                 postArray[index].content.en = postInfos['content-en'];
+                                postArray[index].short.en = postInfos['short-en'];
+                                postArray[index].short.en = postInfos['short-en'];
                                 postArray[index].url.hu = postInfos['url-hu'];
                                 postArray[index].url.en = postInfos['url-en'];
                             }

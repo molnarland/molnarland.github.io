@@ -1,1 +1,1 @@
-{"posts": [{"id":1,"created":"2016-08-31","labelIds":[1],"contentId":3,"titleId":5,"urlId":6},{"id":2,"created":"2016-08-31","labelIds":[1],"contentId":4,"titleId":5,"urlId":6},{"id":3,"created":null,"labelIds":[2,3],"contentId":9,"titleId":10,"urlId":11},{"id":4,"created":"2016-12-18","labelIds":[1],"contentId":12,"titleId":13,"urlId":14}]}
+{"posts": [{"id":1,"created":"2016-08-31","labelIds":[1],"contentId":2,"titleId":3,"shortId":5,"urlId":4}]}

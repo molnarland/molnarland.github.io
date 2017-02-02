@@ -47,6 +47,7 @@
 	'use strict';
 	
 	// import {PublicController, AdminController} from './imports';
+	;
 	
 	/*const parameters = */__webpack_require__(1).start();
 
@@ -296,7 +297,7 @@
 	 * @return {number}
 	 */
 	function timeOutRestart() {
-	    var milliseconds = arguments.length <= 0 || arguments[0] === undefined ? 3000 : arguments[0];
+	    var milliseconds = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 3000;
 	
 	    return setTimeout(start, milliseconds);
 	}
@@ -343,6 +344,10 @@
 	            return node.value;
 	            break;
 	        case 'textarea':
+	            if (typeof editorObject == 'undefined') {
+	                return node;
+	            }
+	
 	            return editorObject.getValueOfEditor() || node.value;
 	            break;
 	        case 'select':
@@ -616,7 +621,7 @@
 	 * @param {function} callback
 	 */
 	function LanguageModel() {
-	    var attributes = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	    var attributes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 	    var callback = arguments[1];
 	
 	    _classCallCheck(this, LanguageModel);
@@ -649,7 +654,7 @@
 	var LabelModel = function LabelModel() {
 	    var _this = this;
 	
-	    var attributes = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	    var attributes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 	    var callback = arguments[1];
 	
 	    _classCallCheck(this, LabelModel);
@@ -708,7 +713,7 @@
 	    function PostModel() {
 	        var _this = this;
 	
-	        var attributes = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	        var attributes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 	        var callback = arguments[1];
 	
 	        _classCallCheck(this, PostModel);
@@ -719,13 +724,16 @@
 	        this.titleId = attributes.titleId || null;
 	        this.contentId = attributes.contentId || null;
 	        this.urlId = attributes.urlId || null;
+	        this.shortId = attributes.shortId || null;
 	
 	        var dc = new _imports.DatabaseController();
 	
 	        this.selectLabels(function () {
 	            _this.selectOne('contentId', 'content', function () {
-	                _this.selectOne('titleId', 'title', function () {
-	                    _this.selectOne('urlId', 'url', callback, dc);
+	                _this.selectOne('shortId', 'short', function () {
+	                    _this.selectOne('titleId', 'title', function () {
+	                        _this.selectOne('urlId', 'url', callback, dc);
+	                    }, dc);
 	                }, dc);
 	            }, dc);
 	        }, dc);
@@ -736,7 +744,7 @@
 	        value: function selectLabels(callback) {
 	            var _this2 = this;
 	
-	            var dc = arguments.length <= 1 || arguments[1] === undefined ? new _imports.DatabaseController() : arguments[1];
+	            var dc = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : new _imports.DatabaseController();
 	
 	            if (this.labelIds) {
 	                (function () {
@@ -778,7 +786,7 @@
 	        value: function selectOne(id, real, callback) {
 	            var _this3 = this;
 	
-	            var dc = arguments.length <= 3 || arguments[3] === undefined ? new _imports.DatabaseController() : arguments[3];
+	            var dc = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : new _imports.DatabaseController();
 	
 	            if (this[id]) {
 	                (function () {
@@ -854,8 +862,8 @@
 	        value: function select(from, end) {
 	            var _this = this;
 	
-	            var clauses = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
-	            var modelCallback = arguments.length <= 3 || arguments[3] === undefined ? null : arguments[3];
+	            var clauses = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+	            var modelCallback = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
 	
 	            __webpack_require__(1).checkSomeTypes(['string', 'function'], [from, end]);
 	
@@ -895,7 +903,7 @@
 	    }, {
 	        key: 'runClauses',
 	        value: function runClauses() {
-	            var clauses = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	            var clauses = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 	            var from = arguments[1];
 	            var callback = arguments[2];
 	
@@ -1028,22 +1036,29 @@
 	            try {
 	                return callback(__webpack_require__(8)("./" + filename + '.json')[filename]);
 	            } catch (e) {
-	                var result = this.JSONSession(filename).get();
-	                if (!result) {
-	                    result = this.JSONCookie(filename).get();
-	                    if (!result) {
-	                        this.JSONSession(filename).set(result);
+	                if (__webpack_require__(1).getUrlPath().indexOf('admin') == -1) //if it isn't admin page
+	                    {
+	                        var result = this.JSONSession(filename).get();
+	                        if (!result) {
+	                            result = this.JSONCookie(filename).get();
+	                            if (!result) {
+	                                this.JSONSession(filename).set(result);
 	
-	                        this.loadJSONFromFile(filename, function (result) {
-	                            _this3.JSONSession(filename).set(result);
-	                            _this3.JSONCookie(filename).set(result);
+	                                this.loadJSONFromFile(filename, function (result) {
+	                                    _this3.JSONSession(filename).set(result);
+	                                    _this3.JSONCookie(filename).set(result);
 	
-	                            return callback(result);
-	                        });
-	                    }
+	                                    return callback(result);
+	                                });
+	                            }
+	                        }
+	
+	                        return callback(result);
+	                    } else {
+	                    this.loadJSONFromFile(filename, function (result) {
+	                        return callback(result);
+	                    });
 	                }
-	
-	                return callback(result);
 	            }
 	        }
 	
@@ -1087,7 +1102,9 @@
 	                 */
 	                get: function get() {
 	                    if (typeof sessionStorage !== 'undefined') {
-	                        return JSON.parse(sessionStorage.getItem(name));
+	                        try {
+	                            return JSON.parse(sessionStorage.getItem(name));
+	                        } catch (e) {}
 	                    }
 	                    return null;
 	                },
@@ -1115,7 +1132,9 @@
 	                 * @return {object}
 	                 */
 	                get: function get() {
-	                    return Cookies.getJSON(name);
+	                    try {
+	                        return Cookies.getJSON(name);
+	                    } catch (e) {}
 	                },
 	                /**
 	                 * @param {object} datas
@@ -1599,7 +1618,7 @@
 	    function PublicController() {
 	        var _this = this;
 	
-	        var language = arguments.length <= 0 || arguments[0] === undefined ? 'en' : arguments[0];
+	        var language = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'en';
 	
 	        _classCallCheck(this, PublicController);
 	
@@ -1672,20 +1691,20 @@
 	    _createClass(PublicController, [{
 	        key: 'postPreviews',
 	        value: function postPreviews() {
-	            var from = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
-	            var to = arguments.length <= 1 || arguments[1] === undefined ? this.posts.length : arguments[1];
+	            var from = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+	            var to = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.posts.length;
 	
 	            var html = '';
 	
 	            for (var i = from; i < to; i++) {
 	                var post = this.posts[i];
-	                var content = this.getOneFromLanguages(post, 'content'),
+	                var short = this.getOneFromLanguages(post, 'short'),
 	                    title = this.getOneFromLanguages(post, 'title'),
 	                    url = this.getOneFromLanguages(post, 'url');
 	
 	                url = url.split('.')[1] === 'html' ? url : '#/' + url;
 	
-	                html += '<section class="post-preview">\n                    <div class="blog-header">\n                        <h2 class="post-title">\n                            <a id="post-' + (i + 1) + '" class="post-link" href="' + url + '">' + title + '</a>\n                        </h2>\n                        <div class="post-datas">\n                            <div class="created">' + post.created + '</div>\n                        </div>\n                    </div>\n                    ' + content + '\n                </section>';
+	                html += '<section class="post-preview">\n                    <div class="blog-header">\n                        <h2 class="post-title">\n                            <a id="post-' + (i + 1) + '" class="post-link" href="' + url + '">' + title + '</a>\n                        </h2>\n                        <div class="post-datas">\n                            <div class="created">' + post.created + '</div>\n                        </div>\n                    </div>\n                    <div class="short">' + short + '</div>\n                </section>';
 	            }
 	
 	            document.querySelector(this.contentElement).innerHTML = html;
@@ -1889,13 +1908,13 @@
 	    }, {
 	        key: 'whichTagTypeWay',
 	        value: function whichTagTypeWay(tag, _ref) {
-	            var id = _ref.id;
-	            var classOfElement = _ref.classOfElement;
-	            var style = _ref.style;
-	            var _ref$other = _ref.other;
-	            var other = _ref$other === undefined ? '' : _ref$other;
-	            var _ref$inner = _ref.inner;
-	            var inner = _ref$inner === undefined ? '' : _ref$inner;
+	            var id = _ref.id,
+	                classOfElement = _ref.classOfElement,
+	                style = _ref.style,
+	                _ref$other = _ref.other,
+	                other = _ref$other === undefined ? '' : _ref$other,
+	                _ref$inner = _ref.inner,
+	                inner = _ref$inner === undefined ? '' : _ref$inner;
 	
 	            if (tag == 'input') {
 	                return this.selfClosedTag(tag, {
@@ -1927,11 +1946,11 @@
 	    }, {
 	        key: 'selfClosedTag',
 	        value: function selfClosedTag(tag, _ref2) {
-	            var id = _ref2.id;
-	            var classOfElement = _ref2.classOfElement;
-	            var style = _ref2.style;
-	            var _ref2$other = _ref2.other;
-	            var other = _ref2$other === undefined ? '' : _ref2$other;
+	            var id = _ref2.id,
+	                classOfElement = _ref2.classOfElement,
+	                style = _ref2.style,
+	                _ref2$other = _ref2.other,
+	                other = _ref2$other === undefined ? '' : _ref2$other;
 	
 	            id = id ? 'id="' + id + '"' : '';
 	            classOfElement = classOfElement ? 'class="' + classOfElement + '"' : '';
@@ -1953,13 +1972,13 @@
 	    }, {
 	        key: 'withCloseTag',
 	        value: function withCloseTag(tag, _ref3) {
-	            var id = _ref3.id;
-	            var classOfElement = _ref3.classOfElement;
-	            var style = _ref3.style;
-	            var _ref3$other = _ref3.other;
-	            var other = _ref3$other === undefined ? '' : _ref3$other;
-	            var _ref3$inner = _ref3.inner;
-	            var inner = _ref3$inner === undefined ? '' : _ref3$inner;
+	            var id = _ref3.id,
+	                classOfElement = _ref3.classOfElement,
+	                style = _ref3.style,
+	                _ref3$other = _ref3.other,
+	                other = _ref3$other === undefined ? '' : _ref3$other,
+	                _ref3$inner = _ref3.inner,
+	                inner = _ref3$inner === undefined ? '' : _ref3$inner;
 	
 	            id = id ? 'id="' + id + '"' : '';
 	            classOfElement = classOfElement ? 'class="' + classOfElement + '"' : '';
@@ -2378,6 +2397,8 @@
 	                contentEnSelector = '#content-en',
 	                titleHuSelector = '#title-hu',
 	                titleEnSelector = '#title-en',
+	                shortHuSelector = '#short-hu',
+	                shortEnSelector = '#short-en',
 	                urlHuSelector = '#url-hu',
 	                urlEnSelector = '#url-en',
 	                contentHuOutputSelector = '#content-hu-output',
@@ -2395,6 +2416,7 @@
 	                currentLabels = result;
 	
 	                _this2.dc.select('posts', function (result) {
+	                    console.log(result);
 	                    currentPosts = result;
 	                }, { once: true }, function () {
 	
@@ -2499,7 +2521,7 @@
 	                                }
 	                            }
 	
-	                            html += postHtmlTemplate(currentPost.id, currentPost.created, labelsHu, labelsEn, currentPost.content.hu, currentPost.content.en, currentPost.title.hu, currentPost.title.en, currentPost.url.hu, currentPost.url.en);
+	                            html += postHtmlTemplate(currentPost.id, currentPost.created, labelsHu, labelsEn, currentPost.content.hu, currentPost.content.en, currentPost.title.hu, currentPost.title.en, currentPost.short.hu, currentPost.short.en, currentPost.url.hu, currentPost.url.en);
 	                        }
 	                    }
 	                } catch (err) {
@@ -2532,15 +2554,17 @@
 	             * @param {string} contentEn
 	             * @param {string} titleHu
 	             * @param {string} titleEn
+	            * @param {string} shortHu
+	            * @param {string} shortEn
 	             * @param {string} urlHu
 	             * @param {string} urlEn
 	             * @return {string}
 	             */
-	            function postHtmlTemplate(id, created, labelsHu, labelsEn, contentHu, contentEn, titleHu, titleEn, urlHu, urlEn) {
+	            function postHtmlTemplate(id, created, labelsHu, labelsEn, contentHu, contentEn, titleHu, titleEn, shortHu, shortEn, urlHu, urlEn) {
 	                var labelHuString = labelsHu.join(labelSeparator),
 	                    labelEnString = labelsEn.join(labelSeparator);
 	
-	                return '<section id="post-' + id + '" class="post" style="border: 10px dotted saddlebrown">\n                        <p data-original="' + id + '" class="id">ID: <var>' + id + '</var></p>\n                        <p data-original="' + created + '" class="created">Created: <var>' + created + '</var></p>\n                        <p data-original="' + labelHuString + '" class="label-hu">Labels in hungarian: <var>' + labelHuString + '</var></p>\n                        <p data-original="' + labelEnString + '" class="label-en">Labels in english: <var>' + labelEnString + '</var></p>\n                        <p data-original="' + contentHu + '" class="content-hu">Content in hungarian: <var>' + contentHu + '</var></p>\n                        <p data-original="' + contentEn + '" class="content-en">Content in english: <var>' + contentEn + '</var></p>\n                        <p data-original="' + titleHu + '" class="title-hu">Title in hungarian: <var>' + titleHu + '</var></p>\n                        <p data-original="' + titleEn + '" class="title-en">Title in english: <var>' + titleEn + '</var></p>\n                        <p data-original="' + urlHu + '" class="url-hu">Url in hungarian: <var>' + urlHu + '</var></p>\n                        <p data-original="' + urlEn + '" class="url-en">Url in english: <var>' + urlEn + '</var></p>\n                        <button class="update" data-clicked="0">Update</button>\n                        <button class="delete">Delete</button>\n                    </section>';
+	                return '<section id="post-' + id + '" class="post" style="border: 10px dotted saddlebrown">\n                        <p data-original="' + id + '" class="id">ID: <var>' + id + '</var></p>\n                        <p data-original="' + created + '" class="created">Created: <var>' + created + '</var></p>\n                        <p data-original="' + labelHuString + '" class="label-hu">Labels in hungarian: <var>' + labelHuString + '</var></p>\n                        <p data-original="' + labelEnString + '" class="label-en">Labels in english: <var>' + labelEnString + '</var></p>\n                        <p data-original="' + contentHu + '" class="content-hu">Content in hungarian: <var>' + contentHu + '</var></p>\n                        <p data-original="' + contentEn + '" class="content-en">Content in english: <var>' + contentEn + '</var></p>\n                        <p data-original="' + titleHu + '" class="title-hu">Title in hungarian: <var>' + titleHu + '</var></p>\n                        <p data-original="' + titleEn + '" class="title-en">Title in english: <var>' + titleEn + '</var></p>\n\t\t\t\t\t\t<p data-original="' + shortHu + '" class="short-hu">Short in hungarian: <var>' + shortHu + '</var></p>\n\t\t\t\t\t\t<p data-original="' + shortEn + '" class="short-en">Short in english: <var>' + shortEn + '</var></p>\n                        <p data-original="' + urlHu + '" class="url-hu">Url in hungarian: <var>' + urlHu + '</var></p>\n                        <p data-original="' + urlEn + '" class="url-en">Url in english: <var>' + urlEn + '</var></p>\n                        <button class="update" data-clicked="0">Update</button>\n                        <button class="delete">Delete</button>\n                    </section>';
 	            }
 	
 	            function newPostClick() {
@@ -2550,9 +2574,11 @@
 	                    contentEn = that.helpers.getElementValue(contentEnSelector, enEditor),
 	                    titleHu = that.helpers.getElementValue(titleHuSelector),
 	                    titleEn = that.helpers.getElementValue(titleEnSelector),
+	                    shortHu = that.helpers.getElementValue(shortHuSelector),
+	                    shortEn = that.helpers.getElementValue(shortEnSelector),
 	                    urlHu = that.helpers.getElementValue(urlHuSelector),
 	                    urlEn = that.helpers.getElementValue(urlEnSelector),
-	                    valuesAndSelectors = [{ value: created, selector: createdSelector }, { value: labels, selector: labelsSelector }, { value: contentHu, selector: contentHuSelector }, { value: contentEn, selector: contentEnSelector }, { value: titleHu, selector: titleHuSelector }, { value: titleEn, selector: titleEnSelector }, { value: urlHu, selector: urlHuSelector }, { value: urlEn, selector: urlEnSelector }],
+	                    valuesAndSelectors = [{ value: created, selector: createdSelector }, { value: labels, selector: labelsSelector }, { value: contentHu, selector: contentHuSelector }, { value: contentEn, selector: contentEnSelector }, { value: titleHu, selector: titleHuSelector }, { value: titleEn, selector: titleEnSelector }, { value: shortHu, selector: shortHuSelector }, { value: shortEn, selector: shortEnSelector }, { value: shortEn, selector: shortEnSelector }, { value: urlHu, selector: urlHuSelector }, { value: urlEn, selector: urlEnSelector }],
 	                    errorClass = 'error';
 	
 	                //true is error, false isn't error
@@ -2596,6 +2622,7 @@
 	                        labels: labels,
 	                        content: { hu: contentHu, en: contentEn },
 	                        title: { hu: titleHu, en: titleEn },
+	                        short: { hu: shortHu, en: shortEn },
 	                        url: { hu: urlHu, en: urlEn }
 	                    });
 	
@@ -2637,7 +2664,7 @@
 	                            }
 	                        }
 	
-	                        element.innerHTML += postHtmlTemplate(null, created, fullLabelsHu, fullLabelsEn, contentHu, contentEn, titleHu, titleEn, urlHu, urlEn);
+	                        element.innerHTML += postHtmlTemplate(null, created, fullLabelsHu, fullLabelsEn, contentHu, contentEn, titleHu, titleEn, shortHu, shortEn, urlHu, urlEn);
 	                    });
 	
 	                    var _iteratorNormalCompletion9 = true;
@@ -2693,16 +2720,21 @@
 	                        titleLanguageIndex = languages.indexOf(languages.find(function (language) {
 	                        return String(language.hu) == originalPostInfos['title-hu'] && String(language.en) == originalPostInfos['title-en'];
 	                    })),
+	                        shortLanguageIndex = languages.indexOf(languages.find(function (language) {
+	                        return String(language.hu) == originalPostInfos['short-hu'] && String(language.en) == originalPostInfos['short-en'];
+	                    })),
 	                        urlLanguageIndex = languages.indexOf(languages.find(function (language) {
 	                        return String(language.hu) == originalPostInfos['url-hu'] && String(language.en) == originalPostInfos['url-en'];
 	                    }));
 	
-	                    console.log(contentLanguageIndex, languages, originalPostInfos);
+	                    console.log(contentLanguageIndex, languages, originalPostInfos, currentPost);
 	
 	                    languages[contentLanguageIndex].hu = currentPost.content.hu;
 	                    languages[contentLanguageIndex].en = currentPost.content.en;
 	                    languages[titleLanguageIndex].hu = currentPost.title.hu;
 	                    languages[titleLanguageIndex].en = currentPost.title.en;
+	                    languages[shortLanguageIndex].hu = currentPost.short.hu;
+	                    languages[shortLanguageIndex].en = currentPost.short.en;
 	                    languages[urlLanguageIndex].hu = currentPost.url.hu;
 	                    languages[urlLanguageIndex].en = currentPost.url.en;
 	
@@ -2712,6 +2744,7 @@
 	                        labelIds: currentPost.labelIds,
 	                        contentId: currentPost.contentId,
 	                        titleId: currentPost.titleId,
+	                        shortId: currentPost.shortId,
 	                        urlId: currentPost.urlId
 	                    });
 	                };
@@ -2739,6 +2772,7 @@
 	                                labelIds: that.helpers.arrayElementsConvertToNumber(newPost.labels),
 	                                contentId: addTextToLanguageAndReturnId(newPost, 'content'),
 	                                titleId: addTextToLanguageAndReturnId(newPost, 'title'),
+	                                shortId: addTextToLanguageAndReturnId(newPost, 'short'),
 	                                urlId: addTextToLanguageAndReturnId(newPost, 'url')
 	                            });
 	                        }
@@ -2796,6 +2830,7 @@
 	                    // labels: {},
 	                    content: {},
 	                    title: {},
+	                    short: {},
 	                    url: {}
 	                },
 	                    callCallback = that.helpers.ifExistCallbackICall,
@@ -2864,7 +2899,7 @@
 	            }
 	
 	            function addAllUpdateEvent() {
-	                __webpack_require__(1).addEventToAllElement('.post .update', 'click', function (attr) {
+	                that.helpers.addEventToAllElement('.post .update', 'click', function (attr) {
 	                    var section = attr.section,
 	                        button = attr.button;
 	
@@ -2967,6 +3002,7 @@
 	                            });
 	
 	                            that.searchInfos(currentPosts, newPosts, postInfos, getPostInfosFromNodeAndChangeNodeHtmlToInputThenToText, function (postArray, index /*, isCurrent*/) {
+	                                console.log(postArray); //<-- false -_- TODO
 	                                if (postArray) {
 	                                    postArray[index].id = postInfos.id;
 	                                    postArray[index].created = postInfos.created;
@@ -2974,6 +3010,8 @@
 	                                    postArray[index].title.en = postInfos['title-en'];
 	                                    postArray[index].content.hu = postInfos['content-hu'];
 	                                    postArray[index].content.en = postInfos['content-en'];
+	                                    postArray[index].short.en = postInfos['short-en'];
+	                                    postArray[index].short.en = postInfos['short-en'];
 	                                    postArray[index].url.hu = postInfos['url-hu'];
 	                                    postArray[index].url.en = postInfos['url-en'];
 	                                }
@@ -3015,7 +3053,7 @@
 	    }, {
 	        key: 'searchInfos',
 	        value: function searchInfos(currents, news, datas, getInfosFunction, callback) {
-	            var isPost = arguments.length <= 5 || arguments[5] === undefined ? false : arguments[5];
+	            var isPost = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : false;
 	
 	            var infos = __webpack_require__(1).isHtmlElement(datas) ? getInfosFunction(datas) : datas;
 	
@@ -3098,13 +3136,13 @@
 	     * @param {string} idOfOutput
 	     */
 	    function Editor(_ref) {
-	        var fileName = _ref.fileName;
-	        var _ref$idOfEditor = _ref.idOfEditor;
-	        var idOfEditor = _ref$idOfEditor === undefined ? 'in' : _ref$idOfEditor;
-	        var _ref$idOfSaveButton = _ref.idOfSaveButton;
-	        var idOfSaveButton = _ref$idOfSaveButton === undefined ? 'save' : _ref$idOfSaveButton;
-	        var _ref$idOfOutput = _ref.idOfOutput;
-	        var idOfOutput = _ref$idOfOutput === undefined ? 'out' : _ref$idOfOutput;
+	        var fileName = _ref.fileName,
+	            _ref$idOfEditor = _ref.idOfEditor,
+	            idOfEditor = _ref$idOfEditor === undefined ? 'in' : _ref$idOfEditor,
+	            _ref$idOfSaveButton = _ref.idOfSaveButton,
+	            idOfSaveButton = _ref$idOfSaveButton === undefined ? 'save' : _ref$idOfSaveButton,
+	            _ref$idOfOutput = _ref.idOfOutput,
+	            idOfOutput = _ref$idOfOutput === undefined ? 'out' : _ref$idOfOutput;
 	
 	        _classCallCheck(this, Editor);
 	
@@ -3238,7 +3276,7 @@
 	}
 	
 	function randomNumber(max) {
-	    var min = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
+	    var min = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
 	
 	    return Math.floor(Math.random() * (max - min + 1)) + min;
 	}
