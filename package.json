@@ -38,5 +38,8 @@
   "bugs": {
     "url": "https://github.com/molnarland/molnarland.github.io/issues"
   },
-  "homepage": "https://github.com/molnarland/molnarland.github.io#readme"
+  "homepage": "https://github.com/molnarland/molnarland.github.io#readme",
+  "optionalDependencies": {
+    "gulp-notify": "^3.0.0"
+  }
 }
