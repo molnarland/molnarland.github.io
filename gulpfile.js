@@ -5,7 +5,8 @@ var gulp = require('gulp'),
 	autoprefixer = require('gulp-autoprefixer'),
 	webpack = require('gulp-webpack'),
 	babel = require('gulp-babel'),
-	browserSync = require('browser-sync').create();
+	browserSync = require('browser-sync').create(),
+	notify = require('gulp-notify');
 
 var paths = {
 	pug: [
@@ -25,6 +26,14 @@ var paths = {
 var basePath = './',
 	base = {base: basePath};
 
+var notifyObject = {
+	'title': '',
+	'subtitle': '',
+	'message': '',
+	'onLast': true
+};
+
+
 function reloadBrowser(done)
 {
 	browserSync.reload();
@@ -32,25 +41,35 @@ function reloadBrowser(done)
 }
 
 
-gulp.task('pug', function build_html (done) {
+gulp.task('pug', function (done) {
 	gulp.src(paths.pug, base)
 		.pipe(pug2({
 			pretty: true,
 			cache: false
 		}))
-		.pipe(gulp.dest(basePath));
+		.pipe(gulp.dest(basePath))
+		.pipe(notify({
+			'title': 'Pug',
+			'message': 'Compiled',
+			'onLast': true
+		}));
 
 	reloadBrowser(done);
 });
 
-gulp.task('sass', function build_sass (done) {
+gulp.task('sass', function (done) {
 	gulp.src(paths.sass, base)
 		.pipe(sass({indentedSyntax: true/*, outputStyle: 'compressed'*/}).on('error', sass.logError))
 		.pipe(autoprefixer({
 			browsers: ['last 10 versions'],
 			cascade: true
 		}))
-		.pipe(gulp.dest(basePath));
+		.pipe(gulp.dest(basePath))
+        .pipe(notify({
+            'title': 'Sass',
+            'message': 'Compiled',
+            'onLast': true
+        }));
 
 	reloadBrowser(done);
 });
@@ -58,7 +77,12 @@ gulp.task('sass', function build_sass (done) {
 gulp.task('coffee', function build_coffee (done) {
 	gulp.src(paths.coffee, base)
 		.pipe(coffee({bare: true})/*.on('error', gutil.log)*/)
-		.pipe(gulp.dest(basePath));
+		.pipe(gulp.dest(basePath))
+        .pipe(notify({
+            'title': 'CoffeeScripts',
+            'message': 'Compiled',
+            'onLast': true
+        }));
 
 	reloadBrowser(done);
 });
@@ -66,7 +90,12 @@ gulp.task('coffee', function build_coffee (done) {
 gulp.task('blogJs', function (done) {
 	gulp.src(paths.blogJs)
 		.pipe(webpack(require('./blog.webpack.config.js')))
-		.pipe(gulp.dest('blog/dist/'));
+		.pipe(gulp.dest('blog/dist/'))
+		.pipe(notify({
+        'title': 'BlogJS',
+        'message': 'Compiled',
+        'onLast': true
+    }));
 
 	reloadBrowser(done);
 });
@@ -74,21 +103,31 @@ gulp.task('blogJs', function (done) {
 gulp.task('landingJs', function (done) {
 	gulp.src(paths.landingJs)
 		.pipe(babel()).on('error', console.error.bind(console))
-		.pipe(gulp.dest('script'));
+		.pipe(gulp.dest('script'))
+		.pipe(notify({
+        'title': 'LandingJS',
+        'message': 'Compiled',
+        'onLast': true
+    }));
 
 	reloadBrowser(done);
 });
 
-gulp.task('j2hJs', function (done) {
+gulp.task('json2html', function (done) {
 	gulp.src(paths.json2HtmlJs)
 		.pipe(webpack(require('./json2html.webpack.config')))
-		.pipe(gulp.dest('json2html'));
+		.pipe(gulp.dest('json2html'))
+		.pipe(notify({
+        'title': 'Json to Html',
+        'message': 'Compiled',
+        'onLast': true
+    }));
 
 	reloadBrowser(done);
 });
 
 
-gulp.task('fullServer', ['pug', 'sass', 'coffee', 'blogJs', 'landingJs', 'j2hJs'], function () {
+gulp.task('fullServer', ['pug', 'sass', 'coffee', 'blogJs', 'landingJs', 'json2html'], function () {
 	watch();
 	browserSyncInit();
 });
@@ -100,17 +139,18 @@ function browserSyncInit(callback) {
     });
 }
 
-function watch (tasks = ['pug', 'sass', 'coffee', 'blogJs', 'landingJs', 'j2hJs']) {
+function watch (tasks = ['pug', 'sass', 'coffee', 'blogJs', 'landingJs', 'json2html']) {
 	for (var index = 0; index < tasks.length; index++)
 	{
 		var task = tasks[index];
+
         gulp.watch(paths[task], [task]);
 	}
 }
 
 gulp.task('default', ['fullServer']);
-gulp.task('jws', ['pug', 'sass', 'j2hJs'], function () { //j2h watching + server
-	watch(['pug', 'sass', 'j2hJs']);
+gulp.task('jws', ['pug', 'sass', 'json2html'], function () { //j2h watching + server
+	watch(['pug', 'sass', 'json2html']);
     browserSyncInit();
 });
 gulp.task('lws', ['pug', 'sass', 'landingJs'], function () { //landing watching + server
