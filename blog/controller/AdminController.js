@@ -235,18 +235,45 @@ export default class AdminController
             return result;
         }
 
-        function searchLabel(datas, callback)
+        function searchLabel(currents, news, datas, callback)
         {
-            that.searchInfos(
-                currentLabels,
-                newLabels,
-                datas,
-                getLabelInfosFromNodeAndChangeNodeHtmlToInputThenToText,
-                callback
-            );
+            let infos = (require('../src/helpers').isHtmlElement(datas))
+                ? getLabelInfosFromNodeAndChangeNodeHtmlToInputThenToText(datas) : datas;
+
+
+            if (infos.id != 'null') //these still don't saved
+            {
+                let arrayIndex = that.searchIndex(currents, //label
+                    (value) =>
+                        value.id == infos.id
+                        && String(value.content.hu) == infos.hu
+                        && String(value.content.en) == infos.en
+                );
+
+
+                if (arrayIndex > -1)
+                {
+                    return callback(currents, arrayIndex, true);
+                }
+            }
+            else //these perhaps will be saved
+            {
+                let arrayIndex = that.searchIndex(news, //label
+                    (value) =>
+                        String(value.hu) == infos.hu
+                        && String(value.en) == infos.en
+                );
+
+
+                if (arrayIndex > -1)
+                {
+                    return callback(news, arrayIndex, false)
+                }
+            }
+
+            return callback(false, false, false);
         }
 
-        function addAllDeleteEvent()
         {
             require('../src/helpers').addEventToAllElement('.label .delete', 'click', (attr) =>
             {
@@ -483,9 +510,6 @@ export default class AdminController
                         <p data-original="${labelEnString}" class="label-en">Labels in english: <var>${labelEnString}</var></p>
                         <p data-original="${contentHu}" class="content-hu">Content in hungarian: <var>${contentHu}</var></p>
                         <p data-original="${contentEn}" class="content-en">Content in english: <var>${contentEn}</var></p>
-                        <p data-original="${titleHu}" class="title-hu">Title in hungarian: <var>${titleHu}</var></p>
-                        <p data-original="${titleEn}" class="title-en">Title in english: <var>${titleEn}</var></p>
-						<p data-original="${shortHu}" class="short-hu">Short in hungarian: <var>${shortHu}</var></p>
 						<p data-original="${shortEn}" class="short-en">Short in english: <var>${shortEn}</var></p>
                         <p data-original="${urlHu}" class="url-hu">Url in hungarian: <var>${urlHu}</var></p>
                         <p data-original="${urlEn}" class="url-en">Url in english: <var>${urlEn}</var></p>
@@ -595,8 +619,11 @@ export default class AdminController
         {
             let endPosts = [];
 
+            console.log(currentPosts);
             for (let index in currentPosts)
             {
+
+                //it isn't drop correctly a datas of posts
                 let currentPost = currentPosts[index],
                     originalPostInfos = {};
 
@@ -618,8 +645,6 @@ export default class AdminController
                     urlLanguageIndex = languages.indexOf(languages.find(
                         (language) => String(language.hu) == originalPostInfos['url-hu'] && String(language.en) == originalPostInfos['url-en']
                     ));
-
-                console.log(contentLanguageIndex, languages, originalPostInfos, currentPost);
 
                 languages[contentLanguageIndex].hu = currentPost.content.hu;
                 languages[contentLanguageIndex].en = currentPost.content.en;
@@ -697,7 +722,13 @@ export default class AdminController
             }
         }
 
-        function getPostInfosFromNodeAndChangeNodeHtmlToInputThenToText(postSection, callback)
+        /**
+         * @param postSection
+         * @param {Function} onePostInfoCallback
+         * @param {Function} allPostInfosCallback
+         * @returns {{content: {}, title: {}, short: {}, url: {}}}
+         */
+        function getPostInfosFromNodeAndChangeNodeHtmlToInputThenToText(postSection, onePostInfoCallback, allPostInfosCallback)
         {
             let result = {
                     // labels: {},
@@ -706,7 +737,6 @@ export default class AdminController
                     short: {},
                     url: {}
                 },
-                callCallback = that.helpers.ifExistCallbackICall,
                 getData = that.getDataFromPElement;
 
 
@@ -717,28 +747,36 @@ export default class AdminController
                 {
                     let data = getData(child);
 
-                    let classNamePieces = className.split('-');
-                    switch (classNamePieces.length)
-                    {
-                        case 1:
-                            result[classNamePieces[0]] = data;
-                            break;
-                        case 2:
-                            if (!result[classNamePieces[0]])
-                            {
-                                result[classNamePieces[0]] = {};
-                            }
-                            result[classNamePieces[0]][classNamePieces[1]] = data;
-                            break;
-                        default:
-                            break;
-                    }
+                    // let classNamePieces = className.split('-');
+                    // switch (classNamePieces.length)
+                    // {
+                    //     case 1:
+                    //         result[classNamePieces[0]] = data;
+                    //         break;
+                    //     case 2:
+                    //         if (!result[classNamePieces[0]])
+                    //         {
+                    //             result[classNamePieces[0]] = {};
+                    //         }
+                    //         result[classNamePieces[0]][classNamePieces[1]] = data;
+                    //         break;
+                    //     default:
+                    //         break;
+                    // }
 
-                    callCallback(callback, {elem: className, node: child, data: data});
+                    that.helpers.stringSplitAndCreateObject(className, '-', result, data);
+
+                    if (typeof onePostInfoCallback === 'function')
+                    {
+                        onePostInfoCallback({elem: className, node: child, data: data})
+                    }
                 }
             }
 
-            return result;
+            if (typeof allPostInfosCallback === 'function')
+            {
+                return allPostInfosCallback(result);
+            }
         }
 
         function addAllDeleteEvent()
@@ -748,17 +786,14 @@ export default class AdminController
                 let section = attr.section,
                     button = attr.button;
 
-                that.searchInfos(
+                searchPosts(
                     currentPosts,
                     newPosts,
                     section,
-                    getPostInfosFromNodeAndChangeNodeHtmlToInputThenToText,
                     (postArray, index) =>
                     {
-                        console.log(postArray);
                         postArray.splice(index, 1);
-                    },
-                    true
+                    }
                 );
 
                 section.parentNode.removeChild(section);
@@ -774,6 +809,11 @@ export default class AdminController
 
                 if (button.dataset.clicked == '0')
                 {
+                    // let changeTheDom = function changeTheDom()
+                    // {
+                    //
+                    // }
+
                     button.dataset.clicked = '1';
                     button.innerHTML = 'Save';
 
@@ -815,15 +855,17 @@ export default class AdminController
                 }
                 else
                 {
-                    button.dataset.clicked = '0';
-                    button.innerHTML = 'Update';
+                    //i pass the oldPostDatas variable to searchPost function, it's the reason of mistake
 
                     let oldPostDatas = {},
                         labelsHu = [],
                         labelsEn = [];
 
-                    let postInfos = getPostInfosFromNodeAndChangeNodeHtmlToInputThenToText(section, (args) =>
+                    const changeBackTheDom = function changeBackTheDom(args)
                     {
+                        button.dataset.clicked = '0';
+                        button.innerHTML = 'Update';
+
                         let elem = args.elem,
                             node = args.node,
                             data = args.data;
@@ -852,34 +894,90 @@ export default class AdminController
                                 break;
                         }
 
-                    });
-
-                    that.searchInfos(
-                        currentPosts,
-                        newPosts,
-                        postInfos,
-                        getPostInfosFromNodeAndChangeNodeHtmlToInputThenToText,
-                        (postArray, index/*, isCurrent*/) =>
-                        {
-                            console.log(postArray); //<-- false -_- TODO
-                            if (postArray)
+                    };
+                    const callSearchFunction = function callSearchFunction()
+                    {
+                        searchPosts(
+                            currentPosts,
+                            newPosts,
+                            oldPostDatas,
+                            (postArray, index/*, isCurrent*/) =>
                             {
-                                postArray[index].id = postInfos.id;
-                                postArray[index].created = postInfos.created;
-                                postArray[index].title.hu = postInfos['title-hu'];
-                                postArray[index].title.en = postInfos['title-en'];
-                                postArray[index].content.hu = postInfos['content-hu'];
-                                postArray[index].content.en = postInfos['content-en'];
-                                postArray[index].short.en = postInfos['short-en'];
-                                postArray[index].short.en = postInfos['short-en'];
-                                postArray[index].url.hu = postInfos['url-hu'];
-                                postArray[index].url.en = postInfos['url-en'];
+								console.log(postArray); 
+                                if (postArray) //false :( TODO
+                                {
+                                    postArray[index].id = postInfos.id;
+                                    postArray[index].created = postInfos.created;
+                                    postArray[index].title.hu = postInfos['title-hu'];
+                                    postArray[index].title.en = postInfos['title-en'];
+                                    postArray[index].content.hu = postInfos['content-hu'];
+                                    postArray[index].content.en = postInfos['content-en'];
+                                    postArray[index].short.en = postInfos['short-en'];
+                                    postArray[index].short.en = postInfos['short-en'];
+                                    postArray[index].url.hu = postInfos['url-hu'];
+                                    postArray[index].url.en = postInfos['url-en'];
+                                }
                             }
-                        },
-                        true
-                    );
+                        );
+                    };
+
+                    return getPostInfosFromNodeAndChangeNodeHtmlToInputThenToText(section, changeBackTheDom, callSearchFunction);
                 }
             });
+        }
+
+        /**
+         * @param {*[]} currents
+         * @param news
+         * @param datas
+         * @param callback
+         * @returns {*}
+         */
+        function searchPosts(currents, news, datas, callback)
+        {
+            let searching = function searching(datas)
+            {
+                let arrayIndex = -1;
+
+                arrayIndex = that.searchIndex(currents,
+                    (value) =>
+                        value.id == datas.id
+                        && datas.content
+                        && String(value.content.hu) == datas.content.hu
+                        && String(value.content.en) == datas.content.en
+                );
+
+                if (arrayIndex > -1)
+                {
+                    return callback(currents, arrayIndex, true);
+                }
+
+
+                arrayIndex = that.searchIndex(news, //post
+                    (value) =>
+                        String(value.content.hu) == datas['content-hu']
+                        && String(value.content.en) == datas['content-en']
+                );
+
+                if (arrayIndex > -1)
+                {
+                    return callback(news, arrayIndex, false);
+                }
+
+
+                return callback(false, false, false);
+            };
+
+            // let infos = (require('../src/helpers').isHtmlElement(datas))
+            //     ? getPostInfosFromNodeAndChangeNodeHtmlToInputThenToText(datas) : datas;
+
+            if (that.helpers.isHtmlElement(datas))
+            {
+                console.log(datas);
+                return getPostInfosFromNodeAndChangeNodeHtmlToInputThenToText(datas, null, searching);
+            }
+
+            return searching(datas);
         }
 
     }
@@ -900,79 +998,19 @@ export default class AdminController
         else
         {
             return require('../src/helpers').getElementValue(child);
-        }
-    }
+        }   
+     }
+
 
     /**
-     * @param {*[]} currents
-     * @param {*[]} news
-     * @param {object|HTMLElement} datas
-     * @param {function} getInfosFunction
-     * @param {function} callback
-     * @param {boolean} isPost
-     * @return {function(object|boolean, number|boolean, boolean)}
-     */
-    searchInfos (currents, news, datas, getInfosFunction, callback, isPost = false)
-    {
-        let infos = (require('../src/helpers').isHtmlElement(datas))
-            ? getInfosFunction(datas) : datas;
-
-
-        if (infos.id != 'null') //these labels still be
-        {
-            let arrayIndex = (isPost)
-                ? this.searchIndex(currents, //post
-                    (value) =>
-                        value.id == infos.id
-                        && String(value.content.hu) == infos.content.hu
-                        && String(value.content.en) == infos.content.en
-                )
-                : this.searchIndex(currents, //label
-                    (value) =>
-                        value.id == infos.id
-                        && String(value.content.hu) == infos.hu
-                        && String(value.content.en) == infos.en
-                );
-
-
-            if (arrayIndex > -1)
-            {
-                return callback(currents, arrayIndex, true);
-            }
-        }
-        else //these labels maybe will be, other objects
-        {
-            let arrayIndex = (isPost)
-                ? this.searchIndex(news, //post
-                    value => 
-                        String(value.content.hu) == infos['content-hu']
-                        && String(value.content.en) == infos['content-en']
-                )
-                : this.searchIndex(news, //label
-                    value => 
-                        String(value.hu) == infos.hu 
-                        && String(value.en) == infos.en
-                );
-
-
-            if (arrayIndex > -1)
-            {
-                return callback(news, arrayIndex, false)
-            }
-        }
-
-        return callback(false, false, false);
-    }
-
-    /**
-     * @param {*[]} array
-     * @param {function} callback
-     * @return {number}
-     */
+	 * @param {*[]} array
+	 * @param {function} callback
+	 * @return {number}
+	 */
     searchIndex (array, callback)
     {
-        return array.indexOf(array.find(
-            (elem) => callback(elem)
-        ));
-    }
+		return array.indexOf(array.find(
+			(elem) => callback(elem)
+		));
+	}
 }

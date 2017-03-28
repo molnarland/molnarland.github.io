@@ -345,7 +345,7 @@
 	            break;
 	        case 'textarea':
 	            if (typeof editorObject == 'undefined') {
-	                return node;
+	                return node.value;
 	            }
 	
 	            return editorObject.getValueOfEditor() || node.value;
@@ -384,6 +384,10 @@
 	            return node.innerHTML;
 	            break;
 	    }
+	}
+	
+	function l(text) {
+	    console.log(text);
 	}
 	
 	function ifExistCallbackICall(callback, args) {
@@ -538,6 +542,35 @@
 	    }
 	}
 	
+	/**
+	 * @param {string} string
+	 * @param {string} separator
+	 * @param {object} object
+	 * @param {*} data
+	 */
+	function stringSplitAndCreateObject(string, separator, object, data, callback) {
+	    var splittedString = string.split(separator),
+	        lengthOfSplittedString = splittedString.length;
+	
+	    var pieceOfObjectWhereITakeThePieceOfString = object;
+	    for (var index = 0; index < lengthOfSplittedString; index++) {
+	        var currentPieceOfString = splittedString[index];
+	
+	        // console.log(index);
+	        // console.log(pieceOfObjectWhereITakeThePieceOfString, object, currentPieceOfString, string);
+	
+	        if (!pieceOfObjectWhereITakeThePieceOfString[currentPieceOfString]) {
+	            if (index !== lengthOfSplittedString - 1) {
+	                pieceOfObjectWhereITakeThePieceOfString[currentPieceOfString] = {};
+	            } else {
+	                pieceOfObjectWhereITakeThePieceOfString[currentPieceOfString] = data;
+	            }
+	        }
+	
+	        pieceOfObjectWhereITakeThePieceOfString = pieceOfObjectWhereITakeThePieceOfString[currentPieceOfString];
+	    }
+	}
+	
 	module.exports = {
 	    start: start,
 	    isEmptyObject: isEmptyObject,
@@ -556,7 +589,8 @@
 	    isHtmlElement: isHtmlElement,
 	    changeAllOptionInSelect: changeAllOptionInSelect,
 	    arrayElementsConvertToNumber: arrayElementsConvertToNumber,
-	    addEventToAllElement: addEventToAllElement
+	    addEventToAllElement: addEventToAllElement,
+	    stringSplitAndCreateObject: stringSplitAndCreateObject
 	};
 
 /***/ },
@@ -2033,6 +2067,8 @@
 	    value: true
 	});
 	
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _imports = __webpack_require__(2);
@@ -2313,11 +2349,35 @@
 	                return result;
 	            }
 	
-	            function searchLabel(datas, callback) {
-	                that.searchInfos(currentLabels, newLabels, datas, getLabelInfosFromNodeAndChangeNodeHtmlToInputThenToText, callback);
+	            function searchLabel(currents, news, datas, callback) {
+	                var infos = __webpack_require__(1).isHtmlElement(datas) ? getLabelInfosFromNodeAndChangeNodeHtmlToInputThenToText(datas) : datas;
+	
+	                if (infos.id != 'null') //these still don't saved
+	                    {
+	                        var arrayIndex = that.searchIndex(currents, //label
+	                        function (value) {
+	                            return value.id == infos.id && String(value.content.hu) == infos.hu && String(value.content.en) == infos.en;
+	                        });
+	
+	                        if (arrayIndex > -1) {
+	                            return callback(currents, arrayIndex, true);
+	                        }
+	                    } else //these perhaps will be saved
+	                    {
+	                        var _arrayIndex = that.searchIndex(news, //label
+	                        function (value) {
+	                            return String(value.hu) == infos.hu && String(value.en) == infos.en;
+	                        });
+	
+	                        if (_arrayIndex > -1) {
+	                            return callback(news, _arrayIndex, false);
+	                        }
+	                    }
+	
+	                return callback(false, false, false);
 	            }
 	
-	            function addAllDeleteEvent() {
+	            {
 	                __webpack_require__(1).addEventToAllElement('.label .delete', 'click', function (attr) {
 	                    var section = attr.section,
 	                        button = attr.button;
@@ -2564,7 +2624,7 @@
 	                var labelHuString = labelsHu.join(labelSeparator),
 	                    labelEnString = labelsEn.join(labelSeparator);
 	
-	                return '<section id="post-' + id + '" class="post" style="border: 10px dotted saddlebrown">\n                        <p data-original="' + id + '" class="id">ID: <var>' + id + '</var></p>\n                        <p data-original="' + created + '" class="created">Created: <var>' + created + '</var></p>\n                        <p data-original="' + labelHuString + '" class="label-hu">Labels in hungarian: <var>' + labelHuString + '</var></p>\n                        <p data-original="' + labelEnString + '" class="label-en">Labels in english: <var>' + labelEnString + '</var></p>\n                        <p data-original="' + contentHu + '" class="content-hu">Content in hungarian: <var>' + contentHu + '</var></p>\n                        <p data-original="' + contentEn + '" class="content-en">Content in english: <var>' + contentEn + '</var></p>\n                        <p data-original="' + titleHu + '" class="title-hu">Title in hungarian: <var>' + titleHu + '</var></p>\n                        <p data-original="' + titleEn + '" class="title-en">Title in english: <var>' + titleEn + '</var></p>\n\t\t\t\t\t\t<p data-original="' + shortHu + '" class="short-hu">Short in hungarian: <var>' + shortHu + '</var></p>\n\t\t\t\t\t\t<p data-original="' + shortEn + '" class="short-en">Short in english: <var>' + shortEn + '</var></p>\n                        <p data-original="' + urlHu + '" class="url-hu">Url in hungarian: <var>' + urlHu + '</var></p>\n                        <p data-original="' + urlEn + '" class="url-en">Url in english: <var>' + urlEn + '</var></p>\n                        <button class="update" data-clicked="0">Update</button>\n                        <button class="delete">Delete</button>\n                    </section>';
+	                return '<section id="post-' + id + '" class="post" style="border: 10px dotted saddlebrown">\n                        <p data-original="' + id + '" class="id">ID: <var>' + id + '</var></p>\n                        <p data-original="' + created + '" class="created">Created: <var>' + created + '</var></p>\n                        <p data-original="' + labelHuString + '" class="label-hu">Labels in hungarian: <var>' + labelHuString + '</var></p>\n                        <p data-original="' + labelEnString + '" class="label-en">Labels in english: <var>' + labelEnString + '</var></p>\n                        <p data-original="' + contentHu + '" class="content-hu">Content in hungarian: <var>' + contentHu + '</var></p>\n                        <p data-original="' + contentEn + '" class="content-en">Content in english: <var>' + contentEn + '</var></p>\n\t\t\t\t\t\t<p data-original="' + shortEn + '" class="short-en">Short in english: <var>' + shortEn + '</var></p>\n                        <p data-original="' + urlHu + '" class="url-hu">Url in hungarian: <var>' + urlHu + '</var></p>\n                        <p data-original="' + urlEn + '" class="url-en">Url in english: <var>' + urlEn + '</var></p>\n                        <button class="update" data-clicked="0">Update</button>\n                        <button class="delete">Delete</button>\n                    </section>';
 	            }
 	
 	            function newPostClick() {
@@ -2706,7 +2766,11 @@
 	            function saveChangeClick() {
 	                var endPosts = [];
 	
+	                console.log(currentPosts);
+	
 	                var _loop4 = function _loop4(index) {
+	
+	                    //it isn't drop correctly a datas of posts
 	                    var currentPost = currentPosts[index],
 	                        originalPostInfos = {};
 	
@@ -2726,8 +2790,6 @@
 	                        urlLanguageIndex = languages.indexOf(languages.find(function (language) {
 	                        return String(language.hu) == originalPostInfos['url-hu'] && String(language.en) == originalPostInfos['url-en'];
 	                    }));
-	
-	                    console.log(contentLanguageIndex, languages, originalPostInfos, currentPost);
 	
 	                    languages[contentLanguageIndex].hu = currentPost.content.hu;
 	                    languages[contentLanguageIndex].en = currentPost.content.en;
@@ -2825,7 +2887,13 @@
 	                }
 	            }
 	
-	            function getPostInfosFromNodeAndChangeNodeHtmlToInputThenToText(postSection, callback) {
+	            /**
+	             * @param postSection
+	             * @param {Function} onePostInfoCallback
+	             * @param {Function} allPostInfosCallback
+	             * @returns {{content: {}, title: {}, short: {}, url: {}}}
+	             */
+	            function getPostInfosFromNodeAndChangeNodeHtmlToInputThenToText(postSection, onePostInfoCallback, allPostInfosCallback) {
 	                var result = {
 	                    // labels: {},
 	                    content: {},
@@ -2833,7 +2901,6 @@
 	                    short: {},
 	                    url: {}
 	                },
-	                    callCallback = that.helpers.ifExistCallbackICall,
 	                    getData = that.getDataFromPElement;
 	
 	                var _iteratorNormalCompletion11 = true;
@@ -2848,22 +2915,28 @@
 	                        if (className && child.nodeName !== 'BUTTON') {
 	                            var data = getData(child);
 	
-	                            var classNamePieces = className.split('-');
-	                            switch (classNamePieces.length) {
-	                                case 1:
-	                                    result[classNamePieces[0]] = data;
-	                                    break;
-	                                case 2:
-	                                    if (!result[classNamePieces[0]]) {
-	                                        result[classNamePieces[0]] = {};
-	                                    }
-	                                    result[classNamePieces[0]][classNamePieces[1]] = data;
-	                                    break;
-	                                default:
-	                                    break;
-	                            }
+	                            // let classNamePieces = className.split('-');
+	                            // switch (classNamePieces.length)
+	                            // {
+	                            //     case 1:
+	                            //         result[classNamePieces[0]] = data;
+	                            //         break;
+	                            //     case 2:
+	                            //         if (!result[classNamePieces[0]])
+	                            //         {
+	                            //             result[classNamePieces[0]] = {};
+	                            //         }
+	                            //         result[classNamePieces[0]][classNamePieces[1]] = data;
+	                            //         break;
+	                            //     default:
+	                            //         break;
+	                            // }
 	
-	                            callCallback(callback, { elem: className, node: child, data: data });
+	                            that.helpers.stringSplitAndCreateObject(className, '-', result, data);
+	
+	                            if (typeof onePostInfoCallback === 'function') {
+	                                onePostInfoCallback({ elem: className, node: child, data: data });
+	                            }
 	                        }
 	                    }
 	                } catch (err) {
@@ -2881,7 +2954,9 @@
 	                    }
 	                }
 	
-	                return result;
+	                if (typeof allPostInfosCallback === 'function') {
+	                    return allPostInfosCallback(result);
+	                }
 	            }
 	
 	            function addAllDeleteEvent() {
@@ -2889,10 +2964,9 @@
 	                    var section = attr.section,
 	                        button = attr.button;
 	
-	                    that.searchInfos(currentPosts, newPosts, section, getPostInfosFromNodeAndChangeNodeHtmlToInputThenToText, function (postArray, index) {
-	                        console.log(postArray);
+	                    searchPosts(currentPosts, newPosts, section, function (postArray, index) {
 	                        postArray.splice(index, 1);
-	                    }, true);
+	                    });
 	
 	                    section.parentNode.removeChild(section);
 	                });
@@ -2904,6 +2978,11 @@
 	                        button = attr.button;
 	
 	                    if (button.dataset.clicked == '0') {
+	                        // let changeTheDom = function changeTheDom()
+	                        // {
+	                        //
+	                        // }
+	
 	                        button.dataset.clicked = '1';
 	                        button.innerHTML = 'Save';
 	
@@ -2959,15 +3038,17 @@
 	                            }
 	                        });
 	                    } else {
-	                        (function () {
-	                            button.dataset.clicked = '0';
-	                            button.innerHTML = 'Update';
+	                        var _ret7 = function () {
+	                            //i pass the oldPostDatas variable to searchPost function, it's the reason of mistake
 	
 	                            var oldPostDatas = {},
 	                                labelsHu = [],
 	                                labelsEn = [];
 	
-	                            var postInfos = getPostInfosFromNodeAndChangeNodeHtmlToInputThenToText(section, function (args) {
+	                            var changeBackTheDom = function changeBackTheDom(args) {
+	                                button.dataset.clicked = '0';
+	                                button.innerHTML = 'Update';
+	
 	                                var elem = args.elem,
 	                                    node = args.node,
 	                                    data = args.data;
@@ -2999,26 +3080,75 @@
 	                                        node.childNodes[1].innerHTML = data;
 	                                        break;
 	                                }
-	                            });
+	                            };
+	                            var callSearchFunction = function callSearchFunction() {
+	                                searchPosts(currentPosts, newPosts, oldPostDatas, function (postArray, index /*, isCurrent*/) {
+	                                    console.log(postArray);
+	                                    if (postArray) {
+	                                        postArray[index].id = postInfos.id;
+	                                        postArray[index].created = postInfos.created;
+	                                        postArray[index].title.hu = postInfos['title-hu'];
+	                                        postArray[index].title.en = postInfos['title-en'];
+	                                        postArray[index].content.hu = postInfos['content-hu'];
+	                                        postArray[index].content.en = postInfos['content-en'];
+	                                        postArray[index].short.en = postInfos['short-en'];
+	                                        postArray[index].short.en = postInfos['short-en'];
+	                                        postArray[index].url.hu = postInfos['url-hu'];
+	                                        postArray[index].url.en = postInfos['url-en'];
+	                                    }
+	                                });
+	                            };
 	
-	                            that.searchInfos(currentPosts, newPosts, postInfos, getPostInfosFromNodeAndChangeNodeHtmlToInputThenToText, function (postArray, index /*, isCurrent*/) {
-	                                console.log(postArray); //<-- false -_- TODO
-	                                if (postArray) {
-	                                    postArray[index].id = postInfos.id;
-	                                    postArray[index].created = postInfos.created;
-	                                    postArray[index].title.hu = postInfos['title-hu'];
-	                                    postArray[index].title.en = postInfos['title-en'];
-	                                    postArray[index].content.hu = postInfos['content-hu'];
-	                                    postArray[index].content.en = postInfos['content-en'];
-	                                    postArray[index].short.en = postInfos['short-en'];
-	                                    postArray[index].short.en = postInfos['short-en'];
-	                                    postArray[index].url.hu = postInfos['url-hu'];
-	                                    postArray[index].url.en = postInfos['url-en'];
-	                                }
-	                            }, true);
-	                        })();
+	                            return {
+	                                v: getPostInfosFromNodeAndChangeNodeHtmlToInputThenToText(section, changeBackTheDom, callSearchFunction)
+	                            };
+	                        }();
+	
+	                        if ((typeof _ret7 === 'undefined' ? 'undefined' : _typeof(_ret7)) === "object") return _ret7.v;
 	                    }
 	                });
+	            }
+	
+	            /**
+	             * @param {*[]} currents
+	             * @param news
+	             * @param datas
+	             * @param callback
+	             * @returns {*}
+	             */
+	            function searchPosts(currents, news, datas, callback) {
+	                var searching = function searching(datas) {
+	                    var arrayIndex = -1;
+	
+	                    arrayIndex = that.searchIndex(currents, function (value) {
+	                        return value.id == datas.id && datas.content && String(value.content.hu) == datas.content.hu && String(value.content.en) == datas.content.en;
+	                    });
+	
+	                    if (arrayIndex > -1) {
+	                        return callback(currents, arrayIndex, true);
+	                    }
+	
+	                    arrayIndex = that.searchIndex(news, //post
+	                    function (value) {
+	                        return String(value.content.hu) == datas['content-hu'] && String(value.content.en) == datas['content-en'];
+	                    });
+	
+	                    if (arrayIndex > -1) {
+	                        return callback(news, arrayIndex, false);
+	                    }
+	
+	                    return callback(false, false, false);
+	                };
+	
+	                // let infos = (require('../src/helpers').isHtmlElement(datas))
+	                //     ? getPostInfosFromNodeAndChangeNodeHtmlToInputThenToText(datas) : datas;
+	
+	                if (that.helpers.isHtmlElement(datas)) {
+	                    console.log(datas);
+	                    return getPostInfosFromNodeAndChangeNodeHtmlToInputThenToText(datas, null, searching);
+	                }
+	
+	                return searching(datas);
 	            }
 	        }
 	
@@ -3041,58 +3171,10 @@
 	        }
 	
 	        /**
-	         * @param {*[]} currents
-	         * @param {*[]} news
-	         * @param {object|HTMLElement} datas
-	         * @param {function} getInfosFunction
-	         * @param {function} callback
-	         * @param {boolean} isPost
-	         * @return {function(object|boolean, number|boolean, boolean)}
-	         */
-	
-	    }, {
-	        key: 'searchInfos',
-	        value: function searchInfos(currents, news, datas, getInfosFunction, callback) {
-	            var isPost = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : false;
-	
-	            var infos = __webpack_require__(1).isHtmlElement(datas) ? getInfosFunction(datas) : datas;
-	
-	            if (infos.id != 'null') //these labels still be
-	                {
-	                    var arrayIndex = isPost ? this.searchIndex(currents, //post
-	                    function (value) {
-	                        return value.id == infos.id && String(value.content.hu) == infos.content.hu && String(value.content.en) == infos.content.en;
-	                    }) : this.searchIndex(currents, //label
-	                    function (value) {
-	                        return value.id == infos.id && String(value.content.hu) == infos.hu && String(value.content.en) == infos.en;
-	                    });
-	
-	                    if (arrayIndex > -1) {
-	                        return callback(currents, arrayIndex, true);
-	                    }
-	                } else //these labels maybe will be, other objects
-	                {
-	                    var _arrayIndex = isPost ? this.searchIndex(news, //post
-	                    function (value) {
-	                        return String(value.content.hu) == infos['content-hu'] && String(value.content.en) == infos['content-en'];
-	                    }) : this.searchIndex(news, //label
-	                    function (value) {
-	                        return String(value.hu) == infos.hu && String(value.en) == infos.en;
-	                    });
-	
-	                    if (_arrayIndex > -1) {
-	                        return callback(news, _arrayIndex, false);
-	                    }
-	                }
-	
-	            return callback(false, false, false);
-	        }
-	
-	        /**
-	         * @param {*[]} array
-	         * @param {function} callback
-	         * @return {number}
-	         */
+	        * @param {*[]} array
+	        * @param {function} callback
+	        * @return {number}
+	        */
 	
 	    }, {
 	        key: 'searchIndex',

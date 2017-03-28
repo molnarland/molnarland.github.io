@@ -34,13 +34,6 @@ var notifyObject = {
 };
 
 
-function reloadBrowser(done)
-{
-	browserSync.reload();
-	done();
-}
-
-
 gulp.task('pug', function (done) {
 	gulp.src(paths.pug, base)
 		.pipe(pug2({
@@ -74,7 +67,7 @@ gulp.task('sass', function (done) {
 	reloadBrowser(done);
 });
 
-gulp.task('coffee', function build_coffee (done) {
+gulp.task('coffee', function (done) {
 	gulp.src(paths.coffee, base)
 		.pipe(coffee({bare: true})/*.on('error', gutil.log)*/)
 		.pipe(gulp.dest(basePath))
@@ -92,9 +85,9 @@ gulp.task('blogJs', function (done) {
 		.pipe(webpack(require('./blog.webpack.config.js')))
 		.pipe(gulp.dest('blog/dist/'))
 		.pipe(notify({
-        'title': 'BlogJS',
-        'message': 'Compiled',
-        'onLast': true
+			'title': 'BlogJS',
+			'message': 'Compiled',
+			'onLast': true
     }));
 
 	reloadBrowser(done);
@@ -105,9 +98,9 @@ gulp.task('landingJs', function (done) {
 		.pipe(babel()).on('error', console.error.bind(console))
 		.pipe(gulp.dest('script'))
 		.pipe(notify({
-        'title': 'LandingJS',
-        'message': 'Compiled',
-        'onLast': true
+			'title': 'LandingJS',
+			'message': 'Compiled',
+			'onLast': true
     }));
 
 	reloadBrowser(done);
@@ -118,9 +111,9 @@ gulp.task('json2html', function (done) {
 		.pipe(webpack(require('./json2html.webpack.config')))
 		.pipe(gulp.dest('json2html'))
 		.pipe(notify({
-        'title': 'Json to Html',
-        'message': 'Compiled',
-        'onLast': true
+			'title': 'Json to Html',
+			'message': 'Compiled',
+			'onLast': true
     }));
 
 	reloadBrowser(done);
@@ -136,7 +129,21 @@ function browserSyncInit(callback) {
     browserSync.init(['index.html'], {
         server: './',
         open: false
-    });
+    }/*, function ()
+	{
+
+        notify({
+            'title': 'Server ',
+            'message': 'Compiled',
+            'onLast': true
+        });
+	}*/);
+}
+
+function reloadBrowser(done)
+{
+    browserSync.reload();
+    done();
 }
 
 function watch (tasks = ['pug', 'sass', 'coffee', 'blogJs', 'landingJs', 'json2html']) {
@@ -147,6 +154,8 @@ function watch (tasks = ['pug', 'sass', 'coffee', 'blogJs', 'landingJs', 'json2h
         gulp.watch(paths[task], [task]);
 	}
 }
+
+gulp.task('server', browserSyncInit);
 
 gulp.task('default', ['fullServer']);
 gulp.task('jws', ['pug', 'sass', 'json2html'], function () { //j2h watching + server
@@ -161,6 +170,3 @@ gulp.task('bws', ['pug', 'sass', 'blogJs'], function () { //blog watching + serv
 	watch(['pug', 'sass', 'blogJs']);
     browserSyncInit();
 });
-
-
-//5223

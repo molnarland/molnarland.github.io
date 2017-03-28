@@ -288,6 +288,7 @@ function getElementValue(selectorOrNode, editorObject)
         node = document.querySelector(selectorOrNode);
     }
 
+
     switch (getNodeName(selectorOrNode))
     {
         case 'input':
@@ -296,7 +297,7 @@ function getElementValue(selectorOrNode, editorObject)
         case 'textarea':
             if (typeof editorObject == 'undefined')
             {
-                return node;
+                return node.value;
             }
 
             return editorObject.getValueOfEditor() || node.value;
@@ -317,6 +318,10 @@ function getElementValue(selectorOrNode, editorObject)
     }
 }
 
+function l(text)
+{
+    console.log(text);
+}
 
 function ifExistCallbackICall(callback, args)
 {
@@ -424,6 +429,41 @@ function addEventToAllElement (selector, eventName, callback)
     }
 }
 
+/**
+ * @param {string} string
+ * @param {string} separator
+ * @param {object} object
+ * @param {*} data
+ */
+function stringSplitAndCreateObject(string, separator, object, data, callback)
+{
+    const splittedString = string.split(separator),
+        lengthOfSplittedString = splittedString.length;
+
+    let pieceOfObjectWhereITakeThePieceOfString = object;
+    for (let index = 0; index < lengthOfSplittedString; index++)
+    {
+        const currentPieceOfString = splittedString[index];
+
+        // console.log(index);
+        // console.log(pieceOfObjectWhereITakeThePieceOfString, object, currentPieceOfString, string);
+
+        if (!pieceOfObjectWhereITakeThePieceOfString[currentPieceOfString])
+        {
+            if (index !== lengthOfSplittedString - 1)
+            {
+                pieceOfObjectWhereITakeThePieceOfString[currentPieceOfString] = {};
+            }
+            else
+            {
+                pieceOfObjectWhereITakeThePieceOfString[currentPieceOfString] = data;
+            }
+        }
+
+        pieceOfObjectWhereITakeThePieceOfString = pieceOfObjectWhereITakeThePieceOfString[currentPieceOfString];
+    }
+}
+
 module.exports = {
     start: start,
     isEmptyObject: isEmptyObject,
@@ -442,5 +482,6 @@ module.exports = {
     isHtmlElement: isHtmlElement,
     changeAllOptionInSelect: changeAllOptionInSelect,
     arrayElementsConvertToNumber: arrayElementsConvertToNumber,
-    addEventToAllElement: addEventToAllElement
+    addEventToAllElement: addEventToAllElement,
+    stringSplitAndCreateObject: stringSplitAndCreateObject
 };
