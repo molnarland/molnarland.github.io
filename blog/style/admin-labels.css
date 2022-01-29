@@ -1,6 +1,0 @@
-input, textarea, select {
-  border: 1px solid black; }
-  input.error, textarea.error, select.error {
-    -webkit-box-shadow: 0 3px 8px #c80000;
-            box-shadow: 0 3px 8px #c80000;
-    border: 1px solid #c80000; }
