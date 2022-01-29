@@ -23,7 +23,11 @@ const genres = {
  * @param {Object} library
  */
 function search(library) {
-  document.getElementById("search").addEventListener("keyup", (event) => {
+  const searchInput = document.getElementById("search");
+
+  searchInput.value = '';
+
+  searchInput.addEventListener("keyup", (event) => {
     console.log(library);
     event.preventDefault();
 
@@ -58,10 +62,14 @@ function addTooltips() {
     document.querySelectorAll('[data-bs-toggle="tooltip"]')
   );
   const tooltipList = tooltipTriggerList.map((tooltipTriggerEl) => {
-    return new bootstrap.Tooltip(tooltipTriggerEl, {
-      animation: false,
+    const tooltip = new bootstrap.Tooltip(tooltipTriggerEl, {
+      title: 'Copied to clipboard!',
       placement: "auto",
       trigger: "click",
+    });
+
+    tooltipTriggerEl.addEventListener("shown.bs.tooltip", () => {
+      setTimeout(() => tooltip.hide(), 1500);
     });
   });
 }
@@ -99,7 +107,7 @@ function getMarkup(library) {
         const content = `${artist} - ${title}`;
         const cssClass = `class="list-group-item list-group-item-action title"`;
         const dataClipBoardText = `data-clipboard-text="!music ${content}"`;
-        const tooltips = `data-bs-toggle="tooltip" title="Copied!"`;
+        const tooltips = `data-bs-toggle="tooltip"`;
 
         markup[
           section
