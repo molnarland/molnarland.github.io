@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "music": "cd ../music-library-reader/ && npm run write && cd ../molnarland.github.io/ && git commit -am \"update library.json\" && git push"
   },
   "repository": {
     "type": "git",
